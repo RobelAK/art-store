@@ -4,7 +4,7 @@ import Signup from './screens/Signup'
 import Login from './screens/Login'
 import Profile from './screens/Profile'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Fa from './screens/Fa'
+import Forgotpassword from './screens/Forgotpassword'
 
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
       <Route path='/login' element={<Login/>}></Route>
       <Route path='/signup' element={<Signup/>}></Route>
       <Route path='/profile' element={<Profile/>}></Route>
-      <Route path='/' element={<Fa/>}></Route>
+      <Route path='/forgotpassword' element={<Forgotpassword/>}></Route>
     </Routes>
     </BrowserRouter>
   )

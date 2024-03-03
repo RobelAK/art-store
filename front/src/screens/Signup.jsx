@@ -1,25 +1,19 @@
-// import React, { useState } from 'react'
-// import axios from 'axios'
-// import { Link } from 'react-router-dom'
-// import { useNavigate} from 'react-router-dom'
-
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import React , { useState } from 'react';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import IconButton from '@mui/material/IconButton'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import Logo from '../utils/logo.png';
+import backgroundImage from '../utils/334.jpg';
 
 function Signup() {
     
@@ -29,20 +23,29 @@ function Signup() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
-    const [isValid, setIsValid] = useState(false);  
+    const [passwordHelperText, setPasswordHelperText] = useState('')
+    const [passwordMatchHelperText, setpasswordMatchHelperText] = useState('')
+    const [passwordMatch, setpasswordMatch] = useState(false);
+    const [isValid, setIsValid] = useState(false);
+    const [submitClicked, setSubmitClicked] = useState(false);
     const navigate = useNavigate()
 
+    
     const handleName = (event) =>{
-        setName(event.target.value)
+      setName(event.target.value)
     }
     const handleEmail = (event) =>{
-        setEmail(event.target.value) 
+      setEmail(event.target.value) 
     }
     const handlePassword = (event) =>{
-        setPassword(event.target.value)
-        setIsValid(validatePassword(password))
-        
+      setPassword(event.target.value)
+      setIsValid(validatePassword(password))
     }
+    const handlePasswordConfirm = (event) =>{
+      setPasswordConfirm(event.target.value)
+      
+    }
+
 
     const validatePassword = (password) => {
         const minLength = 8;
@@ -61,12 +64,20 @@ function Signup() {
     };
 
 
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+    const handleTogglePassword = () => {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
+    
+    const handleToggleConfirmPassword = () => {
+      setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+    };
 
 
 
-    const handlePasswordConfirm = (event) =>{
-        setPasswordConfirm(event.target.value)
-    }
+    
     const values = {
         name: name,
         email: email,
@@ -75,79 +86,81 @@ function Signup() {
     };
     const handleSubmit = (event) =>{
         event.preventDefault();
-        if(!isValid){console.log("password invalid")}
+        setSubmitClicked(true)
+        if(!isValid){
+          setPasswordHelperText("Invalid Password")
+          console.log("Invalid password")
+        }
         else {
-            axios.post('http://localhost:8081/signup', values)
-            .then(res => {
-                if(res.data.signup){
-                    alert(res.data.Message)
-                    navigate('/login')
-                }
-                else{
-                    console.log(res.data)
-                }
-            })
-            .catch(err => console.log(err)); 
+          if(password == passwordConfirm){
+            setpasswordMatch(true)
+            setpasswordMatchHelperText('Correct')
+          }
+          else{
+            setpasswordMatch(false) 
+            setpasswordMatchHelperText('Password doesnt match')
+          }
+          setPasswordHelperText("")
+          axios.post('http://localhost:8081/signup', values)
+          .then(res => {
+              if(res.data.signup){
+                  alert(res.data.Message)
+                  navigate('/login')
+              }
+              else{
+                  alert(res.data.Message)
+                  navigate('/signup')
+              }
+          })
+          .catch(err => console.log(err)); 
         }
     }
-//   return (
-//     <div className="cont">
-//         <form onSubmit={handleSubmit}>
-//             <div>
-//                 <label htmlFor="name">Name</label>
-//                 <input type="text" name="name" onChange={handleName} required/>
-//             </div>
-//             <div>
-//                 <label htmlFor="email">Email</label>
-//                 <input type="email" name="email" onChange={handleEmail} required/>
-//             </div>
-//             <div>
-//                 <label htmlFor="password">Password</label>
-//                 <input type="password" name="password" onChange={handlePassword} required/>
-//             </div>
-//             <div>
-//                 <label htmlFor="passwordConfirm">Confirm Password</label>
-//                 <input type="password" name="passwordConfirm" onChange={handlePasswordConfirm} required/>
-//             </div>
-//             <button type="submit">Signup</button>
-//         </form>
-//         <Link to='/login'>Already have an account</Link>
-//     </div>
-//   )
 return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      <Container component="main" maxWidth="100vw" sx={{
+        height: '100vh',
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+        }}>
         <Box
           sx={{
-            marginTop: 0,
+            boxShadow: 5,
+            width: '400px',
+            height: '85%',
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'center',
             alignItems: 'center',
+            backgroundColor: 'white',
+            borderRadius: '20px',
+            padding: 5,
           }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
+          >
+          <Box>
+            <Link to="/">
+              <img src={Logo} alt="Logo" style={{ width: '100%', marginBottom: '5px'}} />
+            </Link>
+          </Box>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1}}>
+            <Grid container rowSpacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="name"
-                  required
-                  fullWidth
+                  size='small'
                   id="name"
                   label="Name"
-                  autoFocus
+                  required
+                  fullWidth
+                  name='name'
                   onChange={handleName}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  size='small'
+                  type='email'
                   required
                   fullWidth
                   id="email"
@@ -159,50 +172,59 @@ return (
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  size='small'
                   required
-                  fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  fullWidth
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="new-password"
                   onChange={handlePassword}
+                  helperText={passwordHelperText}
+                  error={submitClicked && !isValid}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton onClick={handleTogglePassword} edge="end">
+                        {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    ),
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                    size='small'
                   required
-                  fullWidth
                   name="passwordConfirm"
                   label="Confirm Password"
-                  type="password"
+                  fullWidth
+                  type={showConfirmPassword ? 'text' : 'password'}
                   id="passwordConfirm"
                   autoComplete="new-password"
                   onChange={handlePasswordConfirm}
+                  helperText={passwordMatchHelperText}
+                  error={submitClicked && !passwordMatch}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton onClick={handleToggleConfirmPassword} edge="end">
+                        {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    ),
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="Agreed to terms and conditions"
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" fullWidth  variant="contained" sx={{ mt: 1, mb: 0 }}>
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+            <Link to='/login'>Already have an account</Link>
           </Box>
         </Box>
       </Container>
