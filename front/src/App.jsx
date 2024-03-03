@@ -4,8 +4,6 @@ import Signup from './screens/Signup'
 import Login from './screens/Login'
 import Profile from './screens/Profile'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
