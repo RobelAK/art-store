@@ -3,7 +3,6 @@ import mysql from 'mysql'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
-// asdfasdf
 
 const app = express()
 app.use(cors({
