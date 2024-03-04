@@ -1,30 +1,21 @@
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
+import { Box, Button, Container, AppBar, Toolbar,IconButton, Drawer, List, ListItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Logo from '../../utils/logo.png';
 import { Link } from 'react-router-dom';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Cart from '../../screens/users/Cart';
+
 
 const logoStyle = {
   width: 'auto',
   height: '60px',
   cursor: 'pointer',
   margin: 'auto',
-  paddingLeft: '10px', // Add padding to the left
+  paddingLeft: '10px',
 };
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isCartOpen, setCartOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -32,9 +23,6 @@ const Navbar = () => {
 
   const handleDrawerClose = () => {
     setDrawerOpen(false);
-  };
-  const handleCartToggle = () => {
-    setCartOpen(!isCartOpen);
   };
 
   return (
@@ -99,7 +87,6 @@ const Navbar = () => {
                   color="primary"
                   variant="text"
                   size="small"
-                // Add your onClick handler logic here
                 >
                   Discover Art
                 </Button>
@@ -108,7 +95,6 @@ const Navbar = () => {
                 color="primary"
                 variant="text"
                 size="small"
-              // Add your onClick handler logic here
               >
                 Features
               </Button>
@@ -116,7 +102,6 @@ const Navbar = () => {
                 color="primary"
                 variant="text"
                 size="small"
-              // Add your onClick handler logic here
               >
                 Categories
               </Button>
@@ -124,7 +109,6 @@ const Navbar = () => {
                 color="primary"
                 variant="text"
                 size="small"
-              // Add your onClick handler logic here
               >
                 About Us
               </Button>
@@ -144,7 +128,7 @@ const Navbar = () => {
                 open={isDrawerOpen}
                 onClose={handleDrawerClose}
                 sx={{ '& .MuiDrawer-paper': { backdropFilter: 'blur(24px)', width: '220px', bgcolor: 'White', } }}
-              >
+                >
                 <List>
                   <ListItem>
                     <Button
@@ -152,8 +136,7 @@ const Navbar = () => {
                       size="small"
                       onClick={handleDrawerClose}
                     >
-                      <ShoppingCartIcon
-                        onClick={handleCartToggle} />
+                      <ShoppingCartIcon/>
                     </Button>
                   </ListItem>
 
@@ -221,17 +204,14 @@ const Navbar = () => {
                 color="primary"
                 variant="text"
                 size="small"
-              // Add your onClick handler logic here
               >
-                <ShoppingCartIcon
-                 onClick={handleCartToggle}/>
+                <ShoppingCartIcon/>
               </Button>
               <Link to="/signup">
                 <Button
                   color="primary"
                   variant="text"
                   size="small"
-                // Add your onClick handler logic here
                 >
                   Sign Up
                 </Button>
@@ -242,11 +222,6 @@ const Navbar = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      {isCartOpen && (
-        <Cart
-          onClose={handleCartToggle} // Pass a function to close the cart
-        />
-      )}
     </div>
   );
 };

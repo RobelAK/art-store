@@ -53,8 +53,8 @@ app.post('/login', async (req, res) => {
   db.query(sql, [email, password], (err, result) => {
     if (err) return res.json({ loginStatus: false, Error: "Query error" })
     if (result.length > 0) {
-      const id = result[0].id
-      const email = result[0].email
+      const id = result[0].id;
+      const email = result[0].email;
       const name = result[0].name
       const password = result[0].password
       const token = jwt.sign(

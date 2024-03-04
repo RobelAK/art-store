@@ -6,7 +6,7 @@ import Footer from '../../components/users/Footer'
 import PostedArt from '../../components/users/PostedArt'
 
 
-const Product = () => {
+function Product() {
   return (
     <>
       <CssBaseline />

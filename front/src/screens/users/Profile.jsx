@@ -50,7 +50,14 @@ function Profile() {
     (<div>
       <h1>{name}</h1>
       <button onClick={handleClick}>Show</button>
-      <button onClick={handleLogout}>Logout</button>
+      <button onClick={handleLogout}>Logout</button><br />
+      <label htmlFor="Change name">Change Name</label><br />
+      <input type="text" name='newname' placeholder='New name'/><br />
+      <label htmlFor="Change password">Change Password</label><br /><br />
+      <input type="text" placeholder='Current password'/><br />
+      <input type="text" placeholder='New password'/><br />
+      <input type="text" placeholder='Confirm password'/><br />
+
     </div>)
     
   )

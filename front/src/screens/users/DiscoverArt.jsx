@@ -6,7 +6,7 @@ import DiscoveryTitle from "../../components/users/DiscoveryTitle";
 import { AppBar, Box, Card, CardActions, CardContent, CardMedia, Container, CssBaseline, Grid, Toolbar, Typography } from "@mui/material";
 
 
-const DiscoverArt = () => {
+function DiscoverArt  () {
   return (
     
     <>
