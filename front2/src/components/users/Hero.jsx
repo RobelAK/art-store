@@ -19,7 +19,7 @@ const HeroSection = () => {
     >
       <Container>
         <Typography
-          variant="h2"
+          variant="h3"
           component="h1"
           sx={{
             fontFamily: 'Sora, sans-serif',

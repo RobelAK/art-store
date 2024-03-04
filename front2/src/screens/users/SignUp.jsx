@@ -1,184 +1,209 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Logo from '../../utils/logo.png';
 import backgroundImage from '../../utils/334.jpg';
-import IconButton from '@mui/material/IconButton';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import Logo from '../../utils/logo.png';
+import {
+  TextField,
+  InputAdornment,
+  Icon,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+  Button,
+} from "@mui/material";
 
-function SignUp() {
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleTogglePassword = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
-  
-
+const Sign = () => {
   return (
-    <ThemeProvider theme={createTheme()}>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100vw',
-        backgroundColor: 'purple',
-        height : '100vh',
-        margin: '0px'
-      }}>
-        {/* Card */}
-        <Card
-          sx={{
-            backgroundColor: 'green',
-            width: '30%'
-            // height
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        width: "100%",
+
+        position: "relative",
+        backgroundColor: "#eee",
+        height: "720px",
+        overflow: "hidden",
+        backgroundSize: 'cover',
+        display: "Flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <section
+        style={{
+          borderRadius: "22.76px",
+          boxShadow: 6,
+          backgroundColor: "#fff",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          padding: "52.6363639831543px 38.41032028198242px",
+          textAlign: "left",
+          fontSize: "17.1px",
+          color: "#000",
+          fontFamily: "Inter",
+        }}
+      >
+        <div
+          style={{
+            boxShadow: 6,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            gap: "28.45px 0px",
           }}
-          >
-          <CardContent>
-            {/* Logo */}
-            <Link to="/">
-              <img src={Logo} alt="Logo" style={{ width: '100%', marginBottom: '20px' }} />
-            </Link>
-
-            {/* Form */}
-            <Box
-              component="form"
-              Validate
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                backgroundColor: 'aqua',
-              }}
-              >
-              {/* Username */}
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                autoFocus
-                size='small'
-              />
-
-              {/* Email */}
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                size='small'
-              />
-
-              {/* Password */}
-              <TextField
-                margin="normal"
-                size='small'
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                autoComplete="new-password"
-                InputProps={{
-                  endAdornment: (
-                    <IconButton onClick={handleTogglePassword} edge="end">
-                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  ),
-                }}
-              />
-
-              {/* Confirm Password */}
-              <TextField
-                margin="normal"
-                required
-                size='small'
-                fullWidth
-                name="confirmPassword"
-                label="Confirm Password"
-                type={showPassword ? 'text' : 'password'}
-                id="confirmPassword"
-                autoComplete="new-password"
-                InputProps={{
-                  endAdornment: (
-                    <IconButton onClick={handleTogglePassword} edge="end">
-                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  ),
-                }}
-              />
-
-              {/* Terms and Conditions Checkbox */}
-              <FormControlLabel
-                control={<Checkbox value="termsAndConditions" color="primary" />}
-                label="I agree to the Terms and Conditions"
-              />
-
-              {/* Sign Up Button */}
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 0.2 }}>
-                Sign Up
-              </Button>
-              <Link to='/signupas' style={{ width: '100%' }}>
-                <Button type="submit" fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }}>
-                  Sign Up as a seller
-                </Button>
-              </Link>
-              <Grid container>
-                <Grid item xs>
-                  {/* You can add a link to your terms and conditions here */}
-                  <Link href="#" variant="body2">
-                    Terms and Conditions
-                  </Link>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs>
-                  <Link to="/signin" variant="body2" >
-                    {"Already have an account? Sign In"}
-                  </Link>
-                </Grid>
-              </Grid>
-
-            </Box>
-          </CardContent>
-        </Card>
-
-        {/* Copyright */}
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          align="center"
-          sx={{ mt: 4, mb: 2, color: '#666' }}
         >
-          {'Copyright © '}
-          <Link color="inherit" href="https://mui.com/">
-            Your Website
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-        </Typography>
-      </div>
-    </ThemeProvider>
+          <Link to="/">
+          <img
+            style={{
+              width: "364.2px",
+              position: "relative",
+              height: "93.9px",
+              objectFit: "cover",
+            }}
+            alt=""
+            src={Logo}
+            
+          />
+          </Link>
+          <div
+            style={{
+              alignSelf: "stretch",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+              gap: "15.65px 0px",
+            }}
+          >
+            <div
+              style={{
+                alignSelf: "stretch",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "22.76px 0px",
+              }}
+            >
+              <TextField
+                style={{
+                  border: "none",
+                  backgroundColor: "transparent",
+                  alignSelf: "stretch",
+                  fontFamily: "Inter",
+                  fontSize: "17.1px",
+                  color: "#6f6d6d",
+                }}
+                size='small'
+                color="primary"
+                label="Username*"
+                required={true}
+                variant="outlined"
+                sx={{ "& .MuiInputBase-root": { height: "49.5px" } }}
+              />
+              <TextField
+                style={{
+                  border: "none",
+                  backgroundColor: "transparent",
+                  alignSelf: "stretch",
+                  fontFamily: "Inter",
+                  fontSize: "17.1px",
+                  color: "#6f6d6d",
+                }}
+                color="primary"
+                size='small'
+                label="Email Address*"
+                required={true}
+                variant="outlined"
+                sx={{ "& .MuiInputBase-root": { height: "49.5px" } }}
+              />
+              <TextField
+                style={{
+                  border: "none",
+                  backgroundColor: "transparent",
+                  alignSelf: "stretch",
+                  fontFamily: "Inter",
+                  fontSize: "17.1px",
+                  color: "#6f6d6d",
+                }}
+                color="primary"
+                label="Password*"
+                required={true}
+                size='small'
+                variant="outlined"
+                sx={{ "& .MuiInputBase-root": { height: "49.5px" } }}
+              />
+              <TextField
+                style={{
+                  border: "none",
+                  backgroundColor: "transparent",
+                  alignSelf: "stretch",
+                  fontFamily: "Inter",
+                  fontSize: "17.1px",
+                  color: "#6f6d6d",
+                }}
+                color="primary"
+                label="Confirm Password*"
+                required={true}
+                size='small'
+                variant="outlined"
+                sx={{ "& .MuiInputBase-root": { height: "49.5px" } }}
+              />
+              <FormControlLabel
+                label="I Agree to the Terms and Conditions"
+                control={<Checkbox color="primary" />}
+              />
+              <Button
+                style={{ alignSelf: "stretch" }}
+                disableElevation={true}
+                color="primary"
+                size='small'
+                variant="contained"
+                sx={{ borderRadius: "0px 0px 0px 0px" }}
+              >
+                SIGN UP
+              </Button>
+            </div>
+            <a
+              style={{
+                textDecoration: "none",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+                gap: "4.27px 0px",
+                color: "inherit",
+              }}
+            >
+              <a
+                style={{
+                  textDecoration: "none",
+                  position: "relative",
+                  color: "inherit",
+                }}
+              >
+                Term and conditions
+              </a>
+              <Link to='/signin'
+                style={{
+                  textDecoration: "none",
+                  position: "relative",
+                  color: "inherit",
+                }}
+              >
+                i alredy have an account
+              </Link>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
   );
-}
+};
 
-export default SignUp;
+export default Sign;

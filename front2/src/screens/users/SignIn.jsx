@@ -40,9 +40,10 @@ function SignIn() {
         {/* Card */}
         <Card
           sx={{
-            boxShadow: 3,
+            
             padding: 3,
             maxWidth: '400px',
+            boxShadow: 3,
             width: '100%',
             borderRadius: '16px',
             margin: '20px', // Adjust margin
