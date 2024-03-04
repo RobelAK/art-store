@@ -12,11 +12,10 @@ import axios from 'axios';
 import IconButton from '@mui/material/IconButton'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import Logo from '../utils/logo.png';
-import backgroundImage from '../utils/334.jpg';
+import Logo from '../../utils/logo.png';
+import backgroundImage from '../../utils/334.jpg';
 
 function Signup() {
-    
     const defaultTheme = createTheme();
 
     const [name, setName] = useState('')

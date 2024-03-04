@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import Hero from '../../components/users/Hero';
 import Navbar from '../../components/users/Navbar';
@@ -9,7 +8,7 @@ import Highlights from '../../components/users/Highlights'
 import Footer from '../../components/users/Footer';
 import AboutUs from '../../components/users/AboutUs';
 import FeaturedArtwork from '../../components/users/FeaturedArtwork'
-import { Container, CssBaseline, colors } from '@mui/material';
+import { Container, CssBaseline } from '@mui/material';
 
 const Landingpage = () => {
   return (
