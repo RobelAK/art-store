@@ -47,8 +47,7 @@ app.post('/signup', async (req, res) => {
 
 })
 app.post('/login', async (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
+  const { email, password } = req.body
   const sql = "SELECT * From users Where email = ? and password = ?";
   db.query(sql, [email, password], (err, result) => {
     if (err) return res.json({ loginStatus: false, Error: "Query error" })
@@ -73,8 +72,27 @@ app.post('/login', async (req, res) => {
 
 
 app.post('/profile', (req, res) => {
-  return res.json(req.body.id)
+  const {id} = req.body
+  const sql = "SELECT * From users Where id = ?"
+  db.query(sql , [id],(err,result) =>{
+    if(err) return res.json({Message: "query error"})
+    else{
+      const name = result[0].name
+      const email = result[0].email
+      return res.json(email)
+    }
+  })
 })
+
+app.post('/profile/changename', (req, res) => {
+  const { newname, id } = req.body;
+  const sql = "UPDATE users SET name = ? WHERE id = ?";
+
+  db.query(sql, [newname, id], (err, result) => {
+    if (err) return res.json({ Message: "Query error" });
+    else return res.json({ Message: "Successful" });
+  });
+});
 
 
 app.listen(8081, () => {
