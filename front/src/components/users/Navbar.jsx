@@ -87,7 +87,6 @@ const Navbar = () => {
                   color="primary"
                   variant="text"
                   size="small"
-                // Add your onClick handler logic here
                 >
                   Discover Art
                 </Button>
@@ -96,7 +95,6 @@ const Navbar = () => {
                 color="primary"
                 variant="text"
                 size="small"
-              // Add your onClick handler logic here
               >
                 Features
               </Button>
@@ -104,7 +102,6 @@ const Navbar = () => {
                 color="primary"
                 variant="text"
                 size="small"
-              // Add your onClick handler logic here
               >
                 Categories
               </Button>
@@ -112,7 +109,6 @@ const Navbar = () => {
                 color="primary"
                 variant="text"
                 size="small"
-              // Add your onClick handler logic here
               >
                 About Us
               </Button>
