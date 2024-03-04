@@ -11,7 +11,7 @@ import AboutUs from '../../components/users/AboutUs';
 import FeaturedArtwork from '../../components/users/FeaturedArtwork'
 import { Container, CssBaseline, colors } from '@mui/material';
 
-const App = () => {
+const Landingpage = () => {
   return (
     <div>
       <CssBaseline/>
@@ -31,4 +31,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Landingpage;
