@@ -6,38 +6,31 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 
-const ArtCard = ({ id, imageUrl, title, artist }) => {
+const ArtCard = ({ id, imageUrl, title, artist, price }) => {
   return (
     <Link to='/product'>
-    <Card
-      sx={{
-        maxWidth: 300,
-        margin: 'auto', // Center the card
-        borderRadius: '8px', // Add border-radius for curved edges
-        transition: 'transform 0.2s', // Add smooth transition for zoom effect
-        '&:hover': {
-          transform: 'scale(1.05)', // Zoom effect on hover
-        },
-      }}
-    >
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          alt={title}
-          style={{ padding: '12px', borderRadius: '16px' }}
-          height="400" // 4:5 ratio
-          image={imageUrl}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
-            {title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Artist: {artist}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+      <Card
+        sx={{
+          maxWidth: 300,
+          aspectRatio: '4/5',
+          margin: 'auto', // Center the card
+          borderRadius: '2px', // Add border-radius for curved edges
+          transition: 'transform 0.2s', // Add smooth transition for zoom effect
+          '&:hover': {
+            transform: 'scale(1.05)', // Zoom effect on hover
+          },
+        }}
+      >
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            alt={title}
+            style={{ padding: '1px', borderRadius: '2px', }}
+            height='100%'
+            image={imageUrl}
+          />
+        </CardActionArea>
+      </Card>
     </Link>
   );
 };
