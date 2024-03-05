@@ -7,8 +7,8 @@ import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Avatar from '@mui/material/Avatar';
 import Logo from '../../utils/logo.png';
+import LoginIcon from '@mui/icons-material/Login';
 import { Link } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -25,7 +25,7 @@ const logoStyle = {
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(false);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -93,10 +93,10 @@ const Navbar = () => {
                 }}
               >
                 <List>
-                  <ListItem sx={{justifyContent:"space-between"}}> 
+                  <ListItem sx={{ justifyContent: "space-between" }}>
                     <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
 
-                    {isLoggedIn ? ( 
+                    {isLoggedIn ? (
                       <AccountMenu />
                     ) : (
                       <Link to="/signup">
@@ -155,13 +155,11 @@ const Navbar = () => {
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
               <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
 
-              {isLoggedIn ? ( 
+              {isLoggedIn ? (
                 <AccountMenu />
               ) : (
                 <Link to="/signup">
-                  <Button color="primary" variant="text" size="small">
-                    Sign Up
-                  </Button>
+                  <LoginIcon sx={{color:'black'}}/>
                 </Link>
               )}
             </Box>
