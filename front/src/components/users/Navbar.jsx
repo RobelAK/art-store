@@ -25,7 +25,7 @@ const logoStyle = {
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(true);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
