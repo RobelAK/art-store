@@ -43,7 +43,7 @@ app.post('/signup', async (req, res) => {
       }
     })
   }
-  else return res.json({ signup: false, Message: "Password doesnt match" })
+  else return res.json({ signup: false, Message: "Password doesn't match" })
 
 })
 app.post('/login', async (req, res) => {
@@ -74,6 +74,77 @@ app.post('/login', async (req, res) => {
 
 app.post('/profile', (req, res) => {
   return res.json(req.body.id)
+})
+app.post('/resetpassword', (req, res) => {
+  const email = req.body.email;
+  const newPassword = req.body.newPassword;
+  const resetCode = req.body.resetCode; 
+  const sql = "UPDATE users SET password = ? WHERE email = ?";
+  db.query(sql, [newPassword, email], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ resetPasswordStatus: false, message: 'Internal server error' });
+    }
+
+    return res.json({ resetPasswordStatus: true, message: 'Password reset successfully' });
+  });
+});
+
+
+
+
+
+app.post('/forgotpassword', (req, res) => {
+  const {email} = req.body;
+  UserModel.findOne({email: email})
+  .then(user => {
+      if(!user) {
+          return res.send({Status: "User not existed"})
+      } 
+      const token = jwt.sign({id: user._id}, "jwt_secret_key", {expiresIn: "1d"})
+      var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'youremail@gmail.com',
+            pass: 'your password'
+          }
+        });
+        
+        var mailOptions = {
+          from: 'youremail@gmail.com',
+          to: 'user email@gmail.com',
+          subject: 'Reset Password Link',
+          text: `http://localhost:5173/reset_password/${user._id}/${token}`
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            return res.send({Status: "Success"})
+          }
+        });
+  })
+})
+
+
+app.post('/reset-password/:id/:token', (req, res) => {
+  const {id, token} = req.params
+  const {password} = req.body
+
+  jwt.verify(token, "jwt_secret_key", (err, decoded) => {
+      if(err) {
+          return res.json({Status: "Error with token"})
+      } else {
+          bcrypt.hash(password, 10)
+          .then(hash => {
+              UserModel.findByIdAndUpdate({_id: id}, {password: hash})
+              .then(u => res.send({Status: "Success"}))
+              .catch(err => res.send({Status: err}))
+          })
+          .catch(err => res.send({Status: err}))
+      }
+  })
 })
 
 

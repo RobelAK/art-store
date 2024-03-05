@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Landingpage from './screens/users/Landingpage'
 import DiscoverArt from './screens/users/DiscoverArt'
 import Product from './screens/users/Product'
+import ResetPassword from './screens/users/ResetPassword';
 
 
 
@@ -22,6 +23,7 @@ function App() {
       <Route path='/forgotpassword' element={<Forgotpassword/>}></Route>
       <Route path='/arts' element={<DiscoverArt/>}></Route>
       <Route path='/arts' element={<Product/>}></Route>
+      <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
     </Routes>
     </BrowserRouter>
   )
