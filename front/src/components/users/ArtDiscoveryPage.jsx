@@ -4,10 +4,11 @@ import Button from '@mui/material/Button';
 import ArtCard from './ArtCard'; // Adjust the import path
 
 const ArtDiscoveryPage = () => {
-  const initialArtItems = Array.from({ length: 12 }, (_, index) => ({
+  const initialArtItems = Array.from({ length: 30 }, (_, index) => ({
     id: index + 1,
     title: `Artwork ${index + 1}`,
     artist: `Artist ${index + 1}`,
+    price: `price ${index + 1}`,
     imageUrl: `https://source.unsplash.com/random/300x400?art=${index + 1}`,
   }));
 
@@ -19,6 +20,7 @@ const ArtDiscoveryPage = () => {
       id: artItems.length + index + 1,
       title: `Artwork ${artItems.length + index + 1}`,
       artist: `Artist ${artItems.length + index + 1}`,
+      price: `price ${artItems.length + index + 1}`,
       imageUrl: `https://source.unsplash.com/random/300x400?art=${artItems.length + index + 1}`,
     }));
 
@@ -27,9 +29,9 @@ const ArtDiscoveryPage = () => {
 
   return (
     <div >
-      <Grid container spacing={4} sx={{  padding: '20px',}}>
+      <Grid container spacing={3} sx={{  padding: '20px',}}>
         {artItems.map((artItem) => (
-          <Grid item key={artItem.id} xs={12} sm={6} md={4} lg={3}>
+          <Grid item key={artItem.id} xs={12} sm={6} md={4} lg={2}>
             <ArtCard {...artItem} />
           </Grid>
         ))}

@@ -1,12 +1,16 @@
 import React from 'react';
-import {Typography, Button, Container, Box} from '@mui/material';
-import Background from '../../utils/333.jpg';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import background from '../../utils/333.jpg'
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
     <Box
       sx={{
-        backgroundImage: `url(${Background})`,
+        backgroundImage: `url(${background})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         paddingY: 24,
@@ -37,18 +41,21 @@ const HeroSection = () => {
           Discover a world of creative and unique artworks.
         </Typography>
         <Box>
+          <Link to='/arts'>
           <Button
             variant="contained"
             color="primary"
             size="large"
-            sx={{ marginRight: 2 }}
+            sx={{ marginRight: 2 ,marginTop:2,}}
           >
             Explore Art
           </Button>
+          </Link>
           <Button
             variant="outlined"
             color="primary"
             size="large"
+            sx={{ marginRight: 2 ,marginTop:2,}}
           >
             Learn More
           </Button>
