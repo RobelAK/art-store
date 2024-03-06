@@ -8,6 +8,7 @@ import Forgotpassword from './screens/users/Forgotpassword'
 import Landingpage from './screens/users/Landingpage'
 import DiscoverArt from './screens/users/DiscoverArt'
 import Product from './screens/users/Product'
+import Profile from './screens/users/Profile'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<Signup />}></Route>
         <Route path='/profile' element={<ProfilePage />}></Route>
+        <Route path='/Editprofile' element ={<Profile/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
       </Routes>
     </BrowserRouter>

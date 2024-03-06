@@ -80,22 +80,15 @@ const AccountMenu = () => {
           <Avatar /> Profile
         </MenuItem>
         </Link>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
         <Divider />
+        <Link to="/Editprofile" style={{ textDecoration: 'none',color:'black' }}>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
-          Add another account
+          Edit Profile
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
+        </Link>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Logout fontSize="small" />

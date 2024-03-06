@@ -25,7 +25,7 @@ const ArtInfo = ({ onButtonClick, selectedButton, ...props }) => {
       borderRadius: '8px',
       p: 3,
       textAlign: 'center',
-      m: '2%',
+      m: '5%',
       width: '30%', ...props
     }}>
       <CardContent>
