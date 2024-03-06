@@ -4,7 +4,7 @@ import { Box, Button, Checkbox, Container, FormControlLabel, Grid, TextField, cr
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Logo from '../../utils/logo.png';
-import backgroundImage from '../../utils/334.jpg';
+import backgroundImage from '../../utils/333.png';
 
 
 function Forgotpassword() {

@@ -25,7 +25,7 @@ const logoStyle = {
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(false);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -94,7 +94,9 @@ const Navbar = () => {
               >
                 <List>
                   <ListItem sx={{ justifyContent: "space-between" }}>
+                    <Link to='/cart'>
                     <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+                    </Link>
 
                     {isLoggedIn ? (
                       <AccountMenu />
@@ -103,8 +105,7 @@ const Navbar = () => {
                         <LoginIcon sx={{color:'black'}}/>
                       </Link>
                       
-                    )}
-                    
+                    )} 
                   </ListItem>
                   <ListItem>
                     <Link to='/arts' style={{ textDecoration: 'none' }}>
@@ -153,8 +154,9 @@ const Navbar = () => {
               </Link>
             </Box>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
+              <Link to='/cart'>
               <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
-
+              </Link>
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (

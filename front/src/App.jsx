@@ -9,6 +9,8 @@ import Landingpage from './screens/users/Landingpage'
 import DiscoverArt from './screens/users/DiscoverArt'
 import Product from './screens/users/Product'
 import Profile from './screens/users/Profile'
+import Checkout from './components/users/Checkout'
+import CartPage from './screens/users/CartPage'
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<Signup />}></Route>
         <Route path='/profile' element={<Profile/>}></Route>
+        <Route path='/Checkout' element ={<Checkout/>}></Route>
+        <Route path='/cart' element = {<CartPage/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
       </Routes>

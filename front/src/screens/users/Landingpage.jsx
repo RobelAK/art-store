@@ -14,11 +14,11 @@ import { Container, CssBaseline } from '@mui/material';
 function Landingpage() {
   return (
     <div>
-      <CssBaseline/>
+      <CssBaseline />
       <Navbar />
-      <Container sx={{ height: '55px', bgcolor: '#fffff' }}></Container>
+      <Container sx={{ height: '20px', maxWidth: '325px', bgcolor: '#fffff' }}></Container>
       <Hero />
-      <Container sx={{ width: '120px', height: '8px', bgcolor: '#d0d2d4' }}></Container>
+      <Container sx={{ Width: '290px', height: '4px', bgcolor: '#d0d2d4' }}></Container>
       <FeaturedArtwork />
       <Features />
       <Highlights />
