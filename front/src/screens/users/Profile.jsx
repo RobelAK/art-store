@@ -66,7 +66,7 @@ function Profile() {
     }
     axios.post('http://localhost:8081/profile/changename', value)
       .then(res => {
-        // console.log(res.data)
+        alert(res.data.Message)
         window.location.reload()
       })
       .catch(err => console.log(err));
