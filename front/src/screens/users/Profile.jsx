@@ -51,7 +51,7 @@ function Profile() {
   }
 
 
-  const [newname, setNewname] = useState('')
+  const [newName, setNewname] = useState('')
 
   const handleNewname = (event) => {
     setNewname(event.target.value)
@@ -59,21 +59,15 @@ function Profile() {
   const handleChangeName = (event) => {
     event.preventDefault();
     const value = {
-      newname: newname,
-      userInfo: userInfo
+      name: newName,
+      id: id,
+      email: email,
+      password: password,
     }
     axios.post('http://localhost:8081/profile/changename', value)
       .then(res => {
-        userInfo.name = newname
-        const newname2 = userInfo.name
-        
-        const token = jwt.sign(
-          {id, newname2, email, password },
-          "jwt_secret_key",
-          { expiresIn: "1d" }
-        );
-        // Cookies.set('token',token)
-        console.log(newname)
+        // console.log(res.data)
+        window.location.reload()
       })
       .catch(err => console.log(err));
   }

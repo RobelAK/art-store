@@ -85,16 +85,23 @@ app.post('/profile', (req, res) => {
 })
 
 app.post('/profile/changename', (req, res) => {
-  const userInfo = req.body.userInfo
-  const newname = req.body.newname
-  // const { newname, id, email } = req.body;
-  // const sql = "UPDATE users SET name = ? WHERE id = ?";
+  const {name, id, email, password} = req.body
+  const sql = "UPDATE users SET name = ? WHERE id = ?";
 
-  // db.query(sql, [newname, id], (err, result) => {
-  //   if (err) return res.json({ Message: "Query error",changeName: true });
-  //   else return res.json({ Message: "Successful", newname, changeName: true});
-  // });
-  return res.json(newname)
+  db.query(sql, [name, id], (err, result) => {
+    if (err) return res.json({ Message: "Query error",changeName: true });
+    else{
+
+      const token = jwt.sign(
+        { id, name, email, password },
+        "jwt_secret_key",
+        { expiresIn: "1d" }
+      );
+      res.clearCookie('token')
+      res.cookie('token', token) 
+      return res.json({Message: "Name succefully changed"})
+    }
+  });
 });
 
 
