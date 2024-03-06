@@ -47,13 +47,14 @@ app.post('/signup', async (req, res) => {
 
 })
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body
+  const email = req.body.email
+  const password = req.body.password
   const sql = "SELECT * From users Where email = ? and password = ?";
   db.query(sql, [email, password], (err, result) => {
     if (err) return res.json({ loginStatus: false, Error: "Query error" })
     if (result.length > 0) {
-      const id = result[0].id
-      const email = result[0].email
+      const id = result[0].id;
+      const email = result[0].email;
       const name = result[0].name
       const password = result[0].password
       const token = jwt.sign(
@@ -72,27 +73,8 @@ app.post('/login', async (req, res) => {
 
 
 app.post('/profile', (req, res) => {
-  const {id} = req.body
-  const sql = "SELECT * From users Where id = ?"
-  db.query(sql , [id],(err,result) =>{
-    if(err) return res.json({Message: "query error"})
-    else{
-      const name = result[0].name
-      const email = result[0].email
-      return res.json(email)
-    }
-  })
+  return res.json(req.body.id)
 })
-
-app.post('/profile/changename', (req, res) => {
-  const { newname, id } = req.body;
-  const sql = "UPDATE users SET name = ? WHERE id = ?";
-
-  db.query(sql, [newname, id], (err, result) => {
-    if (err) return res.json({ Message: "Query error" });
-    else return res.json({ Message: "Successful" });
-  });
-});
 
 
 app.listen(8081, () => {

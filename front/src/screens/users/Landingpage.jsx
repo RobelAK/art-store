@@ -1,16 +1,17 @@
-import React from 'react';
-import Hero from '../../components/users/Hero';
-import Navbar from '../../components/users/Navbar';
+import React from 'react'
+import Hero from '../../components/users/Hero'
+import Navbar from '../../components/users/Navbar'
+import FeaturedArtwork from '../../components/users/FeaturedArtwork'
+import Features from '../../components/users/Features'
 import FAQ from '../../components/users/FAQ';
-import Features from '../../components/users/Features';
 import Testimonials from '../../components/users/Testimonials';
 import Highlights from '../../components/users/Highlights'
 import Footer from '../../components/users/Footer';
 import AboutUs from '../../components/users/AboutUs';
-import FeaturedArtwork from '../../components/users/FeaturedArtwork'
 import { Container, CssBaseline } from '@mui/material';
 
-const Landingpage = () => {
+
+function Landingpage() {
   return (
     <div>
       <CssBaseline/>
@@ -27,7 +28,7 @@ const Landingpage = () => {
       <Footer />
 
     </div>
-  );
-};
+  )
+}
 
-export default Landingpage;
+export default Landingpage
