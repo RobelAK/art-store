@@ -18,17 +18,20 @@ function Profile() {
   let id = ''
   let email = ''
   let name = ''
+  let password = ''
   let values = {}
 
   if (token) {
     userInfo = JSON.parse(atob(token.split('.')[1]));
     id = userInfo.id
-    // email = userInfo.email
-    // name = userInfo.name
+    email = userInfo.email
+    name = userInfo.name
+    password = userInfo.password
     values = {
       id,
-      // email,
-      // name
+      email,
+      name,
+      password
     }
   }
   else {
@@ -57,12 +60,20 @@ function Profile() {
     event.preventDefault();
     const value = {
       newname: newname,
-      id: id,
-      email: email,
+      userInfo: userInfo
     }
     axios.post('http://localhost:8081/profile/changename', value)
       .then(res => {
-        console.log(res.data)
+        userInfo.name = newname
+        const newname2 = userInfo.name
+        
+        const token = jwt.sign(
+          {id, newname2, email, password },
+          "jwt_secret_key",
+          { expiresIn: "1d" }
+        );
+        // Cookies.set('token',token)
+        console.log(newname)
       })
       .catch(err => console.log(err));
   }

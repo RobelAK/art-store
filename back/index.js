@@ -79,19 +79,22 @@ app.post('/profile', (req, res) => {
     else{
       const name = result[0].name
       const email = result[0].email
-      return res.json(email)
+      return res.json(name)
     }
   })
 })
 
 app.post('/profile/changename', (req, res) => {
-  const { newname, id } = req.body;
-  const sql = "UPDATE users SET name = ? WHERE id = ?";
+  const userInfo = req.body.userInfo
+  const newname = req.body.newname
+  // const { newname, id, email } = req.body;
+  // const sql = "UPDATE users SET name = ? WHERE id = ?";
 
-  db.query(sql, [newname, id], (err, result) => {
-    if (err) return res.json({ Message: "Query error" });
-    else return res.json({ Message: "Successful" });
-  });
+  // db.query(sql, [newname, id], (err, result) => {
+  //   if (err) return res.json({ Message: "Query error",changeName: true });
+  //   else return res.json({ Message: "Successful", newname, changeName: true});
+  // });
+  return res.json(newname)
 });
 
 
