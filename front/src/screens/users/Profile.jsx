@@ -71,11 +71,27 @@ function Profile() {
       })
       .catch(err => console.log(err));
   }
+  const [newPassword, setnewPassword] = useState('')
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState('')
+  const [currentPassword, setCurrentPassword] = useState('')
+  const handleCurrentPassword = (event) => {
+    setCurrentPassword(event.target.value)
+  }
+  const handleNewPassword = (event) => {
+    setnewPassword(event.target.value)
+  }
+  const handleNewPasswordConfirm = (event) => {
+    setNewPasswordConfirm(event.target.value)
+  }
+  const handleChangePassword = (event)=>{
+    event.preventDefault();
+  }
 
 
   return (
     (<div>
       <h1>{name}</h1>
+      <h1>{password}</h1>
       <button onClick={handleClick}>Show</button>
       <button onClick={handleLogout}>Logout</button><br />
       <label htmlFor="Change name">Change Name</label><br />
@@ -84,9 +100,12 @@ function Profile() {
         <button type="submit">Confirm</button>
       </Box>
       <label htmlFor="Change password">Change Password</label><br /><br />
-      <input type="text" placeholder='Current password' /><br />
-      <input type="text" placeholder='New password' /><br />
-      <input type="text" placeholder='Confirm password' /><br />
+      <Box component='form' onSubmit={handleChangePassword}>
+        <input required type="text" name='currentPassword' placeholder='Current password' onChange={handleCurrentPassword} /><br />
+        <input required type="text" name='newPassword' placeholder='New password' onChange={handleNewPassword}/><br />
+        <input required type="text" name='newPasswrodConfirm' placeholder='Confirm password' onChange={handleNewPasswordConfirm}/><br />
+        <button type="submit">Change Password</button>
+      </Box>
 
     </div>)
 

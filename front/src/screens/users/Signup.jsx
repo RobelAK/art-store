@@ -10,16 +10,13 @@ import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, T
 function Signup() {
     
     const defaultTheme = createTheme();
-
+    let isValid = false;
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
-    const [passwordHelperText, setPasswordHelperText] = useState('')
-    const [passwordMatchHelperText, setpasswordMatchHelperText] = useState('')
-    const [passwordMatch, setpasswordMatch] = useState(false);
-    const [isValid, setIsValid] = useState(false);
-    const [submitClicked, setSubmitClicked] = useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
     const navigate = useNavigate()
 
     
@@ -31,12 +28,16 @@ function Signup() {
     }
     const handlePassword = (event) =>{
       setPassword(event.target.value)
-      setIsValid(validatePassword(password))
     }
     const handlePasswordConfirm = (event) =>{
       setPasswordConfirm(event.target.value)
-      
     }
+    const handleTogglePassword = () => {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
+    const handleToggleConfirmPassword = () => {
+      setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+    };
 
 
     const validatePassword = (password) => {
@@ -55,21 +56,6 @@ function Signup() {
         );
     };
 
-
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-
-    const handleTogglePassword = () => {
-      setShowPassword((prevShowPassword) => !prevShowPassword);
-    };
-    
-    const handleToggleConfirmPassword = () => {
-      setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
-    };
-
-
-
-    
     const values = {
         name: name,
         email: email,
@@ -78,21 +64,11 @@ function Signup() {
     };
     const handleSubmit = (event) =>{
         event.preventDefault();
-        setSubmitClicked(true)
+        isValid = validatePassword(password);
         if(!isValid){
-          setPasswordHelperText("Invalid Password")
           console.log("Invalid password")
         }
         else {
-          if(password == passwordConfirm){
-            setpasswordMatch(true)
-            setpasswordMatchHelperText('Correct')
-          }
-          else{
-            setpasswordMatch(false) 
-            setpasswordMatchHelperText('Password doesnt match')
-          }
-          setPasswordHelperText("")
           axios.post('http://localhost:8081/signup', values)
           .then(res => {
               if(res.data.signup){
@@ -173,8 +149,6 @@ return (
                   id="password"
                   autoComplete="new-password"
                   onChange={handlePassword}
-                  helperText={passwordHelperText}
-                  error={submitClicked && !isValid}
                   InputProps={{
                     endAdornment: (
                       <IconButton onClick={handleTogglePassword} edge="end">
@@ -195,8 +169,6 @@ return (
                   id="passwordConfirm"
                   autoComplete="new-password"
                   onChange={handlePasswordConfirm}
-                  helperText={passwordMatchHelperText}
-                  error={submitClicked && !passwordMatch}
                   InputProps={{
                     endAdornment: (
                       <IconButton onClick={handleToggleConfirmPassword} edge="end">
