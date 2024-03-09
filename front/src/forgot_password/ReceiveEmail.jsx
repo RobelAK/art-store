@@ -18,7 +18,7 @@ const ReceiveEmail = () => {
 
     try {
       // Send a request to your server endpoint to initiate the password reset process
-      const response = await axios.post('http://localhost:8081/user/resetPassword', { email });
+      const response = await axios.post('http://localhost:8081/user/ResetPassword', { email });
 
       if (response.status === 200) {
         // Request was successful, handle success scenario

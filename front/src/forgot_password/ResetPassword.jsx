@@ -30,7 +30,7 @@ const ResetPassword = () => {
 
     try {
       // Send a request to your server endpoint to update the user's password
-      const response = await axios.post('http://localhost:8081/user/updatePassword', {
+      const response = await axios.post('http://localhost:8081/user/ResetPassword', {
         token,
         newPassword: password,
       });
