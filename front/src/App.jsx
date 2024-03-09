@@ -12,6 +12,9 @@ import Profile from './screens/users/Profile'
 import Checkout from './components/users/Checkout'
 import CartPage from './screens/users/CartPage'
 
+import Dashboard from './screens/Admin/Dashboard'
+
+
 
 function App() {
   return (
@@ -25,6 +28,7 @@ function App() {
         <Route path='/profile' element={<Profile/>}></Route>
         <Route path='/Checkout' element ={<Checkout/>}></Route>
         <Route path='/cart' element = {<CartPage/>}></Route>
+        <Route path='/Dashboard' element = {<Dashboard/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
       </Routes>
