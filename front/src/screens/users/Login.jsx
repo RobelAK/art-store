@@ -8,19 +8,15 @@ import backgroundImage from '../../utils/334.jpg';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
 
 
-function Signup() {
+function login() {
 
   const defaultTheme = createTheme();
-
-
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
-
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const handleEmail = (event) => {
@@ -50,11 +46,6 @@ function Signup() {
       })
       .catch(err => console.log(err));
   }
-
-
-
-
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="100vw" sx={{
@@ -127,7 +118,7 @@ function Signup() {
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 0 }}>
               Sign In
             </Button>
-            <Link to='/forgotpassword'>Forgot password</Link><br />
+            <Link to='/ReceiveEmail'>Forgot password</Link><br />
             <Link to='/signup'>Don't have an account</Link>
           </Box>
         </Box>
@@ -136,4 +127,4 @@ function Signup() {
   );
 }
 
-export default Signup
+export default login
