@@ -22,9 +22,6 @@ function Profile() {
   let values = {}
   let isValid = false;
 
-  // useEffect(() => {
-    
-  // }, []);
   if (token) {
     userInfo = JSON.parse(atob(token.split('.')[1]));
     id = userInfo.id
@@ -111,7 +108,7 @@ function Profile() {
       id: id,
       newPassword: newPassword,
       newPasswordConfirm: newPasswordConfirm,
-      currentPassword: currentPassword
+      currentPassword: currentPassword,
     }
     isValid = validatePassword(newPassword)
     if(!isValid){
@@ -121,25 +118,22 @@ function Profile() {
       if(newPassword == newPasswordConfirm){
         axios.post('http://localhost:8081/profile/changepassword', value)
         .then(res => {
-          // alert(res.data.Message)
-          // window.location.reload()
-          console.log("ok")
+          // console.log(res.data)
+          alert(res.data.Message)
+          window.location.reload()
         })
       .catch(err => console.log(err));
       }
       else{
         console.log("Password doesnt match")
       }
-    }
-    
-    
+    } 
   }
 
 
   return (
     (<div>
       <h1>{name}</h1>
-      <h2>{password}</h2>
       <button onClick={handleClick}>Show</button>
       <button onClick={handleLogout}>Logout</button><br />
       <label htmlFor="Change name">Change Name</label><br />
