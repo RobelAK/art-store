@@ -4,13 +4,14 @@ import transporter from "./node_mailer.js";
 
 const ResetPassword = async (db, req, res) => {
   const { email } = req.body;
-
+  console.log(email)
   // Check if user exists in the database
   const getUserQuery = 'SELECT * FROM users WHERE email = ?';
   const promisifiedQuery = promisify(db.query).bind(db);
 
   try {
     const result = await promisifiedQuery(getUserQuery, [email]);
+    console.log(result)
 
     if (result.length === 0) {
       return res.status(404).json({ message: 'User not found' });
@@ -24,17 +25,20 @@ const ResetPassword = async (db, req, res) => {
       token = crypto.randomBytes(20).toString('hex');
       const checkTokenQuery = 'SELECT * FROM reset_tokens WHERE token = ?';
       const tokenCheckResult = await promisifiedQuery(checkTokenQuery, [token]);
+      console.log("Error ",tokenCheckResult)
       if (tokenCheckResult.length === 0) {
         // If token is unique, break from the loop
+        console.log("DONE")
         break;
       }
     } while (true);
 
     expires = Date.now() + 3600000; // Token expires in 1 hour
 
-    const insertTokenQuery = 'INSERT INTO reset_tokens (email, token, expires) VALUES (?, ?, ?)';
-    await promisifiedQuery(insertTokenQuery, [email, token, expires]);
-
+    const insertTokenQuery = 'INSERT INTO reset_tokens (user_id, email, token, expires) VALUES (?, ?, ?, ?)';
+    await promisifiedQuery(insertTokenQuery, [result[0].id, email, token, expires]);
+    
+    
     // Send reset email with the token link
     const resetLink = `http://localhost:8081/users/resetPassword/${token}`;
     const mailOptions = {
@@ -46,7 +50,7 @@ const ResetPassword = async (db, req, res) => {
 
     transporter.sendMail(mailOptions, async (mailError) => {
       if (mailError) {
-        console.log(mailError);
+       // console.log(mailError);
         return res.status(500).json({ message: 'Failed to send reset email' });
       }
 

@@ -148,7 +148,7 @@ app.post('/reset-password/:id/:token', (req, res) => {
       }
   })
 })
-app.post('/user/resetPassword', async (req, res) => {
+app.post('/user/ResetPassword', async (req, res) => {
   await ResetPassword(db, req, res)
 })
 
