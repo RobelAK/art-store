@@ -118,7 +118,7 @@ function login() {
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 0 }}>
               Sign In
             </Button>
-            <Link to='/forgotpassword'>Forgot password</Link><br />
+            <Link to='/ReceiveEmail'>Forgot password</Link><br />
             <Link to='/signup'>Don't have an account</Link>
           </Box>
         </Box>

@@ -4,7 +4,9 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
-
+import ResetPassword from './forgot_password/password_reset.jsx';
+import UpdatePassword from './forgot_password/password_update.jsx';
+ 
 
 const app = express()
 app.use(cors({
@@ -146,7 +148,17 @@ app.post('/reset-password/:id/:token', (req, res) => {
       }
   })
 })
+app.post('/user/resetPassword', async (req, res) => {
+  await ResetPassword(db, req, res)
+})
 
+// Endpoint to validate token and update user password
+app.post("/user/updatePassword", async (req, res) =>{
+  await UpdatePassword(db, req, res)
+})
+app.post('/user/confirmEmail/:token', async (req, res) => {
+  await EmailConfirm(db, req, res)
+})
 
 app.listen(8081, () => {
   console.log("server is running")
