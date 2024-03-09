@@ -4,8 +4,8 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
-import ResetPassword from './forgot_password/password_reset.jsx';
-import UpdatePassword from './forgot_password/password_update.jsx';
+import ResetPassword from './forgot_password/ResetPassword.js';
+import UpdatePassword from './forgot_password/UpdatePassword.js';
  
 
 const app = express()
