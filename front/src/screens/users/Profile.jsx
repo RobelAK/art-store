@@ -20,7 +20,11 @@ function Profile() {
   let name = ''
   let password = ''
   let values = {}
+  let isValid = false;
 
+  // useEffect(() => {
+    
+  // }, []);
   if (token) {
     userInfo = JSON.parse(atob(token.split('.')[1]));
     id = userInfo.id
@@ -36,7 +40,25 @@ function Profile() {
   }
   else {
     userInfo = 'no token available'
+    navigate('/login')
   }
+
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumber &&
+      hasSpecialChar
+    );
+  };
+
   const handleClick = (event) => {
     event.preventDefault();
     axios.post('http://localhost:8081/profile', values)
@@ -85,13 +107,39 @@ function Profile() {
   }
   const handleChangePassword = (event)=>{
     event.preventDefault();
+    const value = {
+      id: id,
+      newPassword: newPassword,
+      newPasswordConfirm: newPasswordConfirm,
+      currentPassword: currentPassword
+    }
+    isValid = validatePassword(newPassword)
+    if(!isValid){
+      console.log("Invalid Password")
+    }
+    else{
+      if(newPassword == newPasswordConfirm){
+        axios.post('http://localhost:8081/profile/changepassword', value)
+        .then(res => {
+          // alert(res.data.Message)
+          // window.location.reload()
+          console.log("ok")
+        })
+      .catch(err => console.log(err));
+      }
+      else{
+        console.log("Password doesnt match")
+      }
+    }
+    
+    
   }
 
 
   return (
     (<div>
       <h1>{name}</h1>
-      <h1>{password}</h1>
+      <h2>{password}</h2>
       <button onClick={handleClick}>Show</button>
       <button onClick={handleLogout}>Logout</button><br />
       <label htmlFor="Change name">Change Name</label><br />
@@ -106,7 +154,6 @@ function Profile() {
         <input required type="text" name='newPasswrodConfirm' placeholder='Confirm password' onChange={handleNewPasswordConfirm}/><br />
         <button type="submit">Change Password</button>
       </Box>
-
     </div>)
 
   )

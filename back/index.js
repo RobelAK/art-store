@@ -70,7 +70,6 @@ app.post('/login', async (req, res) => {
   })
 })
 
-
 app.post('/profile', (req, res) => {
   const {id} = req.body
   const sql = "SELECT * From users Where id = ?"
@@ -89,9 +88,8 @@ app.post('/profile/changename', (req, res) => {
   const sql = "UPDATE users SET name = ? WHERE id = ?";
 
   db.query(sql, [name, id], (err, result) => {
-    if (err) return res.json({ Message: "Query error",changeName: true });
+    if (err) return res.json({ Message: "Query error"});
     else{
-
       const token = jwt.sign(
         { id, name, email, password },
         "jwt_secret_key",
@@ -103,6 +101,17 @@ app.post('/profile/changename', (req, res) => {
     }
   });
 });
+app.post('/profile/changepassword', (req,res)=>{
+  const {newPassword, newPasswordConfirm, currentPasswrod, id} = req.body
+  const sql = "SELECT * From users Where id = ?"
+  db.query(sql, [id], (err,result) =>{
+    if (err) return res.json({ Message: "Query error"});
+    else{
+      
+    }
+  })
+  return res.json(id)
+})
 
 
 app.listen(8081, () => {

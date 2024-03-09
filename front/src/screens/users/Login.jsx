@@ -14,15 +14,13 @@ function Signup() {
 
 
   const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const handleEmail = (event) => {
     setEmail(event.target.value)
   }

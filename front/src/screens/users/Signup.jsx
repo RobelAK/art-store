@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -8,82 +8,80 @@ import backgroundImage from '../../utils/334.jpg';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
 
 function Signup() {
-    
-    const defaultTheme = createTheme();
-    let isValid = false;
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirm, setPasswordConfirm] = useState('')
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-    const navigate = useNavigate()
-
-    
-    const handleName = (event) =>{
-      setName(event.target.value)
-    }
-    const handleEmail = (event) =>{
-      setEmail(event.target.value) 
-    }
-    const handlePassword = (event) =>{
-      setPassword(event.target.value)
-    }
-    const handlePasswordConfirm = (event) =>{
-      setPasswordConfirm(event.target.value)
-    }
-    const handleTogglePassword = () => {
-      setShowPassword((prevShowPassword) => !prevShowPassword);
-    };
-    const handleToggleConfirmPassword = () => {
-      setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
-    };
+  const defaultTheme = createTheme();
+  let isValid = false;
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const navigate = useNavigate()
 
 
-    const validatePassword = (password) => {
-        const minLength = 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumber = /\d/.test(password);
-        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-    
-        return (
-          password.length >= minLength &&
-          hasUpperCase &&
-          hasLowerCase &&
-          hasNumber &&
-          hasSpecialChar
-        );
-    };
+  const handleName = (event) => {
+    setName(event.target.value)
+  }
+  const handleEmail = (event) => {
+    setEmail(event.target.value)
+  }
+  const handlePassword = (event) => {
+    setPassword(event.target.value)
+  }
+  const handlePasswordConfirm = (event) => {
+    setPasswordConfirm(event.target.value)
+  }
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const handleToggleConfirmPassword = () => {
+    setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+  };
 
-    const values = {
-        name: name,
-        email: email,
-        password: password,
-        passwordConfirm: passwordConfirm,
-    };
-    const handleSubmit = (event) =>{
-        event.preventDefault();
-        isValid = validatePassword(password);
-        if(!isValid){
-          console.log("Invalid password")
-        }
-        else {
-          axios.post('http://localhost:8081/signup', values)
-          .then(res => {
-              if(res.data.signup){
-                  alert(res.data.Message)
-                  navigate('/login')
-              }
-              else{
-                  alert(res.data.Message)
-                  navigate('/signup')
-              }
-          })
-          .catch(err => console.log(err)); 
-        }
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumber &&
+      hasSpecialChar
+    );
+  };
+
+  const values = {
+    name: name,
+    email: email,
+    password: password,
+    passwordConfirm: passwordConfirm,
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    isValid = validatePassword(password);
+    if (!isValid) {
+      console.log("Invalid password")
     }
-return (
+    else {
+      axios.post('http://localhost:8081/signup', values)
+        .then(res => {
+          if (res.data.signup) {
+            alert(res.data.Message)
+            navigate('/login')
+          }
+          else {
+            alert(res.data.Message)
+            navigate('/signup')
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  }
+  return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="100vw" sx={{
         height: '100vh',
@@ -92,7 +90,7 @@ return (
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
-        }}>
+      }}>
         <Box
           sx={{
             boxShadow: 5,
@@ -106,13 +104,13 @@ return (
             borderRadius: '20px',
             padding: 5,
           }}
-          >
+        >
           <Box>
             <Link to="/">
-              <img src={Logo} alt="Logo" style={{ width: '100%', marginBottom: '5px'}} />
+              <img src={Logo} alt="Logo" style={{ width: '100%', marginBottom: '5px' }} />
             </Link>
           </Box>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1}}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <Grid container rowSpacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -160,7 +158,7 @@ return (
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                    size='small'
+                  size='small'
                   required
                   name="passwordConfirm"
                   label="Confirm Password"
@@ -185,7 +183,7 @@ return (
                 />
               </Grid>
             </Grid>
-            <Button type="submit" fullWidth  variant="contained" sx={{ mt: 1, mb: 0 }}>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 0 }}>
               Sign Up
             </Button>
             <Link to='/login'>Already have an account</Link>
