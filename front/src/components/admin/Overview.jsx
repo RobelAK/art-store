@@ -3,6 +3,8 @@ import React from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import UserManagement from './UserManagement';
+import { Container } from '@mui/material';
 
 const Overview = () => {
   // Dummy data (replace with data from your database later)
@@ -11,6 +13,8 @@ const Overview = () => {
   const activeBranches = 3;
 
   return (
+    <>
+    <Container style={{justifyContent:'space-between'}}>
     <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#f5f5f5' }}>
       <Grid container spacing={3}>
         <Grid item xs={4}>
@@ -33,6 +37,12 @@ const Overview = () => {
         </Grid>
       </Grid>
     </Paper>
+    <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#f5f5f5' }}>
+      <UserManagement/>
+
+    </Paper>
+    </Container>
+    </>
   );
 };
 

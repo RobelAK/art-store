@@ -13,6 +13,8 @@ import Checkout from './components/users/Checkout'
 import CartPage from './screens/users/CartPage'
 
 import Dashboard from './screens/Admin/Dashboard'
+import EditProfilePage from './components/users/EditProfilePage'
+import SignupAs from './screens/users/SignupAs'
 
 
 
@@ -30,6 +32,8 @@ function App() {
         <Route path='/cart' element = {<CartPage/>}></Route>
         <Route path='/Dashboard' element = {<Dashboard/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
+        <Route path='/editprofile' element= {<EditProfilePage/>}></Route>
+        <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
       </Routes>
     </BrowserRouter>

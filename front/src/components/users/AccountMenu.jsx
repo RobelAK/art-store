@@ -89,6 +89,14 @@ const AccountMenu = () => {
           Edit Profile
         </MenuItem>
         </Link>
+        <Link to="/Signupas" style={{ textDecoration: 'none',color:'black' }}>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <PersonAdd fontSize="small" />
+          </ListItemIcon>
+          Sign up as a seller
+        </MenuItem>
+        </Link>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Logout fontSize="small" />

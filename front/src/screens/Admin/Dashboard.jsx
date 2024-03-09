@@ -19,6 +19,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Overview from '../../components/admin/Overview';
 import UserManagement from '../../components/admin/UserManagement';
+import AccountMenu from '../../components/users/AccountMenu';
 
 const drawerWidth = 240;
 
@@ -97,9 +98,7 @@ const PersistentDrawerLeft = () => {
           >
             <MenuIcon />
           </IconButton>
-          <IconButton sx={{ justifyContent: 'end' }} color="inherit">
-            <Avatar />
-          </IconButton>
+          <AccountMenu />
         </Toolbar>
       </AppBar>
       <Drawer
@@ -156,6 +155,7 @@ const PersistentDrawerLeft = () => {
       <Main open={open}>
         <DrawerHeader />
         {selectedComponent === 'Overview' ? <Overview /> : <UserManagement />}
+
       </Main>
     </Box>
   );
