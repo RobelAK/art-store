@@ -19,7 +19,6 @@ function App() {
       <Route path='/login' element={<Login/>}></Route>
       <Route path='/signup' element={<Signup/>}></Route>
       <Route path='/profile' element={<Profile/>}></Route>
-      <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
       <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
       <Route path='/arts' element={<DiscoverArt/>}></Route>
 
