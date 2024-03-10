@@ -24,6 +24,8 @@ function App() {
 
       <Route path='/arts' element={<Product/>}></Route>
       <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
+      <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
+
     </Routes>
     </BrowserRouter>
   )
