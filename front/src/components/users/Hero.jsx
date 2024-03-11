@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import background from '../../utils/333.jpg'
+import background from '../../utils/333.png'
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {

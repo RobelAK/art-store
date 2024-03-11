@@ -14,6 +14,7 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import AccountMenu from './AccountMenu';
+import { Divider } from '@mui/material';
 
 const logoStyle = {
   width: 'auto',
@@ -92,41 +93,48 @@ const Navbar = () => {
                   },
                 }}
               >
+
                 <List>
                   <ListItem sx={{ justifyContent: "space-between" }}>
-                    <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+                    <Link to='/cart'>
+                      <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+                    </Link>
+                    <Divider orientation='vertical' component="li" />
 
                     {isLoggedIn ? (
                       <AccountMenu />
                     ) : (
                       <Link to="/signup">
-                        <Button color="primary" variant="text" size="small">
-                          Sign Up
-                        </Button>
+                        <LoginIcon sx={{ color: 'black' }} />
                       </Link>
+
                     )}
                   </ListItem>
+                  <Divider component="li" />
                   <ListItem>
                     <Link to='/arts' style={{ textDecoration: 'none' }}>
-                      <Button fullWidth color="primary" size="small" onClick={handleDrawerClose}>
+                      <Button fullWidth sx={{ color: 'black' }} size="small" onClick={handleDrawerClose}>
                         Discover Art
                       </Button>
                     </Link>
                   </ListItem>
+                  <Divider component="li" />
                   <ListItem>
                     <Link style={{ textDecoration: 'none' }}>
-                      <Button fullWidth color="primary" size="small" onClick={handleDrawerClose}>
+                      <Button fullWidth sx={{ color: 'black' }} size="small" onClick={handleDrawerClose}>
                         Features
                       </Button>
                     </Link>
                   </ListItem>
+                  <Divider component="li" />
                   <ListItem>
                     <Link style={{ textDecoration: 'none' }}>
-                      <Button fullWidth color="primary" size="small" onClick={handleDrawerClose}>
+                      <Button fullWidth sx={{ color: 'black' }} size="small" onClick={handleDrawerClose}>
                         About Us
                       </Button>
                     </Link>
                   </ListItem>
+                  <Divider component="li" />
                 </List>
               </Drawer>
             </Box>
@@ -153,13 +161,14 @@ const Navbar = () => {
               </Link>
             </Box>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
-              <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
-
+              <Link to='/cart'>
+                <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+              </Link>
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (
                 <Link to="/signup">
-                  <LoginIcon sx={{color:'black'}}/>
+                  <LoginIcon sx={{ color: 'black' }} />
                 </Link>
               )}
             </Box>

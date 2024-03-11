@@ -24,7 +24,7 @@ const PostedArt = () => {
       {artImages.map((imageUrl, index) => (
         <Grid item xs={6} sm={4} md={2} key={index}>
           <Card >
-            <Link >
+            <Link to='/product' >
               <CardMedia
                 component="img"
                 alt={`Artwork ${index + 1}`}

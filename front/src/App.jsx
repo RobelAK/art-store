@@ -9,6 +9,13 @@ import Landingpage from './screens/users/Landingpage'
 import DiscoverArt from './screens/users/DiscoverArt'
 import Product from './screens/users/Product'
 import Profile from './screens/users/Profile'
+import Checkout from './components/users/Checkout'
+import CartPage from './screens/users/CartPage'
+
+import Dashboard from './screens/Admin/Dashboard'
+import EditProfilePage from './components/users/EditProfilePage'
+import SignupAs from './screens/users/SignupAs'
+
 
 
 function App() {
@@ -21,7 +28,12 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<Signup />}></Route>
         <Route path='/profile' element={<Profile/>}></Route>
+        <Route path='/Checkout' element ={<Checkout/>}></Route>
+        <Route path='/cart' element = {<CartPage/>}></Route>
+        <Route path='/Dashboard' element = {<Dashboard/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
+        <Route path='/editprofile' element= {<EditProfilePage/>}></Route>
+        <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
       </Routes>
     </BrowserRouter>
