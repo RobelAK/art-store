@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import AccountMenu from './AccountMenu'; // Replace with the actual path
+import AccountMenu from './AccountMenu';
 
 const logoStyle = {
   width: 'auto',
@@ -88,7 +88,7 @@ const Navbar = () => {
                     backdropFilter: 'blur(64px)',
                     width: '220px',
                     borderRadius: '10px',
-                    backgroundColor: 'Background', // Use 'backgroundColor' instead of 'bgcolor'
+                    backgroundColor: 'Background',
                   },
                 }}
               >
