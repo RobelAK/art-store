@@ -15,6 +15,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import AccountMenu from './AccountMenu';
 import { Divider } from '@mui/material';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 const logoStyle = {
   width: 'auto',
@@ -26,7 +27,8 @@ const logoStyle = {
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isSeller, setSeller] = useState(true);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -96,6 +98,7 @@ const Navbar = () => {
 
                 <List>
                   <ListItem sx={{ justifyContent: "space-between" }}>
+
                     <Link to='/cart'>
                       <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
                     </Link>
@@ -161,6 +164,15 @@ const Navbar = () => {
               </Link>
             </Box>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
+            {isSeller ? (
+                      <Link to='/'>
+                      <AddPhotoAlternateIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+                    </Link>
+                    ) : (
+                      ''
+
+                    )}
+            
               <Link to='/cart'>
                 <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
               </Link>
