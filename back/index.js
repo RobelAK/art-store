@@ -4,6 +4,7 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
+import multer from "multer";
 
 
 const app = express()
@@ -17,11 +18,48 @@ app.use(cookieParser())
 
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'art'
-})
+  user: "root",
+  host: "localhost",
+  password: "",
+  database: "art"
+});
+
+db.connect(function(err) {
+  if(err) {
+      console.log("Error in Connection:", err);
+  } else {
+      console.log("Connected");
+  }
+});
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+      cb(null, "./images/Artwork");
+  },
+  filename: function (req, file, cb) {
+      cb(null, `${Date.now()}_${file.originalname}`);
+  }
+});
+
+const upload = multer({storage});
+
+app.post('/add/upload', upload.single('art'), (req, res) => {
+  const sql = "INSERT INTO artwork (`title`, `description`, `category`, `price`, `art`) VALUES (?, ?, ?, ?, ?)";
+  const values = [
+      req.body.title,
+      req.body.description,
+      req.body.category,
+      req.body.price, 
+      req.file.filename
+  ];
+  db.query(sql, values, (err, result) => {
+      if(err) {
+          console.log("Error in SQL Query:", err);
+          return res.json({ error: "Error in database query" });
+      }
+      return res.json({ status: "Success" });
+  });
+});
 
 app.post('/signup', async (req, res) => {
   const check = "SELECT * From users where email = ?";

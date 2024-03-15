@@ -165,7 +165,7 @@ const Navbar = () => {
             </Box>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
             {isSeller ? (
-                      <Link to='/'>
+                      <Link to='/addart'>
                       <AddPhotoAlternateIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
                     </Link>
                     ) : (
