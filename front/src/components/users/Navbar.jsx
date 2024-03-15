@@ -15,6 +15,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import AccountMenu from './AccountMenu';
 import { Divider } from '@mui/material';
+import Cookies from 'js-cookie'
 
 const logoStyle = {
   width: 'auto',
@@ -25,8 +26,25 @@ const logoStyle = {
 };
 
 const Navbar = () => {
+
+
+  
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  // const [isLoggedIn, setLoggedIn] = useState(true);
+  let isLoggedIn = false
+  const token = Cookies.get('token')
+  if(token){
+    // userInfo = JSON.parse(atob(token.split('.')[1]));
+    // setLoggedIn(true)
+    isLoggedIn = true
+  }
+  else {
+    // userInfo = 'no token available'
+    // setLoggedIn(false)
+    isLoggedIn = false
+  }
+
+
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -104,7 +122,7 @@ const Navbar = () => {
                     {isLoggedIn ? (
                       <AccountMenu />
                     ) : (
-                      <Link to="/signup">
+                      <Link to="/login">
                         <LoginIcon sx={{ color: 'black' }} />
                       </Link>
 
@@ -167,7 +185,7 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (
-                <Link to="/signup">
+                <Link to="/login">
                   <LoginIcon sx={{ color: 'black' }} />
                 </Link>
               )}

@@ -92,7 +92,6 @@ function Signup() {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
                   onChange={handleEmail}
                 />
               </Grid>
@@ -104,7 +103,6 @@ function Signup() {
                   fullWidth
                   type={showPassword ? 'text' : 'password'}
                   id="password"
-                  autoComplete="new-password"
                   onChange={handlePassword}
                   InputProps={{
                     endAdornment: (
