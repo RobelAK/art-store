@@ -1,4 +1,4 @@
-export default function profile() {
+export default function profile(db,req,res) {
   const {id} = req.body
   const sql = "SELECT * From users Where id = ?"
   db.query(sql , [id],(err,result) =>{

@@ -35,14 +35,14 @@ app.post('/login', async (req, res) => {
 })
 
 app.post('/profile', (req, res) => { 
-  profile()
+  profile(db,req,res)
 })
 
 app.post('/profile/changename', (req, res) => {
   changename(db,req,res)
 });
 app.post('/profile/changepassword', async (req,res)=>{
-changepassword(db.req.res)
+changepassword(db,req,res)
 })
 app.post('/admintables', async (req,res)=>{
 
