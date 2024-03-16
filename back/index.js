@@ -4,11 +4,13 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
-import login from './login.js'
-import signup from './signup.js'
-import profile from './profile.js'
-import changename from './changename.js'
-import changepassword from './changepassword.js'
+import multer from "multer";
+import login from './routes/login.js'
+import signup from './routes/signup.js'
+import profile from './routes/profile.js'
+import changename from './routes/changename.js'
+import changepassword from './routes/changepassword.js'
+import AddArt from './routes/AddArt.js'
 
 const app = express()
 app.use(cors({
@@ -41,9 +43,11 @@ app.post('/profile', (req, res) => {
 app.post('/profile/changename', (req, res) => {
   changename(db,req,res)
 });
+
 app.post('/profile/changepassword', async (req,res)=>{
   changepassword(db,req,res)
 })
+<<<<<<< HEAD
 app.get('/something', (req,res)=>{
   const sql = "SELECT * FROM users"
   db.query(sql, (err, data) =>{
@@ -53,6 +57,18 @@ app.get('/something', (req,res)=>{
 })
 
  
+=======
+
+app.post('/admintables', async (req,res)=>{
+
+})
+
+app.post('/add/upload', async (req, res) => {
+  AddArt(db, req, res)
+})
+
+
+>>>>>>> 816039c386b3be24eb5c22bc49a65123b4a7b46c
 app.listen(8081, () => {
   console.log("server is running")
 })

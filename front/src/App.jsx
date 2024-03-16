@@ -14,7 +14,13 @@ import CartPage from './screens/users/CartPage'
 import Dashboard from './screens/Admin/Dashboard'
 import EditProfilePage from './components/users/EditProfilePage'
 import SignupAs from './screens/users/SignupAs'
+<<<<<<< HEAD
 import Something from './screens/users/Something'
+=======
+import AddArt from './components/users/AddArt'
+import ArtSubmissionMessage from './components/users/ArtSubmissionMessage'
+
+>>>>>>> 816039c386b3be24eb5c22bc49a65123b4a7b46c
 
 
 
@@ -30,12 +36,17 @@ function App() {
         <Route path='/profile' element={<Profile/>}></Route>
         <Route path='/Checkout' element ={<Checkout/>}></Route>
         <Route path='/cart' element = {<CartPage/>}></Route>
+        <Route path='/message' element= {<ArtSubmissionMessage/>}></Route>
+        <Route path='/addart' element = {<AddArt/>}></Route>
         <Route path='/Dashboard' element = {<Dashboard/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/editprofile' element= {<EditProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
+<<<<<<< HEAD
         <Route path='/something' element={<Something />}></Route>
+=======
+>>>>>>> 816039c386b3be24eb5c22bc49a65123b4a7b46c
       </Routes>
     </BrowserRouter>
   )
