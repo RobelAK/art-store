@@ -22,7 +22,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-const db = mysql.createConnection({
+const db = mysql.createConnection({ 
   host: 'localhost',
   user: 'root',
   password: '',
@@ -47,7 +47,7 @@ app.post('/profile/changename', (req, res) => {
 app.post('/profile/changepassword', async (req,res)=>{
   changepassword(db,req,res)
 })
-<<<<<<< HEAD
+
 app.get('/something', (req,res)=>{
   const sql = "SELECT * FROM users"
   db.query(sql, (err, data) =>{
@@ -56,8 +56,7 @@ app.get('/something', (req,res)=>{
   })
 })
 
- 
-=======
+
 
 app.post('/admintables', async (req,res)=>{
 
@@ -68,7 +67,6 @@ app.post('/add/upload', async (req, res) => {
 })
 
 
->>>>>>> 816039c386b3be24eb5c22bc49a65123b4a7b46c
 app.listen(8081, () => {
   console.log("server is running")
 })
