@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Grid, Select, MenuItem, FormControl, InputLabel, InputAdornment } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import Footer from './Footer';
-import { Link, useHistory } from 'react-router-dom'; // Import useHistory
+import { Link,  } from 'react-router-dom'; // Import useHistory
 import axios from 'axios';
 
 function AddArt () {
@@ -12,8 +12,7 @@ function AddArt () {
   const [price, setPrice] = useState("");
   const [art, setArt] = useState(null);
   const [msg, setMsg] = useState("");
-  const history = useHistory(); // Get the history object
-
+ 
   const handleUpload = () => {
     const formData = new FormData()
     formData.append("title", title);
@@ -21,20 +20,23 @@ function AddArt () {
     formData.append("category", category);
     formData.append("price", price);
     formData.append('art', art);
-
+  
     axios.post('http://localhost:8081/add/upload', formData)
       .then((response) => {
         console.log(response);
         if(response.data.Status === 'Success') {
-          setMsg({});
-          history.push('/message'); // Redirect to /message on success
+          setMsg(""); // Clear any previous error message
+          window.location.href = '/message'; // Redirect to success page
         } else {
-          setMsg("Error");
+          setMsg(response.data.message || "Unknown error occurred"); // Set error message from server response
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        setMsg("Network error occurred. Please try again."); // Set error message for network error
+      });
   };
-
+  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
