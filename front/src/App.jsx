@@ -14,7 +14,7 @@ import CartPage from './screens/users/CartPage'
 import Dashboard from './screens/Admin/Dashboard'
 import EditProfilePage from './components/users/EditProfilePage'
 import SignupAs from './screens/users/SignupAs'
-import AdminTable from './components/users/AdminTable'
+import Something from './screens/users/Something'
 
 
 
@@ -35,7 +35,7 @@ function App() {
         <Route path='/editprofile' element= {<EditProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
-        <Route path='/table' element={<AdminTable />}></Route>
+        <Route path='/something' element={<Something />}></Route>
       </Routes>
     </BrowserRouter>
   )

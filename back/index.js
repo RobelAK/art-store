@@ -42,13 +42,17 @@ app.post('/profile/changename', (req, res) => {
   changename(db,req,res)
 });
 app.post('/profile/changepassword', async (req,res)=>{
-changepassword(db,req,res)
+  changepassword(db,req,res)
 })
-app.post('/admintables', async (req,res)=>{
-
+app.get('/something', (req,res)=>{
+  const sql = "SELECT * FROM users"
+  db.query(sql, (err, data) =>{
+    if(err) return res.json("Error")
+    return res.json(data)
+  })
 })
 
-
+ 
 app.listen(8081, () => {
   console.log("server is running")
 })
