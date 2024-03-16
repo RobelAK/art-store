@@ -4,11 +4,13 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
+import multer from "multer";
 import login from './login.js'
 import signup from './signup.js'
 import profile from './profile.js'
 import changename from './changename.js'
 import changepassword from './changepassword.js'
+import AddArt from './AddArt.js'
 
 const app = express()
 app.use(cors({
@@ -41,11 +43,17 @@ app.post('/profile', (req, res) => {
 app.post('/profile/changename', (req, res) => {
   changename(db,req,res)
 });
+
 app.post('/profile/changepassword', async (req,res)=>{
 changepassword(db,req,res)
 })
+
 app.post('/admintables', async (req,res)=>{
 
+})
+
+app.post('/add/upload', async (req, res) => {
+  AddArt(db, req, res)
 })
 
 
