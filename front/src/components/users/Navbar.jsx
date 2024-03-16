@@ -15,7 +15,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import AccountMenu from './AccountMenu';
 import { Divider } from '@mui/material';
-import Cookies from 'js-cookie'
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 const logoStyle = {
   width: 'auto',
@@ -26,25 +26,9 @@ const logoStyle = {
 };
 
 const Navbar = () => {
-
-
-  
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  // const [isLoggedIn, setLoggedIn] = useState(true);
-  let isLoggedIn = false
-  const token = Cookies.get('token')
-  if(token){
-    // userInfo = JSON.parse(atob(token.split('.')[1]));
-    // setLoggedIn(true)
-    isLoggedIn = true
-  }
-  else {
-    // userInfo = 'no token available'
-    // setLoggedIn(false)
-    isLoggedIn = false
-  }
-
-
+  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isSeller, setSeller] = useState(true);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -114,6 +98,7 @@ const Navbar = () => {
 
                 <List>
                   <ListItem sx={{ justifyContent: "space-between" }}>
+
                     <Link to='/cart'>
                       <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
                     </Link>
@@ -122,7 +107,7 @@ const Navbar = () => {
                     {isLoggedIn ? (
                       <AccountMenu />
                     ) : (
-                      <Link to="/login">
+                      <Link to="/signup">
                         <LoginIcon sx={{ color: 'black' }} />
                       </Link>
 
@@ -179,13 +164,22 @@ const Navbar = () => {
               </Link>
             </Box>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
+            {isSeller ? (
+                      <Link to='/addart'>
+                      <AddPhotoAlternateIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+                    </Link>
+                    ) : (
+                      ''
+
+                    )}
+            
               <Link to='/cart'>
                 <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
               </Link>
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (
-                <Link to="/login">
+                <Link to="/signup">
                   <LoginIcon sx={{ color: 'black' }} />
                 </Link>
               )}

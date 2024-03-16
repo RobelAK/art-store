@@ -14,7 +14,9 @@ import CartPage from './screens/users/CartPage'
 import Dashboard from './screens/Admin/Dashboard'
 import EditProfilePage from './components/users/EditProfilePage'
 import SignupAs from './screens/users/SignupAs'
-import AdminTable from './components/users/AdminTable'
+import AddArt from './components/users/AddArt'
+import ArtSubmissionMessage from './components/users/ArtSubmissionMessage'
+
 
 
 
@@ -30,12 +32,13 @@ function App() {
         <Route path='/profile' element={<Profile/>}></Route>
         <Route path='/Checkout' element ={<Checkout/>}></Route>
         <Route path='/cart' element = {<CartPage/>}></Route>
+        <Route path='/message' element= {<ArtSubmissionMessage/>}></Route>
+        <Route path='/addart' element = {<AddArt/>}></Route>
         <Route path='/Dashboard' element = {<Dashboard/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/editprofile' element= {<EditProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
-        <Route path='/table' element={<AdminTable />}></Route>
       </Routes>
     </BrowserRouter>
   )
