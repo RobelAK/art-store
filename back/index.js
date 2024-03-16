@@ -5,12 +5,12 @@ import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
 import multer from "multer";
-import login from './login.js'
-import signup from './signup.js'
-import profile from './profile.js'
-import changename from './changename.js'
-import changepassword from './changepassword.js'
-import AddArt from './AddArt.js'
+import login from './routes/login.js'
+import signup from './routes/signup.js'
+import profile from './routes/profile.js'
+import changename from './routes/changename.js'
+import changepassword from './routes/changepassword.js'
+import AddArt from './routes/AddArt.js'
 
 const app = express()
 app.use(cors({

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Grid, Select, MenuItem, FormControl, InputLabel, InputAdornment } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import Footer from './Footer';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom'; // Import useHistory
 import axios from 'axios';
 
 function AddArt () {
@@ -12,6 +12,7 @@ function AddArt () {
   const [price, setPrice] = useState("");
   const [art, setArt] = useState(null);
   const [msg, setMsg] = useState("");
+  const history = useHistory(); // Get the history object
 
   const handleUpload = () => {
     const formData = new FormData()
@@ -25,13 +26,15 @@ function AddArt () {
       .then((response) => {
         console.log(response);
         if(response.data.Status === 'Success') {
-          setMsg("File Successfully Uploaded");
+          setMsg({});
+          history.push('/message'); // Redirect to /message on success
         } else {
           setMsg("Error");
         }
       })
       .catch(err => console.log(err));
   };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
