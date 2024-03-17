@@ -11,7 +11,7 @@ import profile from './routes/profile.js'
 import changename from './routes/changename.js'
 import changepassword from './routes/changepassword.js'
 import AddArt from './routes/AddArt.js'
-import DisplayArt from './routes/DisplayArt.js'
+
 
 const app = express()
 app.use(cors({
@@ -45,9 +45,7 @@ app.post('/profile/changename', (req, res) => {
   changename(db,req,res)
 });
 
-app.get('/api/artworks', (req, res) => {
-  DisplayArt(db,req,res)
-});
+
 
 app.post('/profile/changepassword', async (req,res)=>{
   changepassword(db,req,res)
