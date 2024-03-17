@@ -52,7 +52,7 @@ app.get('/something', (req,res)=>{
   const sql = "SELECT * FROM users"
   db.query(sql, (err, data) =>{
     if(err) return res.json("Error")
-    return res.json(data)
+    return res.json("data")
   })
 })
 
