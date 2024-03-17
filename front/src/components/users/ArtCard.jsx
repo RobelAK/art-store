@@ -11,10 +11,10 @@ const ArtCard = ({ id, imageUrl, title, artist, price }) => {
     <Link to='/product'>
       <Card
         sx={{
-          maxWidth: 300,
+          maxWidth: 260,
           aspectRatio: '4/5',
           margin: 'auto', // Center the card
-          borderRadius: '2px', // Add border-radius for curved edges
+          borderRadius: '4px', // Add border-radius for curved edges
           transition: 'transform 0.2s', // Add smooth transition for zoom effect
           '&:hover': {
             transform: 'scale(1.05)', // Zoom effect on hover
@@ -25,8 +25,6 @@ const ArtCard = ({ id, imageUrl, title, artist, price }) => {
           <CardMedia
             component="img"
             alt={title}
-            style={{ padding: '1px', borderRadius: '2px', }}
-            height='100%'
             image={imageUrl}
           />
         </CardActionArea>

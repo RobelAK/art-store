@@ -12,6 +12,7 @@ import changename from './routes/changename.js'
 import changepassword from './routes/changepassword.js'
 import AddArt from './routes/AddArt.js'
 
+
 const app = express()
 app.use(cors({
   origin: ["http://localhost:5173"],
@@ -43,6 +44,8 @@ app.post('/profile', (req, res) => {
 app.post('/profile/changename', (req, res) => {
   changename(db,req,res)
 });
+
+
 
 app.post('/profile/changepassword', async (req,res)=>{
   changepassword(db,req,res)
