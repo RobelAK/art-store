@@ -23,7 +23,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-const db = mysql.createConnection({
+const db = mysql.createConnection({ 
   host: 'localhost',
   user: 'root',
   password: '',
@@ -50,8 +50,18 @@ app.get('/api/artworks', (req, res) => {
 });
 
 app.post('/profile/changepassword', async (req,res)=>{
-changepassword(db,req,res)
+  changepassword(db,req,res)
 })
+
+app.get('/something', (req,res)=>{
+  const sql = "SELECT * FROM users"
+  db.query(sql, (err, data) =>{
+    if(err) return res.json("Error")
+    return res.json(data)
+  })
+})
+
+
 
 app.post('/admintables', async (req,res)=>{
 
