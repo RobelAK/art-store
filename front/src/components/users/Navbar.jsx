@@ -118,7 +118,7 @@ const Navbar = () => {
                     {isLoggedIn ? (
                       <AccountMenu />
                     ) : (
-                      <Link to="/signup">
+                      <Link to="/login">
                         <LoginIcon sx={{ color: 'black' }} />
                       </Link>
 
@@ -190,7 +190,7 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (
-                <Link to="/signup">
+                <Link to="/login">
                   <LoginIcon sx={{ color: 'black' }} />
                 </Link>
               )}
