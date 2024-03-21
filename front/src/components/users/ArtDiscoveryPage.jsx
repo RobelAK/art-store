@@ -1,46 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom'; // Import Link component
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import ArtCard from './ArtCard'; // Adjust the import path
+import Card from '@mui/material/Card'; // Import Card component
+import CardActionArea from '@mui/material/CardActionArea'; // Import CardActionArea component
+import CardMedia from '@mui/material/CardMedia'; // Import CardMedia component
 
 const ArtDiscoveryPage = () => {
-  const initialArtItems = Array.from({ length: 30 }, (_, index) => ({
-    id: index + 1,
-    title: `Artwork ${index + 1}`,
-    artist: `Artist ${index + 1}`,
-    price: `price ${index + 1}`,
-    imageUrl: `https://source.unsplash.com/random/300x400?art=${index + 1}`,
-  }));
+  const [art, setArt] = useState([]);
 
-  const [artItems, setArtItems] = useState(initialArtItems);
+  useEffect(() => {
+    const response = axios.get("http://localhost:8081/art")
+      .then((response) => {
+        console.log(response.data);
+        setArt(response.data);
 
-  const handleLoadMore = () => {
-    // Add 12 more items to the existing list
-    const newArtItems = Array.from({ length: 12 }, (_, index) => ({
-      id: artItems.length + index + 1,
-      title: `Artwork ${artItems.length + index + 1}`,
-      artist: `Artist ${artItems.length + index + 1}`,
-      price: `price ${artItems.length + index + 1}`,
-      imageUrl: `https://source.unsplash.com/random/300x400?art=${artItems.length + index + 1}`,
-    }));
-
-    setArtItems((prevItems) => [...prevItems, ...newArtItems]);
-  };
+      })
+      .catch((error) => {
+        console.error('Error fetching artwork:', error);
+      });
+  }, []);
+  console.log("Art", art)
 
   return (
-    <div >
-      <Grid container spacing={3} sx={{  padding: '20px',}}>
-        {artItems.map((artItem) => (
-          <Grid item key={artItem.id} xs={12} sm={6} md={4} lg={2}>
-            <ArtCard {...artItem} />
+    <div>
+      <Grid container spacing={3} sx={{ padding: '20px' }}>
+        {art.map((Art, index) => (
+          <Grid item key={`${Art.id}-${index}`} xs={12} sm={6} md={4} lg={2}>
+            <Link to='/product'>
+              <Card
+                sx={{
+                  maxWidth: 260,
+                  aspectRatio: '4/5',
+                  margin: 'auto',
+                  borderRadius: '4px',
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                  },
+                }}
+              >
+                <CardActionArea>
+                  <CardMedia
+                    component="img" // Specify component type as 'img'
+                    src={`http://localhost:8081/images/${Art.art}`} // Fix variable name
+                    alt={Art.title} // Fix variable name
+                  />
+                </CardActionArea>
+              </Card>
+            </Link>
           </Grid>
         ))}
-      </Grid >
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button variant="contained" onClick={handleLoadMore} sx={{ margin: '20px' }}>
-          Load More
-        </Button>
-      </div>
+      </Grid>
     </div>
   );
 };
