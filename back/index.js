@@ -51,26 +51,27 @@ app.post('/profile/changepassword', async (req,res)=>{
   changepassword(db,req,res)
 })
 
-app.get('/something', (req,res)=>{
+app.get('/admin/userstable', (req,res)=>{
   const sql = "SELECT * FROM users"
   db.query(sql, (err, data) =>{
-    if(err) return res.json("Error")
-    return res.json(data)
+    if(err) return res.json(err)
+    return res.json(data) 
+  }) 
+})
+app.put('/admin/deleteuser/:id',(req,res)=>{
+  const sql = "DELETE FROM users WHERE id = ?"
+  const id = req.params.id
+  db.query(sql, [id], (err,res)=>{
+    if(err) return res.json("query error") 
+    return res.json("successful") 
   })
 })
-
-
-
-app.post('/admintables', async (req,res)=>{
-
-})
-
 app.post('/add/upload', async (req, res) => {
-  AddArt(db, req, res)
+  AddArt(db, req, res) 
 })
 
 
 app.listen(8081, () => {
-  console.log("server is running")
+  console.log("server is running") 
 })
 

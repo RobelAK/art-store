@@ -14,10 +14,11 @@ import CartPage from './screens/users/CartPage'
 import Dashboard from './screens/Admin/Dashboard'
 import EditProfilePage from './components/users/EditProfilePage'
 import SignupAs from './screens/users/SignupAs'
-import Something from './screens/users/Something'
 import AddArt from './components/users/AddArt'
 import ArtSubmissionMessage from './components/users/ArtSubmissionMessage'
-
+import AdminDashboard from './screens/Admin/AdminDashboard'
+import ResetPassword from './forgot_password/ResetPassword'
+import ReceiveEmail from './forgot_password/ReceiveEmail'
 
 
 
@@ -41,7 +42,10 @@ function App() {
         <Route path='/editprofile' element= {<EditProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
-        <Route path='/something' element={<Something />}></Route>
+        <Route path='/admindashboard' element={<AdminDashboard />}></Route>
+              <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
+              <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
+              <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>
     </BrowserRouter>
   )

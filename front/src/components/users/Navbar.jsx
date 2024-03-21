@@ -16,6 +16,8 @@ import ListItem from '@mui/material/ListItem';
 import AccountMenu from './AccountMenu';
 import { Divider } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 const logoStyle = {
   width: 'auto',
@@ -27,8 +29,17 @@ const logoStyle = {
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(false);
   const [isSeller, setSeller] = useState(true);
+  useEffect(()=>{
+    const token = Cookies.get('token')
+    if (token) {
+      setLoggedIn(true)
+    }
+    else {
+      setLoggedIn(false)
+    }
+  })
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -107,7 +118,7 @@ const Navbar = () => {
                     {isLoggedIn ? (
                       <AccountMenu />
                     ) : (
-                      <Link to="/signup">
+                      <Link to="/login">
                         <LoginIcon sx={{ color: 'black' }} />
                       </Link>
 
@@ -179,7 +190,7 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (
-                <Link to="/signup">
+                <Link to="/login">
                   <LoginIcon sx={{ color: 'black' }} />
                 </Link>
               )}
