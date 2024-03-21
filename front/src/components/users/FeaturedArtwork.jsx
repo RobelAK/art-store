@@ -42,8 +42,8 @@ const FeaturedArtworks = ({ artworks }) => {
         </Typography>
       </Grid>
       {artworks.map((artwork, index) => (
-        <Grid item  xs={12} sm={6} md={3} key={index}>
-          <Card sx={{ justifyContent:"center", alignItems:"flex-start", maxWidth: 350, margin: 'auto', padding: 2 }}>
+        <Grid item xs={12} sm={6} md={3} key={index}>
+          <Card sx={{ justifyContent: "center", alignItems: "flex-start", maxWidth: 350, margin: 'auto', padding: 2 }}>
             <CardActionArea>
               <CardMedia
                 component="img"
@@ -51,11 +51,10 @@ const FeaturedArtworks = ({ artworks }) => {
                 image={artwork.image}
                 alt={artwork.title}
                 sx={{
-                  height: '400px',
-                  paddingTop: '6%', // 4:5 aspect ratio (5 / 4 * 100)
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                  paddingRight: 2, // Padding for the right side of the image
+                  justifyContent: 'center',
+                  aspectRatio: '4/5',
+                  display: 'flex',
+                  borderRadius: '4px',
                 }}
               />
               <CardContent>

@@ -13,7 +13,7 @@ import { Container, CssBaseline, Divider } from '@mui/material';
 
 function Landingpage() {
   return (
-    <div>
+    <div style={{backgroundColor:'#f0f1f2'}}>
       <CssBaseline />
       <Navbar />
       <Container sx={{ height: '20px', maxWidth: '325px', bgcolor: '#fffff' }}></Container>
