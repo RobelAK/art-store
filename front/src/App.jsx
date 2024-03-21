@@ -19,6 +19,7 @@ import ArtSubmissionMessage from './components/users/ArtSubmissionMessage'
 import AdminDashboard from './screens/Admin/AdminDashboard'
 import ResetPassword from './forgot_password/ResetPassword'
 import ReceiveEmail from './forgot_password/ReceiveEmail'
+import WaitingArt from './components/admin/WaitingArt'
 
 
 
@@ -43,9 +44,10 @@ function App() {
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
         <Route path='/admindashboard' element={<AdminDashboard />}></Route>
-              <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
-              <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
-              <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
+        <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
+        <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
+        <Route path='/WaitingArt' element={<WaitingArt/>}></Route>
+        <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>
     </BrowserRouter>
   )

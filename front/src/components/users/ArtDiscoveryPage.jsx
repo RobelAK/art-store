@@ -1,26 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Import Link component
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card'; // Import Card component
-import CardActionArea from '@mui/material/CardActionArea'; // Import CardActionArea component
-import CardMedia from '@mui/material/CardMedia'; // Import CardMedia component
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardMedia from '@mui/material/CardMedia';
 
 const ArtDiscoveryPage = () => {
   const [art, setArt] = useState([]);
 
   useEffect(() => {
-    const response = axios.get("http://localhost:8081/art")
-      .then((response) => {
-        console.log(response.data);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8081/art");
         setArt(response.data);
-
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching artwork:', error);
-      });
+      }
+    };
+    fetchData();
   }, []);
-  console.log("Art", art)
+
+  const handleLoadMore = async () => {
+    try {
+      const response = await fetch('http://localhost:8081/art');
+      if (!response.ok) {
+        throw new Error('Failed to fetch artwork');
+      }
+      const data = await response.json();
+      setArt(prevArt => [...prevArt, ...data]);
+    } catch (error) {
+      console.error('Error fetching artwork:', error);
+    }
+  };
 
   return (
     <div>
@@ -42,9 +55,9 @@ const ArtDiscoveryPage = () => {
               >
                 <CardActionArea>
                   <CardMedia
-                    component="img" // Specify component type as 'img'
-                    src={`http://localhost:8081/images/${Art.art}`} // Fix variable name
-                    alt={Art.title} // Fix variable name
+                    component="img"
+                    src={`http://localhost:8081/images/${Art.art}`}
+                    alt={Art.title}
                   />
                 </CardActionArea>
               </Card>
@@ -52,6 +65,11 @@ const ArtDiscoveryPage = () => {
           </Grid>
         ))}
       </Grid>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <Button variant="contained" onClick={handleLoadMore}>
+          Load More
+        </Button>
+      </div>
     </div>
   );
 };

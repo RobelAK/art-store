@@ -20,6 +20,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import Overview from '../../components/admin/Overview';
 import UserManagement from '../../components/admin/UserManagement';
 import AccountMenu from '../../components/users/AccountMenu';
+import WaitingArt from '../../components/admin/WaitingArt';
 
 const drawerWidth = 240;
 
@@ -154,7 +155,9 @@ const PersistentDrawerLeft = () => {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        {selectedComponent === 'Overview' ? <Overview /> : <UserManagement />}
+        {selectedComponent === 'Overview' ? <Overview /> :[]}
+        {selectedComponent === 'Users' ? <UserManagement /> :[]}
+        {selectedComponent === 'Pending Art' ? <WaitingArt /> :[]}
 
       </Main>
     </Box>
