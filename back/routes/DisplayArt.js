@@ -1,18 +1,7 @@
-import express from 'express';
-import path from 'path';
+export default function displayArt(db , req ,res) {
 
-const app = express();
+    const sql = 'SELECT * FROM artwork WHERE status=false';
 
-// Determine the directory path dynamically
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-// Serve static images
-app.use('/images/artwork', express.static(path.join(__dirname, 'images/artwork')));
-
-// Define function to display artwork
-export default function displayArt(db) {
-  return (req, res) => {
-    const sql = 'SELECT * FROM artwork';
     db.query(sql, (err, results) => {
       if (err) {
         console.error('Error fetching artwork:', err);
@@ -21,4 +10,3 @@ export default function displayArt(db) {
       res.json(results);
     });
   };
-}

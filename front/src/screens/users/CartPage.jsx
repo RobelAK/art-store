@@ -29,6 +29,7 @@ const CartPage = () => {
 
   return (
     <>
+    <div style={{backgroundColor:'#f0f1f2'}}>
       <Navbar />
       <Container sx={{ height: '100px', overflow: 'hidden' }} />
       <div style={{ textAlign: 'center' }}>
@@ -84,6 +85,7 @@ const CartPage = () => {
         )}
         <Container sx={{ Width: '290px', height: '4px', bgcolor: '#ebebeb', margin: '40px' }}></Container>
         <Footer />
+      </div>
       </div>
     </>
   );
