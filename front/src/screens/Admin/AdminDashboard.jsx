@@ -95,22 +95,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:8081/admin/userstable')
@@ -123,6 +109,15 @@ function AdminDashboard() {
         setLoading(false);
       });
   }, []);
+    const handleDelete = (id) => {
+      if (window.confirm('Are you sure you want to delete this user?')) {
+        axios.put('http://localhost:8081/admin/deleteuser/' + id)
+          .then(res => {
+            window.location.reload();
+          })
+          .catch(err => setError(err.message));
+      }
+    };
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
