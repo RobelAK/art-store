@@ -37,7 +37,7 @@ function Signup() {
   const [error, setError] = useState(null)
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:8081/login', values)
+    axios.post('http://localhost:8081/login', values) 
       .then(res => {
         if (res.data.loginStatus) {
           navigate('/profile')

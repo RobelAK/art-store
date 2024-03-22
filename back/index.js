@@ -58,14 +58,17 @@ app.get('/admin/userstable', (req,res)=>{
     return res.json(data) 
   }) 
 })
-app.put('/admin/deleteuser/:id',(req,res)=>{
-  const sql = "DELETE FROM users WHERE id = ?"
-  const id = req.params.id
-  db.query(sql, [id], (err,res)=>{
-    if(err) return res.json("query error") 
-    return res.json("successful") 
-  })
-})
+app.put('/admin/deleteuser/:id', (req, res) => {
+  const sql = "DELETE FROM users WHERE id = ?";
+  const id = req.params.id;
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.json({ error: "Query error" });
+    }
+    return res.json({Message: "User deleted successfully"});
+  });
+});
+
 app.post('/add/upload', async (req, res) => {
   AddArt(db, req, res) 
 })
@@ -73,4 +76,4 @@ app.post('/add/upload', async (req, res) => {
 
 app.listen(8081, () => {
   console.log("server is running") 
-})
+})  

@@ -19,6 +19,7 @@ function Profile() {
   let email = ''
   let name = ''
   let password = ''
+  let role = ''
   let values = {}
   let isValid = false;
 
@@ -27,12 +28,14 @@ function Profile() {
     id = userInfo.id
     email = userInfo.email
     name = userInfo.name
+    role = userInfo.role
     password = userInfo.password
     values = {
       id,
       email,
       name,
-      password
+      password,
+      role
     }
   }
   else {

@@ -29,15 +29,22 @@ const logoStyle = {
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const [isSeller, setSeller] = useState(true);
+  const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [isSeller, setisSeller] = useState(false);
   useEffect(()=>{
     const token = Cookies.get('token')
     if (token) {
-      setLoggedIn(true)
+      setisLoggedIn(true)
+      const userInfo = JSON.parse(atob(token.split('.')[1]));
+      if(userInfo.role == "seller"){
+        setisSeller(true)
+      }
+      else{
+        setisSeller(false)
+      }
     }
     else {
-      setLoggedIn(false)
+      setisLoggedIn(false)
     }
   })
 
