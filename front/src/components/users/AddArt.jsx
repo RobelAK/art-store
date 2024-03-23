@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Grid, Select, MenuItem, FormControl, InputLabel, InputAdornment } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import Footer from './Footer';
-import { Link,  } from 'react-router-dom'; // Import useHistory
+import { Link,  } from 'react-router-dom';
 import axios from 'axios';
 
 function AddArt () {
@@ -25,15 +25,15 @@ function AddArt () {
       .then((response) => {
         console.log(response);
         if(response.data.Status === 'Success') {
-          setMsg(""); // Clear any previous error message
-          window.location.href = '/message'; // Redirect to success page
+          setMsg("");
+          window.location.href = '/message'; 
         } else {
-          setMsg(response.data.message || "Unknown error occurred"); // Set error message from server response
+          setMsg(response.data.message || "Unknown error occurred"); 
         }
       })
       .catch(err => {
         console.log(err);
-        setMsg("Network error occurred. Please try again."); // Set error message for network error
+        setMsg("Network error occurred. Please try again.");
       });
   };
   

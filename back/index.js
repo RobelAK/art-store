@@ -1,9 +1,7 @@
 import express from 'express';
 import mysql from 'mysql';
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import bcrypt from 'bcrypt';
 import multer from "multer";
 import login from './routes/login.js';
 import signup from './routes/signup.js';
@@ -12,12 +10,15 @@ import changename from './routes/changename.js';
 import changepassword from './routes/changepassword.js';
 import AddArt from './routes/AddArt.js';
 import displayArt from './routes/DisplayArt.js';
+import WaitingArt from './routes/WaitingArt.js';
+import ApproveArt from './routes/ApproveArt.js';
+import declineArt from './routes/DeclineArt.js';
 
 const app = express();
 
 app.use(cors({
   origin: ["http://localhost:5173"],
-  methods: ['GET', 'POST', 'PUT'],
+  methods: ['GET', 'POST', 'PUT','DELETE'],
   credentials: true
 }));
 
@@ -81,6 +82,17 @@ app.post('/add/upload', upload, async (req, res) => {
 app.get('/art',upload, async (req, res) => {
   displayArt(db, req, res);
 });
+
+app.get('/art/waiting',upload, async (req, res) => {
+  WaitingArt(db, req, res);
+});
+
+app.put('/art/approve/:id', (req, res) =>{
+  ApproveArt(db,req, res);
+});
+app.delete('/art/waiting/:id', (req, res) => {
+  declineArt(db,req, res);
+})
 
 
 const db = mysql.createConnection({ 
