@@ -20,6 +20,7 @@ import AdminDashboard from './screens/Admin/AdminDashboard'
 import ResetPassword from './forgot_password/ResetPassword'
 import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
+import UsPro from './screens/users/UsPro'
 
 
 
@@ -29,6 +30,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Landingpage />}></Route>
+        <Route path='/uspro' element={<UsPro />}></Route>
         <Route path='/arts' element={<DiscoverArt />}></Route>
         <Route path='/product' element={<Product />}></Route>
         <Route path='/login' element={<Login />}></Route>

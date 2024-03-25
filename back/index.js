@@ -118,7 +118,7 @@ app.put('/admin/deleteuser/:id', (req, res) => {
     if (err) {
       return res.json({ error: "Query error" });
     }
-    return res.json({Message: "User deleted successfully"});
+    return res.json({Message: "User deleted successfully"}); 
   });
 });
 
