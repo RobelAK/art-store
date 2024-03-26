@@ -34,7 +34,6 @@ function Login() {
 
   const navigate = useNavigate()
   axios.defaults.withCredentials = true
-  const [error, setError] = useState(null)
   const handleSubmit = (event) => {
     event.preventDefault();
     axios.post('http://localhost:8081/login', values) 

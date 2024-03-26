@@ -5,9 +5,6 @@ import Cookies from 'js-cookie'
 import { Box } from '@mui/material'
 
 
-
-
-
 function Profile() {
 
   axios.defaults.withCredentials = true
