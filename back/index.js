@@ -124,7 +124,7 @@ app.put('/admin/deleteuser/:id', (req, res) => {
 
 app.post('/add/upload', async (req, res) => {
   AddArt(db, req, res) 
-})
+}) 
 
 
 app.listen(8081, () => {
