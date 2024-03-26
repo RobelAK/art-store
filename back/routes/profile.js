@@ -6,7 +6,8 @@ export default function profile(db,req,res) {
     else{
       const name = result[0].name
       const email = result[0].email
-      return res.json(name)
+      const role = result[0].role
+      return res.json(role)
     }
   })
 }
