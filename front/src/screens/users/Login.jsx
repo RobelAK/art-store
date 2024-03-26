@@ -8,7 +8,7 @@ import backgroundImage from '../../utils/333.png';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
 
 
-function Signup() {
+function Login() {
 
   const defaultTheme = createTheme();
 
@@ -132,4 +132,4 @@ function Signup() {
   );
 }
 
-export default Signup
+export default Login

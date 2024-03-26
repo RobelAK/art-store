@@ -16,6 +16,8 @@ import {
   TextField,
   DialogActions,
 } from "@mui/material";
+import Navbar from '../../components/users/Navbar'
+
 
 function Uspro() {
   const [fullName, setFullName] = useState("Johnatan Smith");
@@ -68,9 +70,10 @@ function Uspro() {
 
   return (
     <section style={{ backgroundColor: "#eee" }}>
+      <Navbar/>
       <Container sx={{ py: 5 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12}>
             <Card sx={{ mb: 4 }}>
               <CardContent sx={{ textAlign: "center" }}>
                 <CardMedia
@@ -86,16 +89,10 @@ function Uspro() {
                 <Typography variant="body2" color="textSecondary" mb={4}>
                   Bay Area, San Francisco, CA
                 </Typography>
-                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-                  <Button variant="contained">Follow</Button>
-                  <Button variant="outlined" sx={{ ml: 1 }}>
-                    Message
-                  </Button>
-                </Box>
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12}>
             <Card sx={{ mb: 4 }}>
               <CardContent>
                 <Grid container spacing={2}>
