@@ -39,13 +39,12 @@ function Login() {
     event.preventDefault();
     axios.post('http://localhost:8081/login', values) 
       .then(res => {
-        console.log(res.data)
-        // if (res.data.loginStatus) {
-        //   navigate('/profile')
-        // }
-        // else {
-        //   console.log('wrong email or password')
-        // }
+        if (res.data.loginStatus) {
+          navigate('/profile')
+        }
+        else {
+          console.log('wrong email or password')
+        }
       })
       .catch(err => console.log(err));
   }

@@ -34,7 +34,7 @@ function ProfilePage() {
           </IconButton>
         </Box>
         <Avatar
-          src="url(https://source.unsplash.com/random/300x400?Avatar)"
+          // src="url(https://source.unsplash.com/random/300x400?Avatar)"
           alt="Profile Image"
           sx={{
             width: 100,
