@@ -4,21 +4,23 @@ import axios from 'axios';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Logo from '../../utils/logo.png';
-import backgroundImage from '../../utils/334.jpg';
+import backgroundImage from '../../utils/333.png';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
 
 
-function login() {
+function Signup() {
 
   const defaultTheme = createTheme();
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+
   const handleEmail = (event) => {
     setEmail(event.target.value)
   }
@@ -46,6 +48,11 @@ function login() {
       })
       .catch(err => console.log(err));
   }
+
+
+
+
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="100vw" sx={{
@@ -85,7 +92,6 @@ function login() {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
                   onChange={handleEmail}
                 />
               </Grid>
@@ -97,7 +103,6 @@ function login() {
                   fullWidth
                   type={showPassword ? 'text' : 'password'}
                   id="password"
-                  autoComplete="new-password"
                   onChange={handlePassword}
                   InputProps={{
                     endAdornment: (
@@ -118,7 +123,7 @@ function login() {
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 0 }}>
               Sign In
             </Button>
-            <Link to='/ReceiveEmail'>Forgot password</Link><br />
+            <Link to='/forgotpassword'>Forgot password</Link><br />
             <Link to='/signup'>Don't have an account</Link>
           </Box>
         </Box>
@@ -127,4 +132,4 @@ function login() {
   );
 }
 
-export default login
+export default Signup

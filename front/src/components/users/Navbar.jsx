@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
-import { Box, Button, Container, AppBar, Toolbar,IconButton, Drawer, List, ListItem} from '@mui/material';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Logo from '../../utils/logo.png';
+import LoginIcon from '@mui/icons-material/Login';
 import { Link } from 'react-router-dom';
-
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import AccountMenu from './AccountMenu';
+import { Divider } from '@mui/material';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 const logoStyle = {
   width: 'auto',
-  height: '60px',
+  height: '50px',
   cursor: 'pointer',
   margin: 'auto',
   paddingLeft: '10px',
@@ -16,6 +29,17 @@ const logoStyle = {
 
 const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isSeller, setSeller] = useState(true);
+  useEffect(()=>{
+    const token = Cookies.get('token')
+    if (token) {
+      setLoggedIn(true)
+    }
+    else {
+      setLoggedIn(false)
+    }
+  })
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -59,60 +83,6 @@ const Navbar = () => {
                   : '0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)',
             })}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                ml: '-18px',
-                px: 0,
-              }}
-            >
-              <Link to='/'>
-                <img
-                  src={Logo}
-                  style={logoStyle}
-                  alt="Habesha Art"
-                />
-              </Link>
-            </Box>
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                gap: 0.5,
-                alignItems: 'center',
-              }}
-            >
-              <Link to='/arts'>
-                <Button
-                  color="primary"
-                  variant="text"
-                  size="small"
-                >
-                  Discover Art
-                </Button>
-              </Link>
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-              >
-                Features
-              </Button>
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-              >
-                Categories
-              </Button>
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-              >
-                About Us
-              </Button>
-            </Box>
             <Box sx={{ display: { sm: '', md: 'none' } }}>
               <IconButton
                 variant="text"
@@ -124,101 +94,107 @@ const Navbar = () => {
                 <MenuIcon />
               </IconButton>
               <Drawer
-                anchor="right"
+                anchor="left"
                 open={isDrawerOpen}
                 onClose={handleDrawerClose}
-                sx={{ '& .MuiDrawer-paper': { backdropFilter: 'blur(24px)', width: '220px', bgcolor: 'White', } }}
-                >
+                sx={{
+                  '& .MuiDrawer-paper': {
+                    backdropFilter: 'blur(64px)',
+                    width: '220px',
+                    borderRadius: '10px',
+                    backgroundColor: 'Background',
+                  },
+                }}
+              >
+
                 <List>
-                  <ListItem>
-                    <Button
-                      color="primary"
-                      size="small"
-                      onClick={handleDrawerClose}
-                    >
-                      <ShoppingCartIcon/>
-                    </Button>
-                  </ListItem>
+                  <ListItem sx={{ justifyContent: "space-between" }}>
 
-                  <Container sx={{ height: '50px', }} />
-                  <ListItem>
-                    <Link to='/arts'>
-
-                      <Button
-                        color="Primary"
-                        size="small"
-                        onClick={handleDrawerClose}
-                      >
-                        Discover Art
-                      </Button>
-
+                    <Link to='/cart'>
+                      <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
                     </Link>
+                    <Divider orientation='vertical' component="li" />
+
+                    {isLoggedIn ? (
+                      <AccountMenu />
+                    ) : (
+                      <Link to="/login">
+                        <LoginIcon sx={{ color: 'black' }} />
+                      </Link>
+
+                    )}
                   </ListItem>
+                  <Divider component="li" />
                   <ListItem>
-                    <Link to='/arts'>
-                      <Button
-                        color="Primary"
-                        size="small"
-                        onClick={handleDrawerClose}
-                      >
+                    <Link to='/arts' style={{ textDecoration: 'none' }}>
+                      <Button fullWidth sx={{ color: 'black' }} size="small" onClick={handleDrawerClose}>
                         Discover Art
                       </Button>
                     </Link>
                   </ListItem>
+                  <Divider component="li" />
                   <ListItem>
-                    <Link to='/arts'>
-                      <Button
-                        color="primary"
-                        size="small"
-                        onClick={handleDrawerClose}
-                      >
-                        Discover Art
+                    <Link style={{ textDecoration: 'none' }}>
+                      <Button fullWidth sx={{ color: 'black' }} size="small" onClick={handleDrawerClose}>
+                        Features
                       </Button>
                     </Link>
                   </ListItem>
+                  <Divider component="li" />
                   <ListItem>
-                    <Link to='/arts'>
-                      <Button
-                        color="primary"
-                        size="small"
-                        onClick={handleDrawerClose}
-                      >
-                        Discover Art
+                    <Link style={{ textDecoration: 'none' }}>
+                      <Button fullWidth sx={{ color: 'black' }} size="small" onClick={handleDrawerClose}>
+                        About Us
                       </Button>
                     </Link>
                   </ListItem>
-                  <Container sx={{ height: '300px', }} />
-                  {/* Add other menu items here */}
-
+                  <Divider component="li" />
                 </List>
               </Drawer>
             </Box>
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                gap: 0.5,
-                alignItems: 'center',
-              }}
-            >
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-              >
-                <ShoppingCartIcon/>
-              </Button>
-              <Link to="/signup">
-                <Button
-                  color="primary"
-                  variant="text"
-                  size="small"
-                >
-                  Sign Up
+            <Box sx={{ display: 'flex', alignItems: 'center', ml: '-18px', px: 0 }}>
+              <Link to='/'>
+                <img src={Logo} style={logoStyle} alt="Habesha Art" />
+              </Link>
+            </Box>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
+              <Link to='/arts'>
+                <Button color="primary" variant="text" size="small" sx={{ color: 'black', fontWeight: 'light', fontFamily: 'sora,sans-serif' }}>
+                  Discover Art
                 </Button>
               </Link>
-
+              <Link >
+                <Button color="primary" variant="text" size="small" sx={{ color: 'black', fontWeight: 'light', fontFamily: 'sora,sans-serif' }}>
+                  Features
+                </Button>
+              </Link>
+              <Link >
+                <Button color="primary" variant="text" size="small" sx={{ color: 'black', fontWeight: 'light', fontFamily: 'sora,sans-serif' }}>
+                  About Us
+                </Button>
+              </Link>
             </Box>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center' }}>
+            {isSeller ? (
+                      <Link to='/addart'>
+                      <AddPhotoAlternateIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+                    </Link>
+                    ) : (
+                      ''
 
+                    )}
+            
+              <Link to='/cart'>
+                <ShoppingCartIcon color='primary' sx={{ marginRight: 2, color: 'black' }} />
+              </Link>
+              {isLoggedIn ? (
+                <AccountMenu />
+              ) : (
+                <Link to="/login">
+                  <LoginIcon sx={{ color: 'black' }} />
+                </Link>
+              )}
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>

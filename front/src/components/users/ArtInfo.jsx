@@ -20,7 +20,14 @@ const ArtInfo = ({ onButtonClick, selectedButton, ...props }) => {
   };
 
   return (
-    <Card sx={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: '8px', p: 2, textAlign: 'center', width: '20%', ...props }}>
+    <Card sx={{
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      borderRadius: '8px',
+      p: 3,
+      textAlign: 'center',
+      m: '5%',
+      width: '30%', ...props
+    }}>
       <CardContent>
         <Typography variant="h4" gutterBottom>
           Artwork Title
