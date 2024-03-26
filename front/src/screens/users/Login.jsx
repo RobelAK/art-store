@@ -8,7 +8,7 @@ import backgroundImage from '../../utils/333.png';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
 
 
-function Signup() {
+function Login() {
 
   const defaultTheme = createTheme();
 
@@ -39,12 +39,13 @@ function Signup() {
     event.preventDefault();
     axios.post('http://localhost:8081/login', values) 
       .then(res => {
-        if (res.data.loginStatus) {
-          navigate('/profile')
-        }
-        else {
-          console.log('wrong email or password')
-        }
+        console.log(res.data)
+        // if (res.data.loginStatus) {
+        //   navigate('/profile')
+        // }
+        // else {
+        //   console.log('wrong email or password')
+        // }
       })
       .catch(err => console.log(err));
   }
@@ -132,4 +133,4 @@ function Signup() {
   );
 }
 
-export default Signup
+export default Login
