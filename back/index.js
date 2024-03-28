@@ -13,6 +13,7 @@ import displayArt from './routes/DisplayArt.js';
 import WaitingArt from './routes/WaitingArt.js';
 import ApproveArt from './routes/ApproveArt.js';
 import declineArt from './routes/DeclineArt.js';
+import HideArts from './routes/HideArts.js';
 
 const app = express();
 
@@ -86,11 +87,14 @@ app.get('/art',upload, async (req, res) => {
 app.get('/art/waiting',upload, async (req, res) => {
   WaitingArt(db, req, res);
 });
+app.put('/art/hide/:id',upload, async (req, res) => {
+  HideArts(db, req, res);
+});
 
 app.put('/art/approve/:id', (req, res) =>{
   ApproveArt(db,req, res);
 });
-app.delete('/art/waiting/:id', (req, res) => {
+app.delete('/art/decline/:id', (req, res) => {
   declineArt(db,req, res);
 })
 
