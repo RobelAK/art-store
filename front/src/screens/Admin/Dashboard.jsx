@@ -20,6 +20,7 @@ import Overview from '../../components/admin/Overview';
 import UserManagement from '../../components/admin/UserManagement';
 import WaitingArt from '../../components/admin/WaitingArt';
 import AdminMenu from '../../components/admin/AdminMenu';
+import AvilableArts from '../../components/admin/AvilableArts';
 
 const drawerWidth = 240;
 
@@ -157,6 +158,7 @@ const PersistentDrawerLeft = () => {
         {selectedComponent === 'Overview' ? <Overview /> :[]}
         {selectedComponent === 'Users' ? <UserManagement /> :[]}
         {selectedComponent === 'Pending Art' ? <WaitingArt /> :[]}
+        {selectedComponent === 'Artworks' ? <AvilableArts/> :[]}
 
       </Main>
     </Box>

@@ -43,7 +43,7 @@ const WaitingArt = () => {
   const handleDecline = async (id) => {
     try {
       console.log('Declining artwork with ID:', id);
-      await axios.delete(`http://localhost:8081/art/waiting/${id}`);
+      await axios.delete(`http://localhost:8081/art/decline/${id}`);
       console.log('Artwork declined successfully');
       fetchData();
     } catch (error) {
