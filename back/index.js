@@ -13,6 +13,7 @@ import displayArt from './routes/DisplayArt.js';
 import WaitingArt from './routes/WaitingArt.js';
 import ApproveArt from './routes/ApproveArt.js';
 import declineArt from './routes/DeclineArt.js';
+import HideArts from './routes/HideArts.js';
 
 const app = express();
 
@@ -86,11 +87,14 @@ app.get('/art',upload, async (req, res) => {
 app.get('/art/waiting',upload, async (req, res) => {
   WaitingArt(db, req, res);
 });
+app.put('/art/hide/:id',upload, async (req, res) => {
+  HideArts(db, req, res);
+});
 
 app.put('/art/approve/:id', (req, res) =>{
   ApproveArt(db,req, res);
 });
-app.delete('/art/waiting/:id', (req, res) => {
+app.delete('/art/decline/:id', (req, res) => {
   declineArt(db,req, res);
 })
 
@@ -111,38 +115,7 @@ db.connect((err) => {
 });
 
 
-
-app.post('/profile/changepassword', async (req,res)=>{
-  changepassword(db,req,res)
-})
-
-app.get('/admin/userstable', (req,res)=>{
-  const sql = "SELECT * FROM users"
-  db.query(sql, (err, data) =>{
-    if(err) return res.json(err)
-    return res.json(data) 
-  }) 
-})
-app.put('/admin/deleteuser/:id', (req, res) => {
-  const sql = "DELETE FROM users WHERE id = ?";
-  const id = req.params.id;
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      return res.json({ error: "Query error" });
-    }
-    return res.json({Message: "User deleted successfully"}); 
-  });
+const PORT = process.env.PORT || 8081;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-app.post('/add/upload', async (req, res) => {
-  AddArt(db, req, res) 
-}) 
-
-
-app.listen(8081, () => {
-  console.log("server is running") 
-})  
-// const PORT = process.env.PORT || 8081;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });

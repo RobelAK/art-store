@@ -22,9 +22,8 @@ export default function login(db, req, res) {
           { id, name, email, role},
           "jwt_secret_key",
           { expiresIn: "1d" }
-        );
-        res.cookie('token', token)
-        return res.json({ loginStatus: true })
+        ); 
+        return res.json({ loginStatus: true, token })
       }
     }
     else {
