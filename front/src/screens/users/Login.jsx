@@ -38,8 +38,10 @@ function Login() {
     event.preventDefault();
     axios.post('http://localhost:8081/login', values) 
       .then(res => {
+        const token = res.data.token
         if (res.data.loginStatus) {
-          navigate('/profile')
+          localStorage.setItem('token',token)
+          navigate('/')
         }
         else {
           console.log('wrong email or password')

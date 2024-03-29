@@ -1,17 +1,14 @@
 import express from 'express';
 import mysql from 'mysql';
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import bcrypt from 'bcrypt';
 import multer from "multer";
 import login from './routes/login.js';
 import signup from './routes/signup.js';
-import profile from './routes/profile.js';
 import changename from './routes/changename.js';
 import changepassword from './routes/changepassword.js';
 import AddArt from './routes/AddArt.js';
-import displayArt from './routes/DisplayArt.js';
+import displayArt from './routes/DisplayArt.js'; 
 
 const app = express();
 
@@ -43,11 +40,7 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   login(db, req, res);
-});
-
-app.post('/profile', (req, res) => { 
-  profile(db, req, res);
-});
+}); 
 
 app.post('/profile/changename', (req, res) => {
   changename(db, req, res);

@@ -1,8 +1,9 @@
-import React from 'react'
+import bcrypt from 'bcrypt';
+
 
 export default async function changepassword(db,req,res) {
   
-  const {newPassword, newPasswordConfirm, currentPassword, id} = req.body
+  const {newPassword , currentPassword, id} = req.body
   const sql = "SELECT * From users Where id = ?"
 
   const hashedNewPassword = await bcrypt.hash(newPassword,10)
@@ -10,8 +11,8 @@ export default async function changepassword(db,req,res) {
   db.query(sql, [id], async (err,result) =>{
     if (err) {return res.json({ Message: "Query error"})} 
     else{
-      const pa = result[0].password
-      const isValidPassword = await bcrypt.compare(currentPassword, pa);
+      const password = result[0].password
+      const isValidPassword = await bcrypt.compare(currentPassword, password);
       if(!isValidPassword){
         return res.json({Message: "Current password incorrect!"})
       }
@@ -21,8 +22,8 @@ export default async function changepassword(db,req,res) {
           if(err) {return res.json({Message: "Query is this error"})}
           else{
             return res.json({Message: "Password changed successfuly"})
-          }
-        })
+          } 
+        }) 
       }
     }
   }) 
