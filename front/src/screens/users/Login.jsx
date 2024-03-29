@@ -8,7 +8,7 @@ import backgroundImage from '../../utils/333.png';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
 
 
-function Signup() {
+function Login() {
 
   const defaultTheme = createTheme();
 
@@ -34,13 +34,14 @@ function Signup() {
 
   const navigate = useNavigate()
   axios.defaults.withCredentials = true
-  const [error, setError] = useState(null)
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:8081/login', values)
+    axios.post('http://localhost:8081/login', values) 
       .then(res => {
+        const token = res.data.token
         if (res.data.loginStatus) {
-          navigate('/profile')
+          localStorage.setItem('token',token)
+          navigate('/')
         }
         else {
           console.log('wrong email or password')
@@ -132,4 +133,4 @@ function Signup() {
   );
 }
 
-export default Signup
+export default Login

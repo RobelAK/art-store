@@ -1,8 +1,4 @@
-import React, {useState} from "react";
-import PostedArt from "../../components/users/PostedArt";
-import Footer from "../../components/users/Footer";
-import Navbar from "../../components/users/Navbar";
-import EditIcon from "@mui/icons-material/Edit";
+import React, { useState } from "react";
 import {
   Container,
   Grid,
@@ -19,11 +15,11 @@ import {
   DialogContent,
   TextField,
   DialogActions,
-  Avatar,
-  IconButton
 } from "@mui/material";
+import Navbar from '../../components/users/Navbar'
 
-function ProfilePage() {
+
+function Uspro() {
   const [fullName, setFullName] = useState("Johnatan Smith");
   const [email, setEmail] = useState("example@example.com");
   const [mobile, setMobile] = useState("(098) 765-4321");
@@ -71,62 +67,33 @@ function ProfilePage() {
         break;
     }
   };
+
   return (
-    <>
-      <Navbar />
-      <Container sx={{ height: "90px", overflow: "hidden" }} />
-
-      <Card sx={{ maxWidth: "100%", margin: "auto" }}>
-        <Box
-          sx={{
-            position: "relative",
-            height: 150,
-            background: "#d3dce3",
-            backgroundSize: "cover",
-          }}
-        >
-          <IconButton
-            sx={{ position: "absolute", top: 0, right: 0, color: "white" }}
-          >
-            <EditIcon />
-          </IconButton>
-        </Box>
-        <Avatar
-          // src="url(https://source.unsplash.com/random/300x400?Avatar)"
-          alt="Profile Image"
-          sx={{
-            width: 100,
-            height: 100,
-            border: "4px solid #fff",
-            position: "relative",
-            top: -50,
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
-        />
-        <Container
-          sx={{ display: "flex", justifyContent: "end", marginTop: -12 }}
-        >
-          <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
-            Edit Profile
-          </Button>
-          <Button variant="outlined" color="primary">
-            Add Art
-          </Button>
-        </Container>
-        <CardContent sx={{ textAlign: "center" }}>
-          <Typography variant="h5" component="div" gutterBottom>
-            User Name
-          </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph>
-            This is the user's bio. Add more information about yourself.
-          </Typography>
-        </CardContent>
-      </Card>
-
-
-
-      <Card sx={{ mb: 4, borderTop: '1px solid black' }}>
+    <section style={{ backgroundColor: "#eee" }}>
+      <Navbar/>
+      <Container sx={{ py: 5 }}>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Card sx={{ mb: 4 }}>
+              <CardContent sx={{ textAlign: "center" }}>
+                <CardMedia
+                  component="img"
+                  height="150"
+                  image="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                  alt="avatar"
+                  sx={{ borderRadius: "50%", width: "150px", margin: "0 auto" }}
+                />
+                <Typography variant="body2" color="textSecondary" mb={1}>
+                  Full Stack Developer
+                </Typography>
+                <Typography variant="body2" color="textSecondary" mb={4}>
+                  Bay Area, San Francisco, CA
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card sx={{ mb: 4 }}>
               <CardContent>
                 <Grid container spacing={2}>
                   <Grid item xs={3}>
@@ -179,10 +146,56 @@ function ProfilePage() {
                 </Grid>
               </CardContent>
             </Card>
-      
-      <Footer />
-    </>
+          </Grid>
+        </Grid>
+      </Container>
+
+      {/* Edit Dialogs */}
+      <Dialog open={openFullName} onClose={() => handleCloseDialog('Full Name')}>
+        <DialogTitle>Edit Full Name</DialogTitle>
+        <DialogContent>
+          <TextField autoFocus margin="dense" label="Full Name" fullWidth value={fullName} onChange={(e) => setFullName(e.target.value)} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseDialog('Full Name')}>Cancel</Button>
+          <Button onClick={() => handleCloseDialog('Full Name')}>Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openEmail} onClose={() => handleCloseDialog('Email')}>
+        <DialogTitle>Edit Email</DialogTitle>
+        <DialogContent>
+          <TextField autoFocus margin="dense" label="Email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseDialog('Email')}>Cancel</Button>
+          <Button onClick={() => handleCloseDialog('Email')}>Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openMobile} onClose={() => handleCloseDialog('Mobile')}>
+        <DialogTitle>Edit Mobile</DialogTitle>
+        <DialogContent>
+          <TextField autoFocus margin="dense" label="Mobile" fullWidth value={mobile} onChange={(e) => setMobile(e.target.value)} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseDialog('Mobile')}>Cancel</Button>
+          <Button onClick={() => handleCloseDialog('Mobile')}>Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openAddress} onClose={() => handleCloseDialog('Address')}>
+        <DialogTitle>Edit Address</DialogTitle>
+        <DialogContent>
+          <TextField autoFocus margin="dense" label="Address" fullWidth value={address} onChange={(e) => setAddress(e.target.value)} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCloseDialog('Address')}>Cancel</Button>
+          <Button onClick={() => handleCloseDialog('Address')}>Save</Button>
+        </DialogActions>
+      </Dialog>
+    </section>
   );
 }
 
-export default ProfilePage;
+export default Uspro;

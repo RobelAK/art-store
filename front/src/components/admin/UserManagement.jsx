@@ -1,50 +1,53 @@
-import React, { useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TextField,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Select,
-  MenuItem,
-  Container,
-} from '@mui/material';
-
-// Mock data for users
-const mockUsers = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'user' },
-  { id: 2, name: 'Jane Doe', email: 'jane@example.com', role: 'admin' },
-  // Add more users as needed
-];
+import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Container } from "@mui/material";
+import axios from 'axios';
 
 const UserManagement = () => {
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState([]);
+  const [originalUsers, setOriginalUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  useEffect(() => {
+    axios.get('http://localhost:8081/admin/userstable')
+      .then(res => {
+        setUsers(res.data);
+        setOriginalUsers(res.data);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      axios.put('http://localhost:8081/admin/deleteuser/' + id)
+        .then(res => {
+          setUsers(users.filter(user => user.id !== id));
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
   const handleSearch = () => {
-    // Filter users based on search term and selected role
-    const filteredUsers = mockUsers.filter(
+    const filteredUsers = originalUsers.filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (selectedRole === 'all' || user.role === selectedRole)
     );
-
     setUsers(filteredUsers);
   };
 
   const handleRoleChange = (event) => {
-    setSelectedRole(event.target.value);
+    const selectedRole = event.target.value;
+    setSelectedRole(selectedRole);
+    
+    if (selectedRole === 'all') {
+      setUsers(originalUsers); // Reset to original users if 'All Roles' selected
+    } else {
+      const filteredUsers = originalUsers.filter(user => user.role === selectedRole);
+      setUsers(filteredUsers); // Filter based on selected role
+    }
   };
 
   const handleViewDetails = (user) => {
@@ -55,6 +58,7 @@ const UserManagement = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+  
 
   return (
     <div>
@@ -74,9 +78,8 @@ const UserManagement = () => {
 
         <Select value={selectedRole} onChange={handleRoleChange} variant="outlined">
           <MenuItem value="all">All Roles</MenuItem>
-          <MenuItem value="user">User</MenuItem>
-          <MenuItem value="seller">Seller</MenuItem>
-          {/* Add more roles as needed */}
+          <MenuItem value="buyer">buyer</MenuItem>
+          <MenuItem value="seller">seller</MenuItem>
         </Select>
       </Container>
 
@@ -92,21 +95,21 @@ const UserManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
+            {users.map((data, i) => (
+              <TableRow key={i}>
+                <TableCell>{data.id}</TableCell>
+                <TableCell>{data.name}</TableCell>
+                <TableCell>{data.email}</TableCell>
+                <TableCell>{data.role}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleViewDetails(user)}>View Details</Button>
+                  <Button onClick={() => handleDelete(data.id)}>Delete</Button>
+                  <Button onClick={() => handleViewDetails(data)}>Detail</Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>User Details</DialogTitle>
         <DialogContent>

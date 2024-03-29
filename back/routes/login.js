@@ -12,18 +12,18 @@ export default function login(db, req, res) {
       const id = result[0].id
       const email = result[0].email
       const name = result[0].name
+      const role = result[0].role
       const isValidPassword = await bcrypt.compare(password, result[0].password);
       if (!isValidPassword){
         return res.json({ loginStatus: false, Error: "Wrong email or password"})
       }
       else{
         const token = jwt.sign(
-          { id, name, email},
+          { id, name, email, role},
           "jwt_secret_key",
           { expiresIn: "1d" }
-        );
-        res.cookie('token', token)
-        return res.json({ loginStatus: true })
+        ); 
+        return res.json({ loginStatus: true, token })
       }
     }
     else {
