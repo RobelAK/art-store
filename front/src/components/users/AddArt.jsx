@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Grid, Select, MenuItem, FormControl, InputLabel, InputAdornment } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import Footer from './Footer';
 
 function AddArt() {
-  axios.defaults.withCredentials = true
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -15,23 +13,6 @@ function AddArt() {
   const [art, setArt] = useState(null);
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
-
-  // Get userId from the token
-  let userId = '';
-  const token = Cookies.get('token');
-  if (token) {
-    const tokenParts = token.split('.');
-    if (tokenParts.length === 3) {
-      const payload = JSON.parse(atob(tokenParts[1]));
-      userId = payload.id;
-    } else {
-      // Handle case where token format is incorrect
-      console.error('Token format is incorrect');
-    }
-  } else {
-    // Handle case where token is not available
-    console.error('Token is not available');
-  }
 
   const handleUpload = async () => {
     try {
@@ -42,8 +23,27 @@ function AddArt() {
       formData.append("price", price);
       formData.append('art', art);
 
+      // Get the token from local storage
+      const token = localStorage.getItem('token');
+      console.log("Token:", token);
+      if (!token) {
+        console.error('Token is not available');
+        return;
+      }
+
+      // Decode the token to extract user id
+      const tokenParts = token.split('.');
+      if (tokenParts.length !== 3) {
+        console.error('Token format is incorrect');
+        return;
+      }
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const userId = payload.id;
+      console.log("User ID:", userId);
+
       // Append userId to form data
       formData.append('user_id', userId);
+      console.log("Form Data User ID:", formData.get('user_id'));
 
       const response = await axios.post('http://localhost:8081/add/upload', formData);
 

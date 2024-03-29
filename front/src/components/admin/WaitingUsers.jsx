@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Container, IconButton } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Container, IconButton } from "@mui/material";
 import axios from 'axios';
 
-const UserManagement = () => {
+const WaitingUsers = () => {
   const [users, setUsers] = useState([]);
   const [originalUsers, setOriginalUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRole, setSelectedRole] = useState('all');
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -33,22 +31,9 @@ const UserManagement = () => {
   const handleSearch = () => {
     const filteredUsers = originalUsers.filter(
       (user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedRole === 'all' || user.role === selectedRole)
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUsers(filteredUsers);
-  };
-
-  const handleRoleChange = (event) => {
-    const selectedRole = event.target.value;
-    setSelectedRole(selectedRole);
-    
-    if (selectedRole === 'all') {
-      setUsers(originalUsers); // Reset to original users if 'All Roles' selected
-    } else {
-      const filteredUsers = originalUsers.filter(user => user.role === selectedRole);
-      setUsers(filteredUsers); // Filter based on selected role
-    }
   };
 
   const handleViewDetails = (user) => {
@@ -59,7 +44,16 @@ const UserManagement = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-  
+
+  const handleApprove = (id) => {
+    // Implement the logic to approve the user
+    console.log('User approved with ID:', id);
+  };
+
+  const handleDecline = (id) => {
+    // Implement the logic to decline the user
+    console.log('User declined with ID:', id);
+  };
 
   return (
     <div>
@@ -76,12 +70,6 @@ const UserManagement = () => {
             Search
           </Button>
         </Container>
-
-        <Select value={selectedRole} onChange={handleRoleChange} variant="outlined">
-          <MenuItem value="all">All Roles</MenuItem>
-          <MenuItem value="buyer">buyer</MenuItem>
-          <MenuItem value="seller">seller</MenuItem>
-        </Select>
       </Container>
 
       <TableContainer component={Paper}>
@@ -91,7 +79,7 @@ const UserManagement = () => {
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>Link</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -101,9 +89,9 @@ const UserManagement = () => {
                 <TableCell>{data.id}</TableCell>
                 <TableCell>{data.name}</TableCell>
                 <TableCell>{data.email}</TableCell>
-                <TableCell>{data.role}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleDelete(data.id)}> <DeleteIcon/> </IconButton> 
+                  <Button onClick={() => handleApprove(data.id)}>Approve</Button>
+                  <Button onClick={() => handleDecline(data.id)}>Decline</Button>
                   <Button onClick={() => handleViewDetails(data)}>Detail</Button>
                 </TableCell>
               </TableRow>
@@ -119,7 +107,7 @@ const UserManagement = () => {
               <p>ID: {selectedUser.id}</p>
               <p>Name: {selectedUser.name}</p>
               <p>Email: {selectedUser.email}</p>
-              <p>Role: {selectedUser.role}</p>
+              <p>Link: {selectedUser.Link}</p>
             </div>
           )}
         </DialogContent>
@@ -131,4 +119,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default WaitingUsers;

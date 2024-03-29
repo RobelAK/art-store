@@ -21,6 +21,7 @@ import UserManagement from '../../components/admin/UserManagement';
 import WaitingArt from '../../components/admin/WaitingArt';
 import AdminMenu from '../../components/admin/AdminMenu';
 import AvilableArts from '../../components/admin/AvilableArts';
+import WaitingUsers from '../../components/admin/WaitingUsers';
 
 const drawerWidth = 240;
 
@@ -86,7 +87,7 @@ const PersistentDrawerLeft = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex',backgroundColor:'#f0f1f2' }}>
+    <Box sx={{ display: 'flex', backgroundColor: '#f0f1f2' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -155,10 +156,11 @@ const PersistentDrawerLeft = () => {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        {selectedComponent === 'Overview' ? <Overview /> :[]}
-        {selectedComponent === 'Users' ? <UserManagement /> :[]}
-        {selectedComponent === 'Pending Art' ? <WaitingArt /> :[]}
-        {selectedComponent === 'Artworks' ? <AvilableArts/> :[]}
+        {selectedComponent === 'Overview' ? <Overview /> : []}
+        {selectedComponent === 'Users' ? <UserManagement /> : []}
+        {selectedComponent === 'Pending Art' ? <WaitingArt /> : []}
+        {selectedComponent === 'Artworks' ? <AvilableArts /> : []}
+        {selectedComponent === 'Sellers' ? <WaitingUsers /> : []}
 
       </Main>
     </Box>
