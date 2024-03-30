@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Container, IconButton } from "@mui/material";
 import axios from 'axios';
 
-const WaitingUsers = () => {
+const Seller = () => {
   const [users, setUsers] = useState([]);
   const [originalUsers, setOriginalUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,7 +11,7 @@ const WaitingUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/sellers/waiting')
+    axios.get('http://localhost:8081/admin/sellerstable')
       .then(res => {
         setUsers(res.data);
         setOriginalUsers(res.data);
@@ -18,6 +19,15 @@ const WaitingUsers = () => {
       .catch(err => console.log(err));
   }, []);
 
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      axios.put('http://localhost:8081/admin/deleteuser/' + id)
+        .then(res => {
+          setUsers(users.filter(user => user.id !== id));
+        })
+        .catch(err => console.log(err));
+    }
+  };
 
   const handleSearch = () => {
     const filteredUsers = originalUsers.filter(
@@ -34,28 +44,6 @@ const WaitingUsers = () => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-  };
-
-  const handleApprove = async (id) => {
-    try {
-      console.log('Approving artwork with ID:', id);
-      await axios.put(`http://localhost:8081/seller/approve/${id}`);
-      console.log('seller approved successfully');
-      fetchData();
-    } catch (error) {
-      console.error('Error approving seller:', error);
-    }
-  };
-  
-  const handleDecline = async (id) => {
-    try {
-      console.log('Declining seller with ID:', id);
-      await axios.delete(`http://localhost:8081/seller/decline/${id}`);
-      console.log('seller declined successfully');
-      fetchData();
-    } catch (error) {
-      console.error('Error declining seller:', error);
-    }
   };
 
   return (
@@ -82,7 +70,6 @@ const WaitingUsers = () => {
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Link</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -93,8 +80,7 @@ const WaitingUsers = () => {
                 <TableCell>{data.name}</TableCell>
                 <TableCell>{data.email}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleApprove(data.id)}>Approve</Button>
-                  <Button onClick={() => handleDecline(data.id)}>Decline</Button>
+                  <IconButton onClick={() => handleDelete(data.id)}> <DeleteIcon/> </IconButton> 
                   <Button onClick={() => handleViewDetails(data)}>Detail</Button>
                 </TableCell>
               </TableRow>
@@ -110,7 +96,6 @@ const WaitingUsers = () => {
               <p>ID: {selectedUser.id}</p>
               <p>Name: {selectedUser.name}</p>
               <p>Email: {selectedUser.email}</p>
-              <p>Link: {selectedUser.Link}</p>
             </div>
           )}
         </DialogContent>
@@ -122,4 +107,4 @@ const WaitingUsers = () => {
   );
 };
 
-export default WaitingUsers;
+export default Seller;

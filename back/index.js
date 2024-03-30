@@ -13,6 +13,10 @@ import WaitingArt from './routes/WaitingArt.js';
 import ApproveArt from './routes/ApproveArt.js';
 import declineArt from './routes/DeclineArt.js';
 import HideArts from './routes/HideArts.js';
+import ApproveSeller from './routes/ApproveSeller.js';
+import declineSeller from './routes/DeclineSeller.js';
+import SignupAs from './routes/SignupAs.js';
+import WaitingSellers from './routes/WaitingSellers.js';
 
 const app = express();
 
@@ -66,6 +70,14 @@ app.get('/admin/userstable', (req, res) => {
   });
 });
 
+app.get('/admin/sellerstable', (req, res) => {
+  const sql = "SELECT * FROM users WHERE role = 'seller' ";
+  db.query(sql, (err, data) =>{
+    if(err) return res.json(err);
+    return res.json(data);
+  });
+});
+
 app.put('/admin/deleteuser/:id', (req, res) => {
   const sql = "DELETE FROM users WHERE id = ?";
   const id = req.params.id;
@@ -86,13 +98,27 @@ app.get('/art',upload, async (req, res) => {
 app.get('/art/waiting',upload, async (req, res) => {
   WaitingArt(db, req, res);
 });
+app.get('/sellers/waiting',upload, async (req, res) => {
+  WaitingSellers(db, req, res);
+});
 app.put('/art/hide/:id',upload, async (req, res) => {
   HideArts(db, req, res);
+});
+
+app.put('/signupas/:userId', (req, res) => {
+  SignupAs (db, req, res)
 });
 
 app.put('/art/approve/:id', (req, res) =>{
   ApproveArt(db,req, res);
 });
+
+app.put('/seller/approve/:id', (req, res) =>{
+  ApproveSeller(db,req, res);
+});
+app.delete('/seller/decline/:id', (req, res) => {
+  declineSeller(db,req, res);
+})
 app.delete('/art/decline/:id', (req, res) => {
   declineArt(db,req, res);
 })

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import CardMedia from '@mui/material/CardMedia';
 import ArtInfo from './ArtInfo';
-import { Card, Container, Grid } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 
 const ProductPreview = () => {
   const imageUrl = 'https://source.unsplash.com/random/800x1000';
@@ -14,9 +14,9 @@ const ProductPreview = () => {
   };
 
   return (
-    <Container sx={{ boxShadow: 'inherit', backgroundImage: 'linear-gradient(to bottom, #dbe4f0, #f0f4f7)', }}>
+    <Box sx={{ boxShadow: 'inherit', backgroundImage: 'linear-gradient(to bottom, #dbe4f0, #f0f4f7)', }}>
       <Grid container>
-        <Grid item sm='12' md='7'>
+        <Grid item xs={12} md={7}>
           <Card sx={{
             width: '100%',
             height: '100%',
@@ -27,7 +27,6 @@ const ProductPreview = () => {
             alignItems: 'center',
             justifyContent: 'center',
             boxShadow: 'none',
-
           }}>
             <CardMedia
               component="img"
@@ -49,7 +48,7 @@ const ProductPreview = () => {
             />
           </Card>
         </Grid>
-        <Grid item sm='12' md='5'>
+        <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'center' }}>
           <ArtInfo
             onButtonClick={handleButtonClick}
             selectedButton={selectedButton}
@@ -60,11 +59,18 @@ const ProductPreview = () => {
               right: 0,
               background: 'rgba(255, 255, 255, 0.8)',
               padding: '2%',
+              '@media (max-width: 600px)': {
+                position: 'relative',
+                top: 'unset',
+                right: 'unset',
+                background: 'transparent',
+                padding: '0 10px', // Adjust padding as needed
+              },
             }}
           />
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
 

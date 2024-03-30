@@ -27,9 +27,16 @@ const ArtInfo = ({ onButtonClick, selectedButton, ...props }) => {
         height: '100%',
         position: 'relative',
         display: 'flex',
+        paddingTop: '5.7%',
+        paddingBottom: '5.6%',
+        paddingRight: { xs: 0, md: '34.6%' },
         alignItems: 'center',
         justifyContent: 'center',
         backgroundImage: 'linear-gradient(to bottom, #dbe4f0, #f0f4f7)',
+        '@media (max-width: 600px)': {
+          padding: 0,
+          margin: 0,
+        },
       }}
     >
       <Card
@@ -38,8 +45,8 @@ const ArtInfo = ({ onButtonClick, selectedButton, ...props }) => {
           borderRadius: '8px',
           p: 2,
           textAlign: 'center',
-          width: '70%',
-          m: '2%',
+          width: '100%', // Set width to 100% for small devices
+          m: 0, // Set margin to 0 for small devices
           ...props,
         }}
       >
@@ -48,7 +55,7 @@ const ArtInfo = ({ onButtonClick, selectedButton, ...props }) => {
             Artwork Title
           </Typography>
           <Typography
-            variant="subtitle1"
+            variant="body2"
             fontFamily={'sora,sans-serif'}
             color="text.secondary"
             gutterBottom
@@ -58,6 +65,7 @@ const ArtInfo = ({ onButtonClick, selectedButton, ...props }) => {
           <Divider />
           <Typography
             variant="body2"
+            fontWeight={'light'}
             color={''}
             fontFamily={'sora,sans-serif'}
             paragraph
