@@ -22,7 +22,7 @@ const UserManagement = () => {
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      axios.put('http://localhost:8081/admin/deleteuser/' + id)
+      axios.put('http://localhost:8081/seller/delete/' + id)
         .then(res => {
           setUsers(users.filter(user => user.id !== id));
         })

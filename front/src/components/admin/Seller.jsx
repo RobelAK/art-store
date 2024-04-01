@@ -11,21 +11,27 @@ const Seller = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/admin/sellerstable')
-      .then(res => {
-        setUsers(res.data);
-        setOriginalUsers(res.data);
-      })
-      .catch(err => console.log(err));
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/admin/sellerstable');
+      setUsers(response.data);
+      setOriginalUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      axios.put('http://localhost:8081/admin/deleteuser/' + id)
+      axios.delete('http://localhost:8081/seller/Delete/' + id)
         .then(res => {
+          // Remove the deleted user from the local state
           setUsers(users.filter(user => user.id !== id));
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error('Error deleting user:', err));
     }
   };
 

@@ -14,9 +14,10 @@ import ApproveArt from './routes/ApproveArt.js';
 import declineArt from './routes/DeclineArt.js';
 import HideArts from './routes/HideArts.js';
 import ApproveSeller from './routes/ApproveSeller.js';
-import declineSeller from './routes/DeclineSeller.js';
+import DeleteSeller from './routes/DeleteSeller.js';
 import SignupAs from './routes/SignupAs.js';
 import WaitingSellers from './routes/WaitingSellers.js';
+import DeclineSeller from './routes/DeclineSeller.js';
 
 const app = express();
 
@@ -77,16 +78,6 @@ app.get('/admin/sellerstable', (req, res) => {
     return res.json(data);
   });
 });
-
-app.put('/admin/deleteuser/:id', (req, res) => {
-  const sql = "DELETE FROM users WHERE id = ?";
-  const id = req.params.id;
-  db.query(sql, [id], (err, result) => {
-    if(err) return res.json("query error");
-    return res.json("successful");
-  });
-});
-
 app.post('/add/upload', upload, async (req, res) => {
   AddArt(db, req, res);
 });
@@ -105,7 +96,7 @@ app.put('/art/hide/:id',upload, async (req, res) => {
   HideArts(db, req, res);
 });
 
-app.put('/signupas/:userId', (req, res) => {
+app.put('/signupas/:user_id', (req, res) => {
   SignupAs (db, req, res)
 });
 
@@ -116,8 +107,11 @@ app.put('/art/approve/:id', (req, res) =>{
 app.put('/seller/approve/:id', (req, res) =>{
   ApproveSeller(db,req, res);
 });
+app.delete('/seller/delete/:id', (req, res) => {
+  DeleteSeller(db,req, res);
+})
 app.delete('/seller/decline/:id', (req, res) => {
-  declineSeller(db,req, res);
+  DeclineSeller(db,req, res);
 })
 app.delete('/art/decline/:id', (req, res) => {
   declineArt(db,req, res);

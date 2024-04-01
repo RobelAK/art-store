@@ -1,11 +1,14 @@
-export default function declineSeller(db, req, res) {
+export default function DeclineSeller(db, req, res) {
   const id = req.params.id;
-  const sql = 'DELETE FROM users WHERE id = ?';
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Error declining artwork:', err);
+
+  const deleteFromSellers = 'DELETE FROM sellers WHERE user_id = ?';
+
+  db.query(deleteFromSellers, [id], (errSellers, resultSellers) => {
+    if (errSellers) {
+      console.error('Error declining seller (sellers table):', errSellers);
       return res.status(500).json({ error: 'Internal server error' });
     }
-    res.json({ message: 'Artwork declined successfully' });
+
+    res.json({ message: 'Seller declined successfully' });
   });
 }
