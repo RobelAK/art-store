@@ -39,7 +39,7 @@ function App() {
         <Route path='/cart' element = {<CartPage/>}></Route>
         <Route path='/message' element= {<ArtSubmissionMessage/>}></Route>
         <Route path='/addart' element = {<AddArt/>}></Route>
-        <Route path='/Dashboard' element = {<Dashboard/>}></Route>
+        <Route path='/dashboard' element = {<Dashboard/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>

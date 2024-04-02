@@ -21,13 +21,15 @@ const UserManagement = () => {
   }, []);
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      axios.put('http://localhost:8081/seller/delete/' + id)
+    // if (window.confirm('Are you sure you want to delete this user?')) {
+
+      axios.put('http://localhost:8081/user/delete/' + id)
         .then(res => {
-          setUsers(users.filter(user => user.id !== id));
+          // setUsers(users.filter(user => user.id !== id));
+          console.log(res.data)
         })
         .catch(err => console.log(err));
-    }
+    
   };
 
   const handleSearch = () => {

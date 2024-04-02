@@ -23,10 +23,10 @@ import Navbar from "../../components/users/Navbar";
 
 function ProfilePage() {
   axios.defaults.withCredentials = true;
-  const [id, setId] = useState(null);
-  const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [role, setRole] = useState(null);
+  const [id, setId] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
   const [newPassword, setnewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
