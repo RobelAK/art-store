@@ -8,13 +8,22 @@ import signup from './routes/signup.js';
 import changename from './routes/changename.js';
 import changepassword from './routes/changepassword.js';
 import AddArt from './routes/AddArt.js';
-import displayArt from './routes/DisplayArt.js'; 
+import displayArt from './routes/DisplayArt.js';
+import WaitingArt from './routes/WaitingArt.js';
+import ApproveArt from './routes/ApproveArt.js';
+import declineArt from './routes/DeclineArt.js';
+import HideArts from './routes/HideArts.js';
+import ApproveSeller from './routes/ApproveSeller.js';
+import DeleteSeller from './routes/DeleteSeller.js';
+import SignupAs from './routes/SignupAs.js';
+import WaitingSellers from './routes/WaitingSellers.js';
+import DeclineSeller from './routes/DeclineSeller.js';
 
 const app = express();
 
 app.use(cors({
   origin: ["http://localhost:5173"],
-  methods: ['GET', 'POST', 'PUT'],
+  methods: ['GET', 'POST', 'PUT','DELETE'],
   credentials: true
 }));
 
@@ -40,7 +49,11 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   login(db, req, res);
-}); 
+});
+
+app.post('/profile', (req, res) => { 
+  profile(db, req, res);
+});
 
 app.post('/profile/changename', (req, res) => {
   changename(db, req, res);
@@ -58,15 +71,13 @@ app.get('/admin/userstable', (req, res) => {
   });
 });
 
-app.put('/admin/deleteuser/:id', (req, res) => {
-  const sql = "DELETE FROM users WHERE id = ?";
-  const id = req.params.id;
-  db.query(sql, [id], (err, result) => {
-    if(err) return res.json("query error");
-    return res.json("successful");
+app.get('/admin/sellerstable', (req, res) => {
+  const sql = "SELECT * FROM users WHERE role = 'seller' ";
+  db.query(sql, (err, data) =>{
+    if(err) return res.json(err);
+    return res.json(data);
   });
 });
-
 app.post('/add/upload', upload, async (req, res) => {
   AddArt(db, req, res);
 });
@@ -74,6 +85,37 @@ app.post('/add/upload', upload, async (req, res) => {
 app.get('/art',upload, async (req, res) => {
   displayArt(db, req, res);
 });
+
+app.get('/art/waiting',upload, async (req, res) => {
+  WaitingArt(db, req, res);
+});
+app.get('/sellers/waiting',upload, async (req, res) => {
+  WaitingSellers(db, req, res);
+});
+app.put('/art/hide/:id',upload, async (req, res) => {
+  HideArts(db, req, res);
+});
+
+app.put('/signupas/:user_id', (req, res) => {
+  SignupAs (db, req, res)
+});
+
+app.put('/art/approve/:id', (req, res) =>{
+  ApproveArt(db,req, res);
+});
+
+app.put('/seller/approve/:id', (req, res) =>{
+  ApproveSeller(db,req, res);
+});
+app.delete('/seller/delete/:id', (req, res) => {
+  DeleteSeller(db,req, res);
+})
+app.delete('/seller/decline/:id', (req, res) => {
+  DeclineSeller(db,req, res);
+})
+app.delete('/art/decline/:id', (req, res) => {
+  declineArt(db,req, res);
+})
 
 
 const db = mysql.createConnection({ 
@@ -92,38 +134,7 @@ db.connect((err) => {
 });
 
 
-
-app.post('/profile/changepassword', async (req,res)=>{
-  changepassword(db,req,res)
-})
-
-app.get('/admin/userstable', (req,res)=>{
-  const sql = "SELECT * FROM users"
-  db.query(sql, (err, data) =>{
-    if(err) return res.json(err)
-    return res.json(data) 
-  }) 
-})
-app.put('/admin/deleteuser/:id', (req, res) => {
-  const sql = "DELETE FROM users WHERE id = ?";
-  const id = req.params.id;
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      return res.json({ error: "Query error" });
-    }
-    return res.json({Message: "User deleted successfully"}); 
-  });
+const PORT = process.env.PORT || 8081;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-app.post('/add/upload', async (req, res) => {
-  AddArt(db, req, res) 
-}) 
-
-
-app.listen(8081, () => {
-  console.log("server is running") 
-})  
-// const PORT = process.env.PORT || 8081;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });

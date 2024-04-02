@@ -1,42 +1,63 @@
 import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Grid, Select, MenuItem, FormControl, InputLabel, InputAdornment } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
-import Footer from './Footer';
-import { Link,  } from 'react-router-dom'; // Import useHistory
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Footer from './Footer';
 
-function AddArt () {
+function AddArt() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [art, setArt] = useState(null);
   const [msg, setMsg] = useState("");
- 
-  const handleUpload = () => {
-    const formData = new FormData()
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("category", category);
-    formData.append("price", price);
-    formData.append('art', art);
-  
-    axios.post('http://localhost:8081/add/upload', formData)
-      .then((response) => {
-        console.log(response);
-        if(response.data.Status === 'Success') {
-          setMsg(""); // Clear any previous error message
-          window.location.href = '/message'; // Redirect to success page
-        } else {
-          setMsg(response.data.message || "Unknown error occurred"); // Set error message from server response
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        setMsg("Network error occurred. Please try again."); // Set error message for network error
-      });
+  const navigate = useNavigate();
+
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category", category);
+      formData.append("price", price);
+      formData.append('art', art);
+
+      // Get the token from local storage
+      const token = localStorage.getItem('token');
+      console.log("Token:", token);
+      if (!token) {
+        console.error('Token is not available');
+        return;
+      }
+
+      // Decode the token to extract user id
+      const tokenParts = token.split('.');
+      if (tokenParts.length !== 3) {
+        console.error('Token format is incorrect');
+        return;
+      }
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const userId = payload.id;
+      console.log("User ID:", userId);
+
+      // Append userId to form data
+      formData.append('user_id', userId);
+      console.log("Form Data User ID:", formData.get('user_id'));
+
+      const response = await axios.post('http://localhost:8081/add/upload', formData);
+
+      if (response.data.status === "Success") {
+        setMsg("");
+        navigate('/message');
+      } else {
+        setMsg(response.data.message || "Unknown error occurred");
+      }
+    } catch (error) {
+      console.error("Error uploading artwork:", error);
+      setMsg("Network error occurred. Please try again.");
+    }
   };
-  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -69,28 +90,30 @@ function AddArt () {
                 Upload Image
               </Button>
             </label>
-            {art && ( 
+            {art && (
               <div>
                 <img src={URL.createObjectURL(art)} alt="Uploaded Art" style={{ maxWidth: '100%', marginTop: 10 }} />
               </div>
             )}
           </Grid>
           <Grid item xs={12}>
-            <TextField 
-              label="Title" 
+            <TextField
+              label="Title"
               name="title"
               fullWidth
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField 
-              label="Description" 
+            <TextField
+              label="Description"
               name="description"
               multiline
-              rows={4} 
+              rows={4}
+              value={description}
               onChange={(e) => setDescription(e.target.value)}
-              fullWidth 
+              fullWidth
             />
           </Grid>
           <Grid item xs={12}>
@@ -98,6 +121,7 @@ function AddArt () {
               <InputLabel>Category</InputLabel>
               <Select
                 name="category"
+                value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 fullWidth
               >
@@ -112,6 +136,7 @@ function AddArt () {
               label="Price (birr)"
               type="number"
               name="price"
+              value={price}
               fullWidth
               onChange={(e) => setPrice(e.target.value)}
               InputProps={{
@@ -120,13 +145,13 @@ function AddArt () {
             />
           </Grid>
           <Grid item xs={6} >
-            <Button variant="contained" onClick={handleUpload} color="primary" component={Link} to="/message" >
+            <Button variant="contained" onClick={handleUpload} color="primary"  >
               Add Art
             </Button>
             <Button variant="outlined" style={{ margin: '15px' }} component={Link} to="/" color="primary">
               Cancel
             </Button>
-            <h1 style={{fontSize: '15px', textAlign: 'center', marginTop: '20px'}}>{msg}</h1>
+            <Typography variant="body1" style={{ textAlign: 'center', marginTop: '20px' }}>{msg}</Typography>
           </Grid>
         </Grid>
       </Container>
@@ -134,6 +159,6 @@ function AddArt () {
       <Footer />
     </>
   );
-};
+}
 
 export default AddArt;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Container } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Container, IconButton } from "@mui/material";
 import axios from 'axios';
 
 const UserManagement = () => {
@@ -21,7 +22,7 @@ const UserManagement = () => {
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      axios.put('http://localhost:8081/admin/deleteuser/' + id)
+      axios.put('http://localhost:8081/seller/delete/' + id)
         .then(res => {
           setUsers(users.filter(user => user.id !== id));
         })
@@ -102,7 +103,7 @@ const UserManagement = () => {
                 <TableCell>{data.email}</TableCell>
                 <TableCell>{data.role}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleDelete(data.id)}>Delete</Button>
+                  <IconButton onClick={() => handleDelete(data.id)}> <DeleteIcon/> </IconButton> 
                   <Button onClick={() => handleViewDetails(data)}>Detail</Button>
                 </TableCell>
               </TableRow>

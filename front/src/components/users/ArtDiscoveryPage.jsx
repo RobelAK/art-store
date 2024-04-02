@@ -56,6 +56,7 @@ const ArtDiscoveryPage = () => {
                 <CardActionArea>
                   <CardMedia
                     component="img"
+                    sx={{aspectRatio:'4/5'}}
                     src={`http://localhost:8081/images/${Art.art}`}
                     alt={Art.title}
                   />

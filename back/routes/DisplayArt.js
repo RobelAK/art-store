@@ -1,6 +1,6 @@
 export default function displayArt(db , req ,res) {
 
-    const sql = 'SELECT * FROM artwork WHERE status=false';
+    const sql = 'SELECT * FROM artwork WHERE status=true';
 
     db.query(sql, (err, results) => {
       if (err) {

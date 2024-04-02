@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { Link } from 'react-router-dom';
+import { Container } from '@mui/material';
 
 const PostedArt = () => {
   // Dummy data for image URLs
@@ -19,6 +20,7 @@ const PostedArt = () => {
   ];
 
   return (
+    <Container>
 
     <Grid container spacing={2} marginTop={3}>
       {artImages.map((imageUrl, index) => (
@@ -46,6 +48,7 @@ const PostedArt = () => {
         </Grid>
       ))}
     </Grid>
+    </Container>
   );
 };
 
