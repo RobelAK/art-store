@@ -20,7 +20,6 @@ import {
 
 function Signup() {
   const defaultTheme = createTheme();
-  // let isValid = false;
   const [isValidPassword, setIsValidPassword] = useState(false);
   const [isValidName, setIsValidName] = useState(false);
   const [name, setName] = useState("");
@@ -105,11 +104,9 @@ function Signup() {
           .post("http://localhost:8081/signup", values)
           .then((res) => {
             if (res.data.signup) {
-              // alert(res.data.Message);
               console.log(res.data.Message)
               navigate("/login");
             } else {
-              // alert(res.data.Message);
               console.log(res.data.Message)
               navigate("/signup");
             }

@@ -6,6 +6,8 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Logo from '../../utils/logo.png';
 import backgroundImage from '../../utils/333.png';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function Login() {
@@ -41,18 +43,16 @@ function Login() {
         const token = res.data.token
         if (res.data.loginStatus) {
           localStorage.setItem('token',token)
-          navigate('/')
+          toast.success("Login successfull",{onClose: ()=> {
+            navigate('/')
+          }})
         }
         else {
-          console.log('wrong email or password')
+          toast.error("wrong email or password")
         }
       })
       .catch(err => console.log(err));
   }
-
-
-
-
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -129,6 +129,7 @@ function Login() {
           </Box>
         </Box>
       </Container>
+      <ToastContainer autoClose={2000}/>
     </ThemeProvider>
   );
 }
