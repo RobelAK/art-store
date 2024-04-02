@@ -12,7 +12,6 @@ import Profile from './screens/users/Profile'
 import Checkout from './components/users/Checkout'
 import CartPage from './screens/users/CartPage'
 import Dashboard from './screens/Admin/Dashboard'
-import EditProfilePage from './components/users/EditProfilePage'
 import SignupAs from './screens/users/SignupAs'
 import AddArt from './components/users/AddArt'
 import ArtSubmissionMessage from './components/users/ArtSubmissionMessage'
@@ -42,7 +41,6 @@ function App() {
         <Route path='/addart' element = {<AddArt/>}></Route>
         <Route path='/Dashboard' element = {<Dashboard/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
-        <Route path='/editprofile' element= {<EditProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
         <Route path='/admindashboard' element={<AdminDashboard />}></Route>

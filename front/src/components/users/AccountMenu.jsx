@@ -8,7 +8,6 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom';
 
@@ -81,7 +80,7 @@ const AccountMenu = () => {
         </MenuItem>
         </Link>
         <Divider />
-        <Link to="/Editprofile" style={{ textDecoration: 'none',color:'black' }}>
+        <Link to="/profilepage" style={{ textDecoration: 'none',color:'black' }}>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
