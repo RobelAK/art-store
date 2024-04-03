@@ -119,7 +119,7 @@ const Navbar = () => {
                         sx={{ marginRight: 2, color: "black" }}
                       />
                     </Link>
-                    <Divider orientation="vertical" component="li" />
+                    <Divider orientation="vertical" component="li"/>
 
                     {isLoggedIn ? (
                       <AccountMenu />

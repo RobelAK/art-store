@@ -22,6 +22,10 @@ const AccountMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    window.location.reload();
+  };
 
   return (
     <React.Fragment>
@@ -96,7 +100,7 @@ const AccountMenu = () => {
           Sign up as a seller
         </MenuItem>
         </Link>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

@@ -96,31 +96,37 @@ app.post('/signupas', (req, res) => {
   SignupAs (db, req, res)
 });
 
-// app.put('/art/approve/:id', (req, res) =>{
-//   ApproveArt(db,req, res);
-// });
-// app.put('/seller/approve/:id', (req, res) =>{
-//   ApproveSeller(db,req, res);
-// });
-// app.delete('/seller/delete/:id', (req, res) => {
-//   DeleteSeller(db,req, res);
-// })
-// app.delete('/seller/decline/:id', (req, res) => { 
-//   DeclineSeller(db,req, res);
-// })
-// app.delete('/art/decline/:id', (req, res) => {
-//   declineArt(db,req, res);
-// })
-app.put('/user/delete/:id'), (req,res)=>{
-  const id = req.params.id;
-  const deleteUser = 'DELETE FROM users WHERE id = ?';
-  db.query(deleteUser,[id], (err,res)=>{
-    if (err) return res.json({Message: "unable to delete user"})
-    else return res.json({Message: "user deleted successfully"})
-  })
-  return res.json(id)
-}
+app.put('/art/approve/:id', (req, res) =>{
+  ApproveArt(db,req, res);
+});
+app.put('/seller/approve/:id', (req, res) =>{
+  ApproveSeller(db,req, res);
+});
+app.delete('/seller/delete/:id', (req, res) => {
+  DeleteSeller(db,req, res);
+})
+app.delete('/seller/decline/:id', (req, res) => { 
+  DeclineSeller(db,req, res);
+})
+app.delete('/art/decline/:id', (req, res) => {
+  declineArt(db,req, res);
+})
 
+
+
+
+
+app.delete('/user/delete/:id', (req, res) => {
+  const id = req.params.id;
+  const deleteUser = 'DELETE FROM users WHERE id = ?'
+  db.query(deleteUser, id, (error, results) => {
+    if (error) {
+      res.json({ error: 'Internal server error' });
+    } else {
+      res.json({Message: "User deleted succefully"})
+    }
+  });
+});
 
 const db = mysql.createConnection({ 
   host: 'localhost',
