@@ -20,9 +20,11 @@ import {
 import axios from "axios";
 import Footer from "../../components/users/Footer";
 import Navbar from "../../components/users/Navbar";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
   axios.defaults.withCredentials = true;
+  const navigate = useNavigate()
   const [id, setId] = useState("");
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

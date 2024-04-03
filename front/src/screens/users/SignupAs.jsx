@@ -18,12 +18,6 @@ import video from "../../utils/23.mp4";
 
 const SignupAs = () => {
   const navigate = useNavigate();
-  // const [formData, setFormData] = useState({
-  //   name: "",
-  //   email: "",
-  //   portfolioLink: "",
-  //   description: "",
-  // });
 
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -63,7 +57,7 @@ const SignupAs = () => {
     axios
       .post("http://localhost:8081/signupas", value)
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data.Message);
         // navigate("/message");
       })
       .catch((error) => {

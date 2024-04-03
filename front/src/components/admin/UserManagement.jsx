@@ -25,8 +25,9 @@ const UserManagement = () => {
       axios
         .delete(`http://localhost:8081/user/delete/${id}`)
         .then((res) => {
-          setUsers(users.filter((user) => user.id !== id));
+          // setUsers(users.filter((user) => user.id !== id));
           console.log(res.data);
+          window.location.reload()
         })
         .catch((err) => console.log(err));
     }
@@ -45,10 +46,10 @@ const UserManagement = () => {
     setSelectedRole(selectedRole);
     
     if (selectedRole === 'all') {
-      setUsers(originalUsers); // Reset to original users if 'All Roles' selected
+      setUsers(originalUsers);
     } else {
       const filteredUsers = originalUsers.filter(user => user.role === selectedRole);
-      setUsers(filteredUsers); // Filter based on selected role
+      setUsers(filteredUsers);
     }
   };
 

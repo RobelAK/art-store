@@ -25,18 +25,12 @@ const WaitingUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    fetchData();
+    axios.get("http://localhost:8081/sellers/waiting")
+    .then(res =>{
+      setUsers(res.data);
+      setOriginalUsers(res.data);
+    });
   }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:8081/sellers/waiting");
-      setUsers(response.data);
-      setOriginalUsers(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
 
   const handleSearch = () => {
     const filteredUsers = originalUsers.filter(
@@ -56,15 +50,12 @@ const WaitingUsers = () => {
     setOpenDialog(false);
   };
 
-  const handleApprove = async (id) => {
-    try {
-      console.log("Approving seller with ID:", id);
-      await axios.put(`http://localhost:8081/seller/approve/${id}`);
-      console.log("Seller approved successfully");
-      fetchData();
-    } catch (error) {
-      console.error("Error approving seller:", error);
-    }
+  const handleApprove =  (id) => {
+      // console.log("Approving seller with ID:", id);
+      axios.put(`http://localhost:8081/seller/approve/${id}`)
+      .then(res =>{
+        console.log(res.data)
+      });
   };
 
   const handleDecline = async (id) => {
