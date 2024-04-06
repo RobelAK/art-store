@@ -51,10 +51,6 @@ app.post('/login', async (req, res) => {
   login(db, req, res);
 });
 
-app.post('/profile', (req, res) => { 
-  profile(db, req, res);
-});
-
 app.post('/profile/changename', (req, res) => {
   changename(db, req, res);
 });
@@ -78,7 +74,7 @@ app.get('/admin/sellerstable', (req, res) => {
     return res.json(data);
   });
 });
-app.post('/add/upload', upload, async (req, res) => {
+app.post('/art/upload', upload, async (req, res) => {
   AddArt(db, req, res);
 });
 
@@ -96,27 +92,49 @@ app.put('/art/hide/:id',upload, async (req, res) => {
   HideArts(db, req, res);
 });
 
-app.put('/signupas/:user_id', (req, res) => {
+app.post('/signupas', (req, res) => {
   SignupAs (db, req, res)
 });
 
 app.put('/art/approve/:id', (req, res) =>{
   ApproveArt(db,req, res);
 });
-
 app.put('/seller/approve/:id', (req, res) =>{
   ApproveSeller(db,req, res);
 });
 app.delete('/seller/delete/:id', (req, res) => {
   DeleteSeller(db,req, res);
 })
-app.delete('/seller/decline/:id', (req, res) => {
+app.delete('/seller/decline/:id', (req, res) => { 
   DeclineSeller(db,req, res);
 })
 app.delete('/art/decline/:id', (req, res) => {
   declineArt(db,req, res);
 })
+app.post('/product' , (req,res)=>{
+  const id = req.body.id
+  const sql = 'SELECT * FROM artwork WHERE id =?'
+  db.query(sql,[id], (err,result)=>{
+    if(err) return res.json(err)
+    return res.json(result)
+  })
+})
 
+
+
+
+
+app.delete('/user/delete/:id', (req, res) => {
+  const id = req.params.id;
+  const deleteUser = 'DELETE FROM users WHERE id = ?'
+  db.query(deleteUser, id, (error, results) => {
+    if (error) {
+      res.json({ error: 'Internal server error' });
+    } else {
+      res.json({Message: "User deleted succefully"})
+    }
+  });
+});
 
 const db = mysql.createConnection({ 
   host: 'localhost',

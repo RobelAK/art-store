@@ -11,7 +11,7 @@ export default function DeleteSeller(db, req, res) {
     }
 
     db.query(deleteFromArtwork, [id], (errArtwork, resultArtwork) => {
-      if (errArtwork) {
+      if (errArtwork) { 
         console.error('Error declining seller (artwork table):', errArtwork);
         return res.status(500).json({ error: 'Internal server error' });
       }

@@ -22,14 +22,16 @@ const UserManagement = () => {
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      axios.put('http://localhost:8081/seller/delete/' + id)
-        .then(res => {
-          setUsers(users.filter(user => user.id !== id));
+      axios
+        .delete(`http://localhost:8081/user/delete/${id}`)
+        .then((res) => {
+          // setUsers(users.filter((user) => user.id !== id));
+          console.log(res.data);
+          window.location.reload()
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   };
-
   const handleSearch = () => {
     const filteredUsers = originalUsers.filter(
       (user) =>
@@ -44,10 +46,10 @@ const UserManagement = () => {
     setSelectedRole(selectedRole);
     
     if (selectedRole === 'all') {
-      setUsers(originalUsers); // Reset to original users if 'All Roles' selected
+      setUsers(originalUsers);
     } else {
       const filteredUsers = originalUsers.filter(user => user.role === selectedRole);
-      setUsers(filteredUsers); // Filter based on selected role
+      setUsers(filteredUsers);
     }
   };
 

@@ -1,76 +1,134 @@
-import React, {useState} from "react";
-import PostedArt from "../../components/users/PostedArt";
-import Footer from "../../components/users/Footer";
-import Navbar from "../../components/users/Navbar";
+import React, { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Container,
   Grid,
-  Breadcrumbs,
-  Link,
   Card,
   CardContent,
-  CardMedia,
   Button,
   Typography,
   Box,
+  Avatar,
+  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
-  TextField,
   DialogActions,
-  Avatar,
-  IconButton
+  TextField,
+  FormLabel,
 } from "@mui/material";
+import axios from "axios";
+import Footer from "../../components/users/Footer";
+import Navbar from "../../components/users/Navbar";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
-  const [fullName, setFullName] = useState("Johnatan Smith");
-  const [email, setEmail] = useState("example@example.com");
-  const [mobile, setMobile] = useState("(098) 765-4321");
-  const [address, setAddress] = useState("Bay Area, San Francisco, CA");
+  axios.defaults.withCredentials = true;
+  const navigate = useNavigate()
+  const [id, setId] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
+  const [newPassword, setnewPassword] = useState("");
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [OpenEditProfile, setOpenEditProfile] = useState(false);
+  const [newName, setNewName] = useState("");
 
-  const [openFullName, setOpenFullName] = useState(false);
-  const [openEmail, setOpenEmail] = useState(false);
-  const [openMobile, setOpenMobile] = useState(false);
-  const [openAddress, setOpenAddress] = useState(false);
+  const handleOpenEditProfile = () => {
+    setOpenEditProfile(true);
+  };
 
-  const handleOpenDialog = (field) => {
-    switch (field) {
-      case "Full Name":
-        setOpenFullName(true);
-        break;
-      case "Email":
-        setOpenEmail(true);
-        break;
-      case "Mobile":
-        setOpenMobile(true);
-        break;
-      case "Address":
-        setOpenAddress(true);
-        break;
-      default:
-        break;
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      setId(user.id);
+      setName(user.name);
+      setEmail(user.email);
+      setRole(user.role);
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  const handleNewname = (event) => {
+    setNewName(event.target.value);
+  };
+  const handleCurrentPassword = (event) => {
+    setCurrentPassword(event.target.value);
+  };
+  const handleNewPassword = (event) => {
+    setnewPassword(event.target.value);
+  };
+  const handleNewPasswordConfirm = (event) => {
+    setNewPasswordConfirm(event.target.value);
+  };
+
+  
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(
+      password
+    );
+
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumber &&
+      hasSpecialChar
+    );
+  };
+  const handleChangeName = (event) => {
+    event.preventDefault();
+    localStorage.removeItem("token");
+    const value = {
+      name: newName,
+      id: id,
+      email: email,
+      role: role,
+    };
+    axios
+      .post("http://localhost:8081/profile/changename", value)
+      .then((res) => {
+        const token = res.data.token;
+        localStorage.removeItem("token");
+        localStorage.setItem("token", token);
+        alert(res.data.Message);
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
+  const handleChangePassword = (event) => {
+    event.preventDefault();
+    const value = {
+      id: id,
+      newPassword: newPassword,
+      newPasswordConfirm: newPasswordConfirm,
+      currentPassword: currentPassword,
+    };
+    const isValid = validatePassword(newPassword);
+    if (!isValid) {
+      console.log("Invalid Password");
+    } else {
+      if (newPassword == newPasswordConfirm) {
+        axios
+          .post("http://localhost:8081/profile/changepassword", value)
+          .then((res) => {
+            alert(res.data.Message);
+            window.location.reload();
+          })
+          .catch((err) => console.log(err));
+      } else {
+        console.log("Password doesnt match");
+      }
     }
   };
 
-  const handleCloseDialog = (field) => {
-    switch (field) {
-      case "Full Name":
-        setOpenFullName(false);
-        break;
-      case "Email":
-        setOpenEmail(false);
-        break;
-      case "Mobile":
-        setOpenMobile(false);
-        break;
-      case "Address":
-        setOpenAddress(false);
-        break;
-      default:
-        break;
-    }
-  };
   return (
     <>
       <Navbar />
@@ -107,79 +165,154 @@ function ProfilePage() {
         <Container
           sx={{ display: "flex", justifyContent: "end", marginTop: -12 }}
         >
-          <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ marginRight: 2 }}
+            onClick={handleOpenEditProfile}
+          >
             Edit Profile
           </Button>
-          <Button variant="outlined" color="primary">
+          {/* <Button variant="outlined" color="primary">
             Add Art
-          </Button>
+          </Button> */}
         </Container>
         <CardContent sx={{ textAlign: "center" }}>
           <Typography variant="h5" component="div" gutterBottom>
-            User Name
-          </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph>
-            This is the user's bio. Add more information about yourself.
+            {name}
           </Typography>
         </CardContent>
       </Card>
 
+      <Card sx={{ mb: 4, borderTop: "1px solid black" }}>
+        <CardContent>
+          <Grid container spacing={2} mb={2}>
+            <Grid item xs={3}>
+              <Typography variant="body2">{email}</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="textSecondary">
+                {name}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} mb={2}>
+            <Grid item xs={3}>
+              <Typography variant="body2">Email</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="textSecondary">
+                {email}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} mb={2}>
+            <Grid item xs={3}>
+              <Typography variant="body2">Phone</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="textSecondary">
+                0911111111
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} mb={2}>
+            <Grid item xs={3}>
+              <Typography variant="body2">Password</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="textSecondary">
+                password
+              </Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
 
-
-      <Card sx={{ mb: 4, borderTop: '1px solid black' }}>
-              <CardContent>
-                <Grid container spacing={2}>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">Full Name</Typography>
+      <Dialog open={OpenEditProfile} onClose={() => setOpenEditProfile(false)}>
+        <Container sx={{ padding: 2 }}>
+          <Grid sx={{display: 'flex', justifyContent: 'center'}}>
+            <Typography>Edit Profile</Typography>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Box component="form" onSubmit={handleChangePassword}>
+                <Grid container rowSpacing={2}>
+                  <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography>Edit Password</Typography>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="body2" color="textSecondary">
-                      {fullName}
-                    </Typography>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      required
+                      type="text"
+                      name="currentPassword"
+                      label="Current password"
+                      onChange={handleCurrentPassword}
+                    />
                   </Grid>
-                  <Grid item xs={3}>
-                    <Button variant="outlined" size="small" onClick={() => handleOpenDialog('Full Name')}>Edit</Button>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      required
+                      type="text"
+                      name="newPassword"
+                      label="New password"
+                      onChange={handleNewPassword}
+                    />
                   </Grid>
-
-                  <Grid item xs={3}>
-                    <Typography variant="body2">Email</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="body2" color="textSecondary">
-                      {email}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Button variant="outlined" size="small" onClick={() => handleOpenDialog('Email')}>Edit</Button>
-                  </Grid>
-
-                  <Grid item xs={3}>
-                    <Typography variant="body2">Mobile</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="body2" color="textSecondary">
-                      {mobile}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Button variant="outlined" size="small" onClick={() => handleOpenDialog('Mobile')}>Edit</Button>
-                  </Grid>
-
-                  <Grid item xs={3}>
-                    <Typography variant="body2">Address</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="body2" color="textSecondary">
-                      {address}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Button variant="outlined" size="small" onClick={() => handleOpenDialog('Address')}>Edit</Button>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      required
+                      type="text"
+                      name="newPasswrodConfirm"
+                      label="Confirm password"
+                      onChange={handleNewPasswordConfirm}
+                    />
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
-      
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 1 }}
+                >
+                  Confirm
+                </Button>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box component="form" onSubmit={handleChangeName}>
+                <Grid container rowSpacing={2}>
+                  <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography>Edit Name</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      required
+                      type="text"
+                      name="newname"
+                      label="New name"
+                      onChange={handleNewname}
+                    />
+                  </Grid>
+
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 1 }}
+                >
+                  Confirm
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Dialog>
       <Footer />
     </>
   );
