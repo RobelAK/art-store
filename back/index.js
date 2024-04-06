@@ -114,9 +114,14 @@ app.delete('/art/decline/:id', (req, res) => {
 app.post('/product' , (req,res)=>{
   const id = req.body.id
   const sql = 'SELECT * FROM artwork WHERE id =?'
+  const username = 'SELECT name FROM users WHERE id = ?'
   db.query(sql,[id], (err,result)=>{
     if(err) return res.json(err)
-    return res.json(result)
+    const abebe = result[0]
+    db.query(username, [result[0].user_id], (err,result)=>{
+      if(err) return res.json("error happned and i dont know what it is")
+      return res.json({artInfo: abebe, sellername: result[0].name})
+  })
   })
 })
 

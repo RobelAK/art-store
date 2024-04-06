@@ -23,6 +23,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 function Product() {
   const [artInfo, setArtInfo] = useState([]);
+  const [sellerName, setSellerName] = useState('')
   const [selectedButton, setSelectedButton] = useState(1);
   const [rating, setRating] = useState(4);
   const id = useParams();
@@ -31,7 +32,8 @@ function Product() {
     axios
       .post("http://localhost:8081/product", id)
       .then((res) => {
-        setArtInfo(res.data);
+        setArtInfo(res.data.artInfo);
+        setSellerName(res.data.sellername)
       })
       .catch((err) => {
         console.log(err);
@@ -61,8 +63,6 @@ function Product() {
           backgroundImage: "linear-gradient(to bottom, #dbe4f0, #f0f4f7)",
         }}
       >
-        {artInfo.map((item) => (
-          <div key={item.id}>
             <Grid container>
               <Grid item xs={12} md={7}>
                 <Card sx={{
@@ -80,7 +80,7 @@ function Product() {
                     component="img"
                     alt="Artwork Preview"
                     height="auto"
-                    src={`http://localhost:8081/images/${item.art}`}
+                    src={`http://localhost:8081/images/${artInfo.art}`}
                     sx={{
                       maxWidth: selectedButton === 1 ? '200px' : selectedButton === 2 ? '260px' : '340px',
                       aspectRatio: '4/5',
@@ -132,7 +132,7 @@ function Product() {
                   >
                     <CardContent>
                       <Typography variant="h4" fontFamily={'sora,sans-serif'}>
-                        {item.title}
+                        {artInfo.title}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -140,7 +140,7 @@ function Product() {
                         color="text.secondary"
                         gutterBottom
                       >
-                        by {item.artist}
+                        by {sellerName}
                       </Typography>
                       <Divider />
                       <Typography
@@ -149,7 +149,7 @@ function Product() {
                         fontFamily={'sora,sans-serif'}
                         paragraph
                       >
-                        {item.description}
+                        {artInfo.description}
                       </Typography>
                       <Divider />
                       <Typography variant="body2" fontWeight="bold">
@@ -196,7 +196,7 @@ function Product() {
                         fontFamily={'sora,sans-serif'}
                         gutterBottom
                       >
-                        Price : {item.price} birr
+                        Price : {artInfo.price} birr
                       </Typography>
                       <Box
                         sx={{
@@ -238,8 +238,6 @@ function Product() {
                 </Box>
               </Grid>
             </Grid>
-          </div>
-        ))}
       </Box>
       <Typography
         variant="body2"
