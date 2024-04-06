@@ -74,7 +74,7 @@ app.get('/admin/sellerstable', (req, res) => {
     return res.json(data);
   });
 });
-app.post('/add/upload', upload, async (req, res) => {
+app.post('/art/upload', upload, async (req, res) => {
   AddArt(db, req, res);
 });
 
@@ -110,6 +110,14 @@ app.delete('/seller/decline/:id', (req, res) => {
 })
 app.delete('/art/decline/:id', (req, res) => {
   declineArt(db,req, res);
+})
+app.post('/product' , (req,res)=>{
+  const id = req.body.id
+  const sql = 'SELECT * FROM artwork WHERE id =?'
+  db.query(sql,[id], (err,result)=>{
+    if(err) return res.json(err)
+    return res.json(result)
+  })
 })
 
 

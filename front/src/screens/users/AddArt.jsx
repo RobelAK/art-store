@@ -3,7 +3,7 @@ import { Container, Typography, TextField, Button, Grid, Select, MenuItem, FormC
 import { PhotoCamera } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Footer from './Footer';
+import Footer from '../../components/users/Footer';
 
 function AddArt() {
   const [title, setTitle] = useState("");
@@ -14,7 +14,9 @@ function AddArt() {
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
-  const handleUpload = async () => {
+  const handleUpload = async (event) => {
+    
+    event.preventDefault();
     try {
       const formData = new FormData();
       formData.append("title", title);
@@ -22,30 +24,21 @@ function AddArt() {
       formData.append("category", category);
       formData.append("price", price);
       formData.append('art', art);
-
-      // Get the token from local storage
       const token = localStorage.getItem('token');
-      console.log("Token:", token);
       if (!token) {
         console.error('Token is not available');
         return;
       }
 
       // Decode the token to extract user id
-      const tokenParts = token.split('.');
-      if (tokenParts.length !== 3) {
-        console.error('Token format is incorrect');
-        return;
-      }
-      const payload = JSON.parse(atob(tokenParts[1]));
-      const userId = payload.id;
-      console.log("User ID:", userId);
+      const user = JSON.parse(atob(token.split(".")[1]));
+      const userId = user.id;
 
       // Append userId to form data
       formData.append('user_id', userId);
       console.log("Form Data User ID:", formData.get('user_id'));
 
-      const response = await axios.post('http://localhost:8081/add/upload', formData);
+      const response = await axios.post('http://localhost:8081/art/upload', formData);
 
       if (response.data.status === "Success") {
         setMsg("");
@@ -71,7 +64,7 @@ function AddArt() {
         <Typography variant="h4" sx={{ fontFamily: 'sora,sans-serif' }} gutterBottom>
           Add New Art
         </Typography>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} component="form" onSubmit={handleUpload}>
           <Grid item xs={12}>
             <input
               accept="image/*"
@@ -103,6 +96,7 @@ function AddArt() {
               fullWidth
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
             />
           </Grid>
           <Grid item xs={12}>
@@ -121,9 +115,11 @@ function AddArt() {
               <InputLabel>Category</InputLabel>
               <Select
                 name="category"
+                label="Category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 fullWidth
+                required
               >
                 <MenuItem value="landscape">Landscape</MenuItem>
                 <MenuItem value="portrait">Portrait</MenuItem>
@@ -142,10 +138,11 @@ function AddArt() {
               InputProps={{
                 startAdornment: <InputAdornment position="start">birr</InputAdornment>,
               }}
+              required
             />
           </Grid>
           <Grid item xs={6} >
-            <Button variant="contained" onClick={handleUpload} color="primary"  >
+            <Button variant="contained" color="primary" type='submit' >
               Add Art
             </Button>
             <Button variant="outlined" style={{ margin: '15px' }} component={Link} to="/" color="primary">
