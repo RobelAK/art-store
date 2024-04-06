@@ -22,7 +22,7 @@ const SignupAs = () => {
       console.error('Token is not available');
       return;
     }
-  
+
     // Decode the token to extract user id
     const tokenParts = token.split('.');
     if (tokenParts.length !== 3) {
@@ -32,10 +32,10 @@ const SignupAs = () => {
     const payload = JSON.parse(atob(tokenParts[1]));
     const userId = payload.id;
     console.log("User ID:", userId);
-  
+
     // Add userId to form data
     const updatedFormData = { ...formData, user_id: userId };
-  
+
     axios.put(`http://localhost:8081/signupas/${userId}`, updatedFormData)
       .then(response => {
         console.log(response.data);
@@ -45,7 +45,7 @@ const SignupAs = () => {
         console.error('Error updating user: ', error);
         // Handle error (e.g., show an error message)
       });
-  };  
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +66,7 @@ const SignupAs = () => {
 
       <Container maxWidth="md" style={{ alignContent: 'center', marginTop: '2%' }}>
         <Grid container spacing={2}>
-          <Grid item sx={{sm:'12' , md:'6'}}>
+          <Grid item xs={12} sm={12} md={6} lg={6}>
             <div style={{ position: 'relative', width: '100%', borderRadius: '2%' }}>
               <CardMedia
                 component="video"
@@ -87,7 +87,7 @@ const SignupAs = () => {
               </div>
             </div>
           </Grid>
-          <Grid item sx={{sm:'12' , md:'6'}}>
+          <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card sx={{ padding: '12%', borderRadius: '4%', aspectRatio: '4/5' }}>
               <Box justifyContent='center' display='flex'>
                 <Link to="/">
