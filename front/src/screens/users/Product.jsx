@@ -13,8 +13,11 @@ import {
   Button,
   Divider,
   CardMedia,
-  Rating
+  Rating,
+  TextField
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+
 import Footer from "../../components/users/Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -23,17 +26,26 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 function Product() {
   const [artInfo, setArtInfo] = useState([]);
-  const [sellerName, setSellerName] = useState('')
+  const [sellerInfo, setSellerInfo] = useState('')
+  const [quantity, setQuantity] = useState(1)
+  const [userid, setUserId] = useState('')
   const [selectedButton, setSelectedButton] = useState(1);
   const [rating, setRating] = useState(4);
   const id = useParams();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      setUserId(user.id);
+    } else {
+      navigate("/login");
+    }
     axios
       .post("http://localhost:8081/product", id)
       .then((res) => {
         setArtInfo(res.data.artInfo);
-        setSellerName(res.data.sellername)
+        setSellerInfo(res.data.sellerinfo)
       })
       .catch((err) => {
         console.log(err);
@@ -47,9 +59,32 @@ function Product() {
   const handleRatingChange = (event, newValue) => {
     setRating(newValue);
   };
+  const handleIncrement = (e)=>{
+    if(quantity == 3) setQuantity(3)
+    else setQuantity(prevCount=> prevCount + 1)
+    
+  }
+  const handledecrement = (e)=>{
+    if(quantity == 1) setQuantity(1)
+    else setQuantity(prevCount=> prevCount - 1)
+
+  }
 
   const handleAddToCart = () => {
-    console.log('Product added to cart!');
+    const values = {
+      artId: artInfo.id,
+      userId: userid,
+      artPrice: artInfo.price,
+      quantity: quantity
+    }
+    axios
+      .post("http://localhost:8081/addtocart", values)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -140,7 +175,7 @@ function Product() {
                         color="text.secondary"
                         gutterBottom
                       >
-                        by {sellerName}
+                        by {sellerInfo.name}
                       </Typography>
                       <Divider />
                       <Typography
@@ -198,6 +233,13 @@ function Product() {
                       >
                         Price : {artInfo.price} birr
                       </Typography>
+                      <Typography>Quantity</Typography>
+
+                      <Box sx={{display: 'flex',alignItems:'center',justifyContent:'center'}}>
+                        <Button onClick={handledecrement} variant="outlined"sx={{p:0}}>-</Button>
+                        <Card sx={{width: 100, background: 'transparent'}}>{quantity}</Card>
+                        <Button onClick={handleIncrement} variant="outlined"sx={{p:0}}>+</Button>
+                      </Box>
                       <Box
                         sx={{
                           display: 'flex',

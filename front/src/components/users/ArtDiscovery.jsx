@@ -32,7 +32,7 @@ const ArtDiscovery = () => {
     <Box>
       <Grid container spacing={3} sx={{ padding: "20px"}}>
         {art.map((Art, index) => (
-          <Grid item key={`${Art.id}-${index}`} xs={12} sm={6} md={4} lg={2}>
+          <Grid item key={`${Art.id}-${index}`} xs={12} sm={6} md={3} lg={2}>
             
             <Link href= {`/product/${Art.id}`} underline='none'>
               <Card

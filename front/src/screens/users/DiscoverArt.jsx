@@ -8,7 +8,6 @@ import {  Container, CssBaseline, } from "@mui/material";
 
 function DiscoverArt() {
   return (
-
     <>
       <CssBaseline />
       <Container sx={{ height: '80px', overflow: 'hidden' }} />
