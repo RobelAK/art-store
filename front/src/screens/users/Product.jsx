@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../components/users/Navbar";
 import Footer from "../../components/users/Footer";
 import {
@@ -81,6 +81,16 @@ function Product() {
   const handleAddToCart = (item) => {
     const selectedSize = getSizeFromButtonNumber(selectedButton);
     const calculatedPrice = calculatePrice(selectedSize);
+
+    // Retrieve user's token from local storage
+    const token = localStorage.getItem('token');
+
+    // Decode the token to extract the identifier (e.g., id)
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const id = decodedToken.id;
+
+    console.log("Decoded ID:", id); // Log the decoded ID
+
     const artToAdd = {
       id: item.id,
       title: item.title,
@@ -91,15 +101,18 @@ function Product() {
       art: item.art,
     };
 
-    // Get existing cart items from local storage
-    const existingCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    // Add the new item to the existing cart items
-    const updatedCartItems = [...existingCartItems, artToAdd];
-    // Store the updated cart items in local storage
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-    
+    // Retrieve existing cart items or initialize an empty array
+    const storedCartItems = JSON.parse(localStorage.getItem(id)) || [];
+
+    // Add the new item to the cart
+    const updatedCartItems = [...storedCartItems, artToAdd];
+
+    // Save the updated cart items back to local storage
+    localStorage.setItem(id, JSON.stringify(updatedCartItems));
+
     console.log("Art added to cart:", artToAdd);
   };
+
 
   return (
     <>
@@ -140,8 +153,8 @@ function Product() {
                         selectedButton === 1
                           ? "200px"
                           : selectedButton === 2
-                          ? "260px"
-                          : "340px",
+                            ? "260px"
+                            : "340px",
                       aspectRatio: "4/5",
                       boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.3)",
                       borderRadius: "4px",

@@ -4,12 +4,23 @@ import Footer from '../../components/users/Footer';
 import Navbar from '../../components/users/Navbar';
 import { Link } from 'react-router-dom';
 
-const CartPage = ({ removeFromCart }) => {
+const CartPage = ({}) => {
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    // Retrieve cart items from local storage
-    const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    // Retrieve user's token from local storage
+    const token = localStorage.getItem('token');
+    
+    // Decode the token to extract the identifier (e.g., id)
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const id = decodedToken.id;
+  
+    console.log("Decoded ID:", id); // Log the decoded ID
+    
+    // Retrieve cart items associated with the ID
+    const storedCartItems = JSON.parse(localStorage.getItem(id)) || [];
+    
+    // Set cart items state
     setCartItems(storedCartItems);
   }, []);
 
@@ -17,12 +28,15 @@ const CartPage = ({ removeFromCart }) => {
     return cartItems.reduce((total, item) => total + item.price, 0);
   };
 
-  const handleRemoveFromCart = (itemToRemove) => {
+  const handleRemoveFromCart = (itemId) => {
     // Filter out the item to remove
-    const updatedCartItems = cartItems.filter(item => item !== itemToRemove);
+    const updatedCartItems = cartItems.filter(item => item.id !== itemId);
     // Update state and local storage
     setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    const token = localStorage.getItem('token');
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const id = decodedToken.id;
+    localStorage.setItem(id, JSON.stringify(updatedCartItems));
   };
 
   return (
@@ -44,20 +58,20 @@ const CartPage = ({ removeFromCart }) => {
                       component="img"
                       alt={item.title}
                       height="230"
-                      image={item.art}
+                      src={item.art}
                     />
                     <CardContent >
                       <Typography variant="h6" fontFamily='sora,sans-serif' fontWeight='light' component="div">
                         {item.title}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Size: {item.size} {/* Display the size of the art */}
+                        Size: {item.size}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         ${item.price}
                       </Typography>
                     </CardContent>
-                    <Button variant="contained" margin='-20px' fullWidth onClick={() => handleRemoveFromCart(item)} color="primary" >
+                    <Button variant="contained" margin='-20px' fullWidth onClick={() => handleRemoveFromCart(item.id)} color="primary" >
                       Remove
                     </Button>
                   </Card>
