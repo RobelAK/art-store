@@ -39,25 +39,23 @@ const ArtDiscovery = () => {
                 sx={{
                   backgroundColor: '#808080',
                   maxWidth: 260,
-                  aspectRatio: "3/5",
+                  aspectRatio: "4/5",
                   margin: "auto",
                   borderRadius: "4px",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
+                  
+                  
                 }}
               >
                 <CardMedia
                   component="img"
-                  sx={{ aspectRatio: "4/5" }}
+                  sx={{ aspectRatio: "4/5" ,
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.1)',
+                  },}}
                   src={`http://localhost:8081/images/${Art.art}`}
                   alt={Art.title}
                 />
-                <CardContent>
-                  <Typography>{Art.title}</Typography>
-                  <Typography>{Art.price+ " birr"}</Typography>
-                </CardContent>
               </Card>
             </Link>
           </Grid>

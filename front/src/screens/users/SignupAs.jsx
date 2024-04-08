@@ -15,7 +15,9 @@ const SignupAs = () => {
 
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    console.log("Submitting form:", formData);
+
     const token = localStorage.getItem('token');
     console.log("Token:", token);
     if (!token) {
@@ -35,16 +37,17 @@ const SignupAs = () => {
 
     // Add userId to form data
     const updatedFormData = { ...formData, user_id: userId };
+    console.log("Updated form data with user ID:", updatedFormData);
 
-    axios.put(`http://localhost:8081/signupas/${userId}`, updatedFormData)
-      .then(response => {
-        console.log(response.data);
-        navigate('/message'); // Navigate to '/message' after successful submission
-      })
-      .catch(error => {
-        console.error('Error updating user: ', error);
-        // Handle error (e.g., show an error message)
-      });
+    try {
+      
+      const response = await axios.put(`http://localhost:8081/signupas/${userId}`, updatedFormData);
+      console.log("Server response:", response.data);
+      navigate('/message'); // Navigate to '/message' after successful submission
+    } catch (error) {
+      console.error('Error updating user: ', error);
+      // Handle error (e.g., show an error message)
+    }
   };
 
   const handleChange = (e) => {

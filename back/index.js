@@ -92,8 +92,8 @@ app.put('/art/hide/:id',upload, async (req, res) => {
   HideArts(db, req, res);
 });
 
-app.post('/signupas', (req, res) => {
-  SignupAs (db, req, res)
+app.put('/signupas/:user_id', async (req, res) => {
+  SignupAs(db, req, res);
 });
 
 app.put('/art/approve/:id', (req, res) =>{

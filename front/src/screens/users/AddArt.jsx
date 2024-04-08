@@ -33,9 +33,11 @@ function AddArt() {
       // Decode the token to extract user id
       const user = JSON.parse(atob(token.split(".")[1]));
       const userId = user.id;
+      const artist = user.name;
 
       // Append userId to form data
       formData.append('user_id', userId);
+      formData.append('artist', artist);
       console.log("Form Data User ID:", formData.get('user_id'));
 
       const response = await axios.post('http://localhost:8081/art/upload', formData);
