@@ -68,7 +68,7 @@ function Product() {
   const getSizeFromButtonNumber = (buttonNumber) => {
     switch (buttonNumber) {
       case 1:
-        return "8x10"
+        return "8x10";
       case 2:
         return "10x12";
       case 3:
