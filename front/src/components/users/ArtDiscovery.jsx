@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import { Link } from 'react-router-dom';
 import { Button, Card, CardContent, CardMedia, Grid, Typography, Box, Link } from '@mui/material';
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);

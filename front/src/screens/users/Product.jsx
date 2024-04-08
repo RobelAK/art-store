@@ -27,9 +27,10 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 function Product() {
   const [artInfo, setArtInfo] = useState([]);
   const [sellerInfo, setSellerInfo] = useState('')
+  const [size, setSize] = useState('small')
   const [quantity, setQuantity] = useState(1)
   const [userid, setUserId] = useState('')
-  const [selectedButton, setSelectedButton] = useState(1);
+  const [selectedButton, setSelectedButton] = useState('small');
   const [rating, setRating] = useState(4);
   const id = useParams();
 
@@ -38,8 +39,6 @@ function Product() {
     if (token) {
       const user = JSON.parse(atob(token.split(".")[1]));
       setUserId(user.id);
-    } else {
-      navigate("/login");
     }
     axios
       .post("http://localhost:8081/product", id)
@@ -52,8 +51,9 @@ function Product() {
       });
   }, [id]);
 
-  const handleButtonClick = (buttonNumber) => {
-    setSelectedButton(buttonNumber);
+  const handleSizeChange = (size) => {
+    setSelectedButton(size);
+    setSize(size);
   };
 
   const handleRatingChange = (event, newValue) => {
@@ -72,10 +72,14 @@ function Product() {
 
   const handleAddToCart = () => {
     const values = {
+      sellerName: sellerInfo.name,
+      artTitle: artInfo.title,
+      art: artInfo.art,
       artId: artInfo.id,
       userId: userid,
       artPrice: artInfo.price,
-      quantity: quantity
+      quantity: quantity,
+      size: size,
     }
     axios
       .post("http://localhost:8081/addtocart", values)
@@ -117,7 +121,7 @@ function Product() {
                     height="auto"
                     src={`http://localhost:8081/images/${artInfo.art}`}
                     sx={{
-                      maxWidth: selectedButton === 1 ? '200px' : selectedButton === 2 ? '260px' : '340px',
+                      maxWidth: selectedButton == 'small' ? '200px' : selectedButton == 'medium' ? '260px' : '340px',
                       aspectRatio: '4/5',
                       boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.3)',
                       borderRadius: '4px',
@@ -193,37 +197,27 @@ function Product() {
                       <ButtonGroup
                         sx={{
                           mb: 2,
-                          display: 'flex',
-                          flexDirection: { xs: 'column', sm: 'row' },
-                          alignItems: 'center',
+                          display: "flex",
+                          justifyContent: "center",
                         }}
                       >
                         <Button
-                          variant="outlined"
-                          onClick={() => {
-                            handleButtonClick(1);
-                          }}
-                          disabled={selectedButton === 1}
+                          variant={selectedButton == 'small' ? "contained" : "outlined"}
+                          onClick={() => handleSizeChange('small')}
                         >
-                          M 45*32cm
+                          8x10
                         </Button>
                         <Button
-                          variant="outlined"
-                          onClick={() => {
-                            handleButtonClick(2);
-                          }}
-                          disabled={selectedButton === 2}
+                          variant={selectedButton == 'medium' ? "contained" : "outlined"}
+                          onClick={() => handleSizeChange('medium')}
                         >
-                          L 67.5*48cm
+                          10x12
                         </Button>
                         <Button
-                          variant="outlined"
-                          onClick={() => {
-                            handleButtonClick(3);
-                          }}
-                          disabled={selectedButton === 3}
+                          variant={selectedButton == 'large' ? "contained" : "outlined"}
+                          onClick={() => handleSizeChange('large')}
                         >
-                          XL 90*64cm
+                          12x16
                         </Button>
                       </ButtonGroup>
                       <Typography

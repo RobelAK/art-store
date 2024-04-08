@@ -126,20 +126,27 @@ app.post("/product", (req, res) => {
   });
 });
 app.post("/addtocart", (req, res) => {
-  const { artId, userId, artPrice, quantity } = req.body;
-  const check = "SELECT * FROM cart WHERE user_id = ? And art_id = ?";
-  const sql =
-    "INSERT INTO cart (`user_id`,`art_id`,`price`,`quantity`) Values (?,?,?,?)";
-  db.query(check, [userId, artId], (err, result) => {
-    if (err) return res.json("query error");
+  const { artId, userId, artPrice, quantity, size, artTitle,art, sellerName} = req.body;
+  const check = "SELECT * FROM cart WHERE user_id = ? And art_id = ? AND size = ?";
+  const sql = "INSERT INTO cart (`user_id`,`art_id`,`price`,`quantity`,`size`,`art`,`art_title`,`seller_name`) Values (?,?,?,?,?,?,?,?)";
+  db.query(check, [userId, artId, size], (err, result) => {
+    if (err) return res.json("query error"); 
     if (result.length == 0) {
-      db.query(sql, [userId, artId, artPrice, quantity], (err, result) => {
+      db.query(sql, [userId, artId, artPrice, quantity, size,art,artTitle,sellerName], (err, result) => {
         if (err) return res.json(err);
         return res.json("item added to cart");
       });
     } else return res.json("item already in cart");
   });
 });
+app.post("/cart", (req,res)=>{
+  const userId = req.body.userId
+  const sql = "SELECT * FROM cart WHERE user_id = ?"
+  db.query(sql, [userId], (err,result)=>{
+    if(err) return res.json(err) 
+    else return res.json(result)
+  })
+})
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;
