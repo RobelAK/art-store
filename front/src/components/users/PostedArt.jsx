@@ -1,53 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { Link } from 'react-router-dom';
 import { Container } from '@mui/material';
+import axios from 'axios';
 
 const PostedArt = () => {
-  // Dummy data for image URLs
-  const artImages = [
-    'https://source.unsplash.com/random/800x1000',
-    'https://source.unsplash.com/random/800x1001',
-    'https://source.unsplash.com/random/800x1002',
-    'https://source.unsplash.com/random/800x1003',
-    'https://source.unsplash.com/random/800x1004',
-    'https://source.unsplash.com/random/800x1005',
-    'https://source.unsplash.com/random/800x1006',
-    'https://source.unsplash.com/random/800x1007',
-    // Add more image URLs as needed
-  ];
+  const [artImages, setArtImages] = useState([]);
+
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        // Fetch posted artworks from the backend with authorization token
+        const response = await axios.get("http://localhost:8081/user/art", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setArtImages(response.data);
+      } catch (error) {
+        console.error('Error fetching posted artworks:', error);
+      }
+    };
+    fetchArtworks();
+  }, []);
 
   return (
     <Container>
-
-    <Grid container spacing={2} marginTop={3}>
-      {artImages.map((imageUrl, index) => (
-        <Grid item xs={6} sm={4} md={2} key={index}>
-          <Card >
-            <Link to='/product' >
-              <CardMedia
-                component="img"
-                alt={`Artwork ${index + 1}`}
-                height="auto"
-
-                image={imageUrl}
-                sx={{
-                  height: '40%',
-                  width: '100%',
-                  aspectRatio: '4/5',
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: 'scale(1.1)',
-                  },
-                }}
-              />
-            </Link>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
+      <Grid container spacing={2} marginTop={3}>
+        {artImages.map((artwork) => (
+          <Grid item xs={6} sm={4} md={2} key={artwork.id}>
+            <Card>
+                <CardMedia
+                  component="img"
+                  alt={`Artwork ${artwork.id}`}
+                  height="auto"
+                  src={`http://localhost:8081/images/${artwork.art}`} // Assuming 'art' is the property containing the image URL
+                  sx={{
+                    height: '40%',
+                    width: '100%',
+                    aspectRatio: '4/5',
+                    transition: 'transform 0.2s',
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                    },
+                  }}
+                />
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
 };
