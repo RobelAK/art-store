@@ -1,105 +1,154 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, Button, Container } from '@mui/material';
-import Footer from '../../components/users/Footer';
-import Navbar from '../../components/users/Navbar';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Container,
+  Box,
+  Paper,
+  Divider,
+  Link,
+} from "@mui/material";
+import Footer from "../../components/users/Footer";
+import Navbar from "../../components/users/Navbar";
 
-const CartPage = ({}) => {
+const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
-
   useEffect(() => {
-    // Retrieve user's token from local storage
-    const token = localStorage.getItem('token');
-    
-    // Decode the token to extract the identifier (e.g., id)
-    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-    const id = decodedToken.id;
-  
-    console.log("Decoded ID:", id); // Log the decoded ID
-    
-    // Retrieve cart items associated with the ID
-    const storedCartItems = JSON.parse(localStorage.getItem(id)) || [];
-    
-    // Set cart items state
-    setCartItems(storedCartItems);
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      axios
+        .post("http://localhost:8081/cart", {userId: user.id })
+        .then((res) => {
+          setCartItems(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      console.log("token not available");
+    }
   }, []);
 
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price, 0);
-  };
+  const handleRemoveItem = (id)=>{
+    axios
+    .post("http://localhost:8081/removecartitem", id)
+    .then((res) => {
+      console.log(res.data)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
-  const handleRemoveFromCart = (itemId) => {
-    // Filter out the item to remove
-    const updatedCartItems = cartItems.filter(item => item.id !== itemId);
-    // Update state and local storage
-    setCartItems(updatedCartItems);
-    const token = localStorage.getItem('token');
-    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-    const id = decodedToken.id;
-    localStorage.setItem(id, JSON.stringify(updatedCartItems));
-  };
+
 
   return (
     <>
-      <div style={{ backgroundColor: '#f0f1f2' }}>
+
+      <Box style={{ backgroundColor: "#f0f1f2", minHeight: '100vh' }}>
         <Navbar />
-        <Container sx={{ height: '100px', overflow: 'hidden' }} />
-        <div style={{ textAlign: 'center' }}>
-          <Typography variant="h6" gutterBottom fontFamily={'sora,sans-serif'}>
-            Your Cart
-          </Typography>
-          <Container sx={{ Width: '290px', height: '4px', bgcolor: '#ebebeb', marginBottom: '40px' }}></Container>
-          {Array.isArray(cartItems) && cartItems.length > 0 ? (
-            <Grid container display='flex' justifyContent='Center' spacing={5}>
-              {cartItems.map((item) => (
-                <Grid item key={item.id} xs={8} sm={6} md={5} lg={2}>
-                  <Card sx={{ width: '200px', height: '370px', alignContent: 'center' }}>
+        <Container
+          sx={{
+            background: "",
+            padding: 0,
+            display: "flex",
+            alignItems: "center",
+            paddingTop: "100px",
+          }}
+        >
+          <Grid
+            container
+            m={0}
+            spacing={2}
+            direction="column"
+          >
+            {cartItems.map((cartItem, i) => (
+              <Grid key={i} item mt={2}>
+                  <Card sx={{ display: "flex"}}>
+                  <Link  href= {`/product/${cartItem.art_id}`} underline="none">
                     <CardMedia
                       component="img"
-                      alt={item.title}
-                      height="230"
-                      src={item.art}
+                      sx={{ width: 100, margin: 1 }}
+                      src={`http://localhost:8081/images/${cartItem.art}`}
+                      alt="Product Image"
                     />
-                    <CardContent >
-                      <Typography variant="h6" fontFamily='sora,sans-serif' fontWeight='light' component="div">
-                        {item.title}
+                  </Link>
+                    <Divider
+                      orientation="vertical"
+                      flexItem
+                      variant="middle"
+                      sx={{ backgroundColor: "black" }}
+                    />
+                    <CardContent sx={{ flex: 1 }}>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {cartItem.art_title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Size: {item.size}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        ${item.price}
+                      <Typography>
+                        {"by "+ cartItem.seller_name}
                       </Typography>
                     </CardContent>
-                    <Button variant="contained" margin='-20px' fullWidth onClick={() => handleRemoveFromCart(item.id)} color="primary" >
-                      Remove
-                    </Button>
+                    <Divider
+                      orientation="vertical"
+                      flexItem
+                      variant="middle"
+                      sx={{ backgroundColor: "black" }}
+                    />
+                    <CardContent sx={{ flex: 1 }}>
+                      <Typography variant="h5" component="div"  color="text.secondary">
+                        Size 
+                      </Typography>
+                      <Typography>{cartItem.size}</Typography>
+                    </CardContent>
+                    <Divider
+                      orientation="vertical"
+                      flexItem
+                      variant="middle"
+                      sx={{ backgroundColor: "black" }}
+                    />
+                    <CardContent sx={{ flex: 1 }}>
+                      <Typography variant="h5" component="div"  color="text.secondary">
+                        Quantity 
+                      </Typography>
+                      <Typography>{cartItem.quantity}</Typography>
+                    </CardContent>
+                    <Divider
+                      orientation="vertical"
+                      flexItem
+                      variant="middle"
+                      sx={{ backgroundColor: "black" }}
+                    />
+                    <CardContent>
+                      <Grid
+                        container
+                        direction="column"
+                        alignItems="flex-end"
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Typography variant="h6" color="text.secondary">
+                          Price:
+                        </Typography>
+                        <Typography>
+                          {cartItem.price *cartItem.quantity + " birr"}
+                        </Typography>
+                        <Button variant="outlined" onClick={() => handleRemoveItem(cartItem.id)}>Remove Item</Button>
+                      </Grid>
+                    </CardContent>
                   </Card>
                 </Grid>
-              ))}
-            </Grid>
-          ) : (
-            <Typography variant="body1" color="text.secondary">
-              Your cart is empty.
-            </Typography>
-          )}
-          <Container sx={{ Width: '290px', height: '4px', bgcolor: '#ebebeb', margin: '40px' }}></Container>
-          {cartItems.length > 0 && (
-            <div>
-              <Typography variant="h6" style={{ marginTop: '20px' }}>
-                Total: ${calculateTotal()}
-              </Typography>
-              <Link to='/Checkout'>
-                <Button variant="contained" color="primary" style={{ marginTop: '10px' }}>
-                  Checkout
-                </Button>
-              </Link>
-            </div>
-          )}
-          <Container sx={{ Width: '290px', height: '4px', bgcolor: '#ebebeb', margin: '40px' }}></Container>
-          <Footer />
-        </div>
-      </div>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
     </>
   );
 };
