@@ -141,7 +141,7 @@ app.post("/addtocart", (req, res) => {
 });
 app.post("/cart", (req,res)=>{
   const userId = req.body.userId
-  const sql = "SELECT * FROM cart WHERE user_id = ?"
+  const sql = "SELECT * FROM cart WHERE user_id = ?" 
   db.query(sql, [userId], (err,result)=>{
     if(err) return res.json(err) 
     else return res.json(result)
