@@ -16,6 +16,7 @@ const UserManagement = () => {
       .then(res => {
         setUsers(res.data);
         setOriginalUsers(res.data);
+        // console.log(res.data)
       })
       .catch(err => console.log(err));
   }, []);
@@ -25,9 +26,9 @@ const UserManagement = () => {
       axios
         .delete(`http://localhost:8081/user/delete/${id}`)
         .then((res) => {
-          // setUsers(users.filter((user) => user.id !== id));
+          setUsers(users.filter((user) => user.id !== id));
           console.log(res.data);
-          window.location.reload()
+          // window.location.reload()
         })
         .catch((err) => console.log(err));
     }
