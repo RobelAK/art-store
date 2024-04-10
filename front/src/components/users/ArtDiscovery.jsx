@@ -29,16 +29,17 @@ const ArtDiscovery = () => {
 
   return (
     <Box>
-      <Grid container spacing={3} sx={{ padding: "20px"}}>
+      <Grid container spacing={3} sx={{ padding: "50px"}}>
         {art.map((Art, index) => (
-          <Grid item key={`${Art.id}-${index}`} xs={12} sm={6} md={3} lg={2}>
+          <Grid sx={{padding: 3}} item key={`${Art.id}-${index}`} xs={12} sm={6} md={3} lg={3} xl={10}>
             
             <Link href= {`/product/${Art.id}`} underline='none'>
               <Card
                 sx={{
-                  backgroundColor: '#808080',
+                  padding: 1,
+                  backgroundColor: '#ebebeb',
                   maxWidth: 260,
-                  aspectRatio: "3/5",
+                  aspectRatio: "3.3/5",
                   margin: "auto",
                   borderRadius: "4px",
                   transition: "transform 0.2s",
@@ -49,26 +50,25 @@ const ArtDiscovery = () => {
               >
                 <CardMedia
                   component="img"
-                  sx={{ aspectRatio: "4/5" }}
+                  sx={{ aspectRatio: "4/5" ,background: 'aqua',borderRadius: "4px"}}
                   src={`http://localhost:8081/images/${Art.art}`}
                   alt={Art.title}
                 />
-                <CardContent>
-                  <Typography>{Art.title}</Typography>
-                  <Typography>{Art.price+ " birr"}</Typography>
+                <CardContent sx={{display: 'flex',justifyContent: 'center'}}>
+                  <Typography variant='h6'>{Art.title}</Typography>
                 </CardContent>
               </Card>
             </Link>
           </Grid>
         ))}
       </Grid>
-      <div
+      {/* <div
         style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
         <Button variant="contained" onClick={handleLoadMore}>
           Load More
         </Button>
-      </div>
+      </div> */}
     </Box>
   );
 };

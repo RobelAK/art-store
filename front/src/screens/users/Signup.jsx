@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, {userRef,useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
 import axios from "axios";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -16,33 +17,71 @@ import {
   TextField,
   ThemeProvider,
   createTheme,
+  Typography
 } from "@mui/material";
+const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_]{3,12}$/;
+const PASSWORD_VALID =/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
 
 function Signup() {
+  // const userRef = userRef()
   const defaultTheme = createTheme();
-  const [isValidPassword, setIsValidPassword] = useState(false);
-  const [isValidName, setIsValidName] = useState(false);
+
   const [name, setName] = useState("");
+  const [isValidName, setIsValidName] = useState(false);
+  const [userFocus,setUserFocus] = useState(false)
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [isValidPassword, setIsValidPassword] = useState(false);
+  const [passwordFocus,setPasswordFocus] = useState(false)
+
+  const [matchPassword, setMatchPassword] = useState("");
+  const [validMatch, setValidMatch] = useState(false);
+  const [matchFocus,setMatchFocus] = useState(false)
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  
+  const [errMsg, setErrMsg] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  useEffect(()=>{
+    // userRef.current.focus()
+  },[])
+  useEffect(()=>{
+    const result = NAME_VALID.test(name)
+    // console.log(result)
+    setIsValidName(result)
+  },[name])
+  useEffect(()=>{
+    const result = PASSWORD_VALID.test(password)
+    setIsValidPassword(result)
+    const match = password === matchPassword
+    setValidMatch(match)
+    console.log(match)
+  },[password,matchPassword])
+  
+  useEffect(()=>{
+    setErrMsg('')
+  },[name,password,matchPassword])
+  
+  
+  
   const navigate = useNavigate();
 
   const handleName = (event) => {
     setName(event.target.value);
-    setIsValidName(validateName(event.target.value));
   };
   const handleEmail = (event) => {
     setEmail(event.target.value);
   };
   const handlePassword = (event) => {
     setPassword(event.target.value);
-    setIsValidPassword(validatePassword(event.target.value));
   };
   const handlePasswordConfirm = (event) => {
-    setPasswordConfirm(event.target.value);
+    setMatchPassword(event.target.value);
   };
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -57,7 +96,6 @@ function Signup() {
     const minLength = 2;
     const maxLength = 20;
     const lettersRegex = /^[a-zA-Z]+$/;
-
     if (name.length < minLength || name.length > maxLength) {
       return false;
     }
@@ -90,7 +128,7 @@ function Signup() {
     name: name,
     email: email,
     password: password,
-    passwordConfirm: passwordConfirm,
+    passwordConfirm: matchPassword,
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -155,6 +193,7 @@ function Signup() {
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <Grid container rowSpacing={2}>
               <Grid item xs={12}>
+                {/* <input type="text" aria-invalid="false"/> */}
                 <TextField
                   size="small"
                   id="name"
@@ -162,7 +201,10 @@ function Signup() {
                   required
                   fullWidth
                   name="name"
+                  autoComplete="off"
                   onChange={handleName}
+                  helperText=''
+                  // error={!isValidName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -229,6 +271,7 @@ function Signup() {
                   }}
                 />
               </Grid>
+              <p className={"offscreen"} aria-live="assertive">{errMsg}</p>
               <Grid item xs={12}>
                 <FormControlLabel
                   control={

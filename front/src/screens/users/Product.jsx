@@ -17,9 +17,8 @@ import {
   TextField
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-
 import Footer from "../../components/users/Footer";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
@@ -33,6 +32,8 @@ function Product() {
   const [selectedButton, setSelectedButton] = useState('small');
   const [rating, setRating] = useState(4);
   const id = useParams();
+  
+const navigate = useNavigate()
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -71,6 +72,9 @@ function Product() {
   }
 
   const handleAddToCart = () => {
+    const token=localStorage.getItem('token')
+    if(token){
+      
     const values = {
       sellerName: sellerInfo.name,
       artTitle: artInfo.title,
@@ -89,6 +93,10 @@ function Product() {
       .catch((err) => {
         console.log(err);
       });
+    }
+    else{
+      navigate('/login')
+    }
   };
 
   return (

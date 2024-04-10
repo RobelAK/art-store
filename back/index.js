@@ -162,7 +162,7 @@ app.delete("/user/delete/:id", (req, res) => {
 app.post('/removecartitem', (req,res)=>{
   const {id} = req.body
   const sql = "DELETE FROM cart WHERE id=?"
-  db.query(sql,[id], (err,response)=>{
+  db.query(sql,[id], (err,response)=>{ 
     if(err) return res.json(err)
     return res.json('item deleted successfully')
   })
