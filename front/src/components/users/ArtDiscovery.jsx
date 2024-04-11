@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Card, Container, CardMedia, CardContent, MenuItem, Select, Grid, Typography, Box, Link } from '@mui/material';
-import video from "../../utils/r.mp4";
-import { light } from '@mui/material/styles/createPalette';
+import video from "../../utils/rr.mp4";
 
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
