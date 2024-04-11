@@ -39,11 +39,10 @@ const CartPage = () => {
   useEffect(() => {
     const totalPrice = calculateTotalPrice();
     setTotalPrice(totalPrice);
-    if(cartData.length == 0){
-      setItemsInCart(false)
-    }
-    else{
-      setItemsInCart(true)
+    if (cartData.length == 0) {
+      setItemsInCart(false);
+    } else {
+      setItemsInCart(true);
     }
   }, [cartData]);
 
@@ -66,9 +65,9 @@ const CartPage = () => {
         console.log(err);
       });
   };
-  const handleCheckout = () =>{
-    console.log(itemsInCart)
-  }
+  const handleCheckout = () => {
+    console.log(itemsInCart);
+  };
 
   return (
     <>
@@ -82,131 +81,151 @@ const CartPage = () => {
             paddingTop: "100px",
           }}
         >
-           <Grid container m={0} spacing={2} direction="column">
-            {cartData.map((cartItem, i) => (
-              <Grid key={i} item mt={2}>
-                <Card sx={{ display: "flex" }}>
-                  <Link href={`/product/${cartItem.art_id}`} underline="none">
-                    <CardMedia
-                      component="img"
-                      sx={{ width: 100, margin: 1 }}
-                      src={`http://localhost:8081/images/${cartItem.art}`}
-                      alt="Product Image"
-                    />
-                  </Link>
-                  <Divider
-                    orientation="vertical"
-                    flexItem
-                    variant="middle"
-                    sx={{ backgroundColor: "black" }}
-                  />
-                  <CardContent sx={{ flex: 1 }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {cartItem.art_title}
-                    </Typography>
-                    <Typography>{"by " + cartItem.seller_name}</Typography>
-                  </CardContent>
-                  <Divider
-                    orientation="vertical"
-                    flexItem
-                    variant="middle"
-                    sx={{ backgroundColor: "black" }}
-                  />
-                  <CardContent sx={{ flex: 1 }}>
-                    <Typography
-                      variant="h5"
-                      component="div"
-                      color="text.secondary"
-                    >
-                      Size
-                    </Typography>
-                    <Typography>{cartItem.size}</Typography>
-                  </CardContent>
-                  <Divider
-                    orientation="vertical"
-                    flexItem
-                    variant="middle"
-                    sx={{ backgroundColor: "black" }}
-                  />
-                  <CardContent sx={{ flex: 1 }}>
-                    <Typography
-                      variant="h5"
-                      component="div"
-                      color="text.secondary"
-                    >
-                      Quantity
-                    </Typography>
-                    <Typography>{cartItem.quantity}</Typography>
-                  </CardContent>
-                  <Divider
-                    orientation="vertical"
-                    flexItem
-                    variant="middle"
-                    sx={{ backgroundColor: "black" }}
-                  />
-                  <CardContent>
-                    <Grid
-                      container
-                      direction="column"
-                      alignItems="flex-end"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography variant="h6" color="text.secondary">
-                        Price:
-                      </Typography>
-                      <Typography>
-                        {cartItem.price * cartItem.quantity + " birr"}
-                      </Typography>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleRemoveItem(cartItem.id)}
+          {itemsInCart ? (
+            <Container>
+              <Grid container m={0} spacing={2} direction="column">
+                {cartData.map((cartItem, i) => (
+                  <Grid key={i} item mt={2}>
+                    <Card sx={{ display: "flex" }}>
+                      <Link
+                        href={`/product/${cartItem.art_id}`}
+                        underline="none"
                       >
-                        Remove Item
-                      </Button>
-                    </Grid>
-                  </CardContent>
-                </Card>
+                        <CardMedia
+                          component="img"
+                          sx={{ width: 100, margin: 1 }}
+                          src={`http://localhost:8081/images/${cartItem.art}`}
+                          alt="Product Image"
+                        />
+                      </Link>
+                      <Divider
+                        orientation="vertical"
+                        flexItem
+                        variant="middle"
+                        sx={{ backgroundColor: "black" }}
+                      />
+                      <CardContent sx={{ flex: 1 }}>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {cartItem.art_title}
+                        </Typography>
+                        <Typography>{"by " + cartItem.seller_name}</Typography>
+                      </CardContent>
+                      <Divider
+                        orientation="vertical"
+                        flexItem
+                        variant="middle"
+                        sx={{ backgroundColor: "black" }}
+                      />
+                      <CardContent sx={{ flex: 1 }}>
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          color="text.secondary"
+                        >
+                          Size
+                        </Typography>
+                        <Typography>{cartItem.size}</Typography>
+                      </CardContent>
+                      <Divider
+                        orientation="vertical"
+                        flexItem
+                        variant="middle"
+                        sx={{ backgroundColor: "black" }}
+                      />
+                      <CardContent sx={{ flex: 1 }}>
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          color="text.secondary"
+                        >
+                          Quantity
+                        </Typography>
+                        <Typography>{cartItem.quantity}</Typography>
+                      </CardContent>
+                      <Divider
+                        orientation="vertical"
+                        flexItem
+                        variant="middle"
+                        sx={{ backgroundColor: "black" }}
+                      />
+                      <CardContent>
+                        <Grid
+                          container
+                          direction="column"
+                          alignItems="flex-end"
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography variant="h6" color="text.secondary">
+                            Price:
+                          </Typography>
+                          <Typography>
+                            {cartItem.price * cartItem.quantity + " birr"}
+                          </Typography>
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleRemoveItem(cartItem.id)}
+                          >
+                            Remove Item
+                          </Button>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-          <Grid
-            container
-            m={2}
-            spacing={2}
-            direction="column"
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+              <Grid
+                container
+                m={2}
+                spacing={2}
+                direction="column"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Grid
+                  item
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography variant="h5">Total Price</Typography>
+                  <Typography variant="h6">{totalPrice}</Typography>
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" onClick={handleCheckout}>
+                    check out
+                  </Button>
+                </Grid>
+              </Grid>
+            </Container>
+          ) : (
             <Grid
-              item
+              container
+              height={"50vh"}
               sx={{
                 display: "flex",
                 alignItems: "center",
-                flexDirection: "column",
                 justifyContent: "center",
+                flexDirection: "column",
               }}
             >
-              <Typography variant="h5">Total Price</Typography>
-              <Typography variant="h6">{totalPrice}</Typography>
+              <Typography variant="h5" mb={1}>
+                Nothing here
+              </Typography>
+              <Link variant="h6" underline="none" href="/arts">
+                Back to shopping
+              </Link>
             </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={handleCheckout}>
-                check out
-              </Button>
-            </Grid>
-          </Grid> 
-          <Grid container height={'50vh'} sx={{display: 'flex', alignItems: 'center',justifyContent:'center',flexDirection: 'column'}}>
-            <Typography variant="h5">Nothing here</Typography>
-            <Typography>Continue shopping</Typography>
-
-          </Grid>
+          )}
         </Container>
         <Footer />
       </Box>
