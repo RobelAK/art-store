@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
-import { Link } from 'react-router-dom';
 import { Container } from '@mui/material';
 import axios from 'axios';
 
@@ -13,7 +12,7 @@ const PostedArt = () => {
     const fetchArtworks = async () => {
       try {
         const token = localStorage.getItem('token');
-        // Fetch posted artworks from the backend with authorization token
+        
         const response = await axios.get("http://localhost:8081/user/art", {
           headers: {
             Authorization: `Bearer ${token}`

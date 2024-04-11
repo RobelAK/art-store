@@ -18,6 +18,8 @@ import DeleteSeller from "./routes/DeleteSeller.js";
 import SignupAs from "./routes/SignupAs.js";
 import WaitingSellers from "./routes/WaitingSellers.js";
 import DeclineSeller from "./routes/DeclineSeller.js";
+import PostedArt from "./routes/PostedArt.js";
+
 
 const app = express();
 
@@ -81,6 +83,10 @@ app.post("/art/upload", upload, async (req, res) => {
 
 app.get("/art", upload, async (req, res) => {
   displayArt(db, req, res);
+});
+
+app.get('/user/art', (req, res) => {
+  PostedArt(db, req, res);
 });
 
 app.get("/art/waiting", upload, async (req, res) => {
@@ -147,6 +153,8 @@ app.post("/cart", (req,res)=>{
     else return res.json(result)
   })
 })
+
+
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;

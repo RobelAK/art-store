@@ -1,4 +1,4 @@
-// Navbar.jsx
+
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -7,13 +7,15 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import Logo from "../../utils/logo.png";
+import Logo from "../../utils/logo1.png";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import AccountMenu from './AccountMenu';
 import { Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
 import DrawerComponent from "./DrawerComponent";
+import {Typography } from '@mui/material';
+import SearchBar from "./SearchBar";
 
 const logoStyle = {
   width: "auto",
@@ -59,7 +61,7 @@ const Navbar = () => {
           boxShadow: 0,
           bgcolor: "transparent",
           backgroundImage: "none",
-          mt: 2,
+          mt: 1,
         }}
       >
         <Container maxWidth="lg">
@@ -97,12 +99,32 @@ const Navbar = () => {
               </IconButton>
             </Box>
             <Box
-              sx={{ display: "flex", alignItems: "center", ml: "-18px", px: 0 }}
-            >
-              <Link to="/">
-                <img src={Logo} style={logoStyle} alt="Habesha Art" />
-              </Link>
-            </Box>
+  sx={{
+    display: { xs: "none", md: "flex" },
+    alignItems: "center",
+    ml: "-18px",
+    px: 0,
+    textDecoration: 'none', // Remove underline from the text
+  }}
+>
+  <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}> {/* Remove underline from the link */}
+    <img src={Logo} style={logoStyle} alt="Habesha Art" />
+    <Typography
+      variant="body2"
+      component="h1"
+      sx={{
+        
+        fontFamily: 'Sora, sans-serif',
+        fontWeight: 200,
+        color: 'gray', // Text color on top of the overlay
+        marginLeft: '5px', // Add margin for spacing between the logo and text
+      }}
+    >
+      Habesha Art Store
+    </Typography>
+  </Link>
+</Box>
+
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -153,6 +175,7 @@ const Navbar = () => {
                 </Button>
               </Link>
             </Box>
+            <SearchBar/>
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -181,7 +204,7 @@ const Navbar = () => {
                 <AccountMenu />
               ) : (
                 <Link to="/login">
-                  <LoginIcon sx={{ color: "black" }} />
+                  <LoginIcon sx={{ color: "black"}} />
                 </Link>
               )}
             </Box>

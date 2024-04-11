@@ -82,7 +82,7 @@ const CartPage = () => {
             paddingTop: "100px",
           }}
         >
-          {/* <Grid container m={0} spacing={2} direction="column">
+           <Grid container m={0} spacing={2} direction="column">
             {cartData.map((cartItem, i) => (
               <Grid key={i} item mt={2}>
                 <Card sx={{ display: "flex" }}>
@@ -201,7 +201,7 @@ const CartPage = () => {
                 check out
               </Button>
             </Grid>
-          </Grid> */}
+          </Grid> 
           <Grid container height={'50vh'} sx={{display: 'flex', alignItems: 'center',justifyContent:'center',flexDirection: 'column'}}>
             <Typography variant="h5">Nothing here</Typography>
             <Typography>Continue shopping</Typography>

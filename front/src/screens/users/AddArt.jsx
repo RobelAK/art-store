@@ -123,9 +123,25 @@ function AddArt() {
                 fullWidth
                 required
               >
-                <MenuItem value="landscape">Landscape</MenuItem>
-                <MenuItem value="portrait">Portrait</MenuItem>
-                <MenuItem value="abstract">Abstract</MenuItem>
+                <MenuItem value="Abstract">Abstract</MenuItem>
+                <MenuItem value="Animals">Animals</MenuItem>
+                <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>
+                <MenuItem value="Character Design">Character Design</MenuItem>
+                <MenuItem value="Concept Art">Concept Art</MenuItem>
+                <MenuItem value="Cyberpunk">Cyberpunk</MenuItem>
+                <MenuItem value="Fantasy">Fantasy</MenuItem>
+                <MenuItem value="Fan Art">Fan Art</MenuItem>
+                <MenuItem value="Graffiti">Graffiti</MenuItem>
+                <MenuItem value="Horror">Horror</MenuItem>
+                <MenuItem value="Landscapes">Landscapes</MenuItem>
+                <MenuItem value="Minimalism">Minimalism</MenuItem>
+                <MenuItem value="Nature">Nature</MenuItem>
+                <MenuItem value="Pixel Art">Pixel Art</MenuItem>
+                <MenuItem value="Pop Art">Pop Art</MenuItem>
+                <MenuItem value="Portraits">Portraits</MenuItem>
+                <MenuItem value="Sci-Fi">Sci-Fi</MenuItem>
+                <MenuItem value="Steampunk">Steampunk</MenuItem>
+                <MenuItem value="Surreal">Surreal</MenuItem>
               </Select>
             </FormControl>
           </Grid>

@@ -20,9 +20,6 @@ import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
 import SellerProfile from './screens/users/SellerProfile'
 
-
-
-
 function App() {
   return (
     <BrowserRouter>
