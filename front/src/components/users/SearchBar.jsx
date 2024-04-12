@@ -92,9 +92,9 @@ const SearchBar = () => {
             // Scrollbar styles
             WebkitOverflowScrolling: 'touch', // Optional: Enables smooth scrolling on iOS
             scrollbarWidth: 'thin', // Optional: Use 'thin', 'auto', or 'none'
-            scrollbarColor: '#888 #f1f1f1', // Optional: Scrollbar color (thumb and track)
+            scrollbarColor: '#447bb3 #f1f1f1', // Optional: Scrollbar color (thumb and track)
             '&::-webkit-scrollbar': {
-              width: '8px', // Width of the scrollbar
+              width: '5px', // Width of the scrollbar
             },
             '&::-webkit-scrollbar-track': {
               background: '#f1f1f1', // Color of the track
