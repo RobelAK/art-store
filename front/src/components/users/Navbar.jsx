@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
 import DrawerComponent from "./DrawerComponent";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import {Typography } from '@mui/material';
 import SearchBar from "./SearchBar";
 
@@ -199,6 +200,12 @@ const Navbar = () => {
                   color="primary"
                   sx={{ marginRight: 2, color: "black" }}
                 />
+              </Link>
+              <Link to="/saved">
+              <BookmarkIcon
+              color="primary"
+              sx={{ marginRight: 2, color: "black" }}
+              />
               </Link>
               {isLoggedIn ? (
                 <AccountMenu />

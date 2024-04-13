@@ -19,6 +19,9 @@ import SignupAs from "./routes/SignupAs.js";
 import WaitingSellers from "./routes/WaitingSellers.js";
 import DeclineSeller from "./routes/DeclineSeller.js";
 import PostedArt from "./routes/PostedArt.js";
+import toggleArtBookmark from "./routes/ArtBookmark.js";
+import Bookmarks from "./routes/Bookmarks.js";
+import RemoveBookmark from "./routes/RemoveBookmark.js";
 
 
 const app = express();
@@ -54,6 +57,21 @@ app.post("/login", async (req, res) => {
   login(db, req, res);
 });
 
+
+app.post('/api/art/bookmark/:id', (req, res) => {
+  toggleArtBookmark(db, req, res);
+});
+
+
+app.get('/api/bookmarked-art/:userId', async (req, res) => {
+  Bookmarks(db, req, res);
+});
+
+app.delete("/api/bookmarks/:userId/:artId", async (req, res) => {
+  RemoveBookmark(db, req, res);
+});
+
+
 app.post("/profile/changename", (req, res) => {
   changename(db, req, res);
 });
@@ -67,6 +85,22 @@ app.get("/admin/userstable", (req, res) => {
   db.query(sql, (err, data) => {
     if (err) return res.json(err);
     return res.json(data);
+  });
+});
+
+app.get('/api/bookmarks/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  const selectQuery = 'SELECT art_id FROM bookmarks WHERE user_id = ?';
+
+  db.query(selectQuery, [userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    const bookmarkedArtIds = result.map(row => row.art_id);
+    return res.status(200).json(bookmarkedArtIds);
   });
 });
 

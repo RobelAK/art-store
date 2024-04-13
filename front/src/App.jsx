@@ -19,6 +19,7 @@ import ResetPassword from './forgot_password/ResetPassword'
 import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
 import SellerProfile from './screens/users/SellerProfile'
+import Bookmark from './screens/users/Bookmark'
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path='/SellerProfile' element={<SellerProfile/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
+        <Route path='/saved' element= {<Bookmark/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
         <Route path='/admindashboard' element={<AdminDashboard />}></Route>
         <Route path='/ResetPassword' element={<ResetPassword/>}></Route>

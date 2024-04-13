@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import { Button, Card, Container, CardMedia, CardContent, MenuItem, Select, Grid, Typography, Box, Link } from '@mui/material';
 import video from "../../utils/rr.mp4";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [bookmarkStatus, setBookmarkStatus] = useState({});
 
   useEffect(() => {
     fetchArtwork();
@@ -13,22 +17,80 @@ const ArtDiscovery = () => {
 
   const fetchArtwork = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const user = JSON.parse(atob(token.split(".")[1]));
+      const userId = user.id;
+      
       const response = await axios.get('http://localhost:8081/art', {
         params: { category: selectedCategory }
       });
+  
       if (!response.data) {
         throw new Error('Failed to fetch artwork');
       }
+  
+      // Fetch bookmark status for the user
+      const bookmarkResponse = await axios.get(`http://localhost:8081/api/bookmarks/${userId}`);
+      const bookmarkData = bookmarkResponse.data;
+  
+      // Initialize bookmark status based on fetched data
+      const initialBookmarkStatus = {};
+      response.data.forEach(item => {
+        initialBookmarkStatus[item.id] = bookmarkData.includes(item.id);
+      });
+  
       setArt(response.data);
+      setBookmarkStatus(initialBookmarkStatus);
     } catch (error) {
       console.error('Error fetching artwork:', error);
     }
   };
+  
 
   const handleChange = (event) => {
     const category = event.target.value;
     setSelectedCategory(category);
   };
+
+  
+  const toggleBookmark = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
+      const user = JSON.parse(atob(token.split(".")[1]));
+      const userId = user.id;
+  
+      const response = await axios.post(`http://localhost:8081/api/art/bookmark/${id}`, { userId, artId: id });
+  
+      console.log('Response:', response.data); // Log the entire response data
+  
+      // Assuming the response contains the updated bookmark status
+      const { message, bookmarked } = response.data;
+  
+      console.log(`Updated bookmark status for artwork ${id}: ${bookmarked}`);
+  
+      // Update the bookmark status in the state
+      setBookmarkStatus(prevStatus => ({
+        ...prevStatus,
+        [id]: bookmarked
+      }));
+  
+      console.log('Bookmark status after update:', bookmarkStatus); // Log the updated bookmarkStatus state
+  
+      console.log(message);
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
+  };
+  
 
   return (
     <div>
@@ -74,7 +136,6 @@ const ArtDiscovery = () => {
             >
               Habesha Art Store
             </Typography>
-            {/* Description */}
             <Typography
               variant="body2"
               color="textSecondary"
@@ -118,7 +179,7 @@ const ArtDiscovery = () => {
                       transition: 'background-color 0.2s',
                       '&:hover': {
                         color: 'white',
-                    backgroundColor: '#333',
+                        backgroundColor: '#333',
                       },
                     },
                     '& .MuiMenuItem-root:first-child': {
@@ -161,24 +222,26 @@ const ArtDiscovery = () => {
       <Container sx={{ height: '2px', bgcolor: '#e3e3e3', marginTop: '18px', marginBottom: '15px' }} />
       <Container>
         <Box>
-          <Grid container spacing={1} sx={{ padding: "20px" }}>
+          <Grid container spacing={3} sx={{ padding: "20px" }}>
             {art.map((Art, index) => (
               <Grid item key={`${Art.id}-${index}`} xs={12} sm={6} md={4} lg={3}>
-                <Link href={`/product/${Art.id}`} underline='none'>
-                  <Card
-                    sx={{
-                      backgroundColor: 'white',
-                      maxWidth: 280,
-                      aspectRatio: "4/5",
-                      margin: "auto",
-                      borderRadius: "3px",
-                    }}
-                  >
+
+                <Card
+                  sx={{
+                    backgroundColor: '#f7fdff',
+                    maxWidth: 280,
+                    aspectRatio: "4/6",
+                    margin: "5",
+                    borderRadius: "3px",
+                  }}
+                >
+                  <Link href={`/product/${Art.id}`} underline='none'>
                     <CardMedia
                       component="img"
                       sx={{
+                        borderRadius: "17px",
                         aspectRatio: "4/5",
-                        padding: '2px',
+                        padding: '8px',
                         transition: 'transform 0.2s',
                         '&:hover': {
                           transform: 'scale(1.01)',
@@ -187,8 +250,33 @@ const ArtDiscovery = () => {
                       src={`http://localhost:8081/images/${Art.art}`}
                       alt={Art.title}
                     />
-                  </Card>
-                </Link>
+                  </Link>
+                  <CardContent>
+                    <Grid container >
+                      <Grid item xs={10.5} sm={10.5} md={10.5}>
+                        <Typography variant="body1" fontWeight={"600"} fontFamily={'sora,sans-serif'}>
+                          {Art.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          fontFamily={'sora,sans-serif'}
+                          gutterBottom
+                        >
+                          Price : {Art.price} birr
+                        </Typography>
+                      </Grid>
+                      {bookmarkStatus[Art.id] ? (
+                        <BookmarkIcon onClick={() => toggleBookmark(Art.id)} />
+                      ) : (
+                        <BookmarkBorderIcon onClick={() => toggleBookmark(Art.id)} />
+                      )}
+
+                    </Grid>
+                  </CardContent>
+
+
+                </Card>
+
               </Grid>
             ))}
           </Grid>
