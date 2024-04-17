@@ -13,9 +13,7 @@ export default function changename(db, req, res) {
         "jwt_secret_key",
         { expiresIn: "1d" }
       );
-      res.clearCookie('token')
-      res.cookie('token', token) 
-      return res.json({Message: "Name succefully changed"})
+      return res.json({Message: "Name succefully changed", token})
     }
   });
 }

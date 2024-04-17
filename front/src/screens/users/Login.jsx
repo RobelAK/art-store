@@ -6,9 +6,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Logo from '../../utils/logo.png';
 import backgroundImage from '../../utils/333.png';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, TextField, ThemeProvider, createTheme } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
-function Signup() {
+function Login() {
 
   const defaultTheme = createTheme();
 
@@ -34,24 +36,23 @@ function Signup() {
 
   const navigate = useNavigate()
   axios.defaults.withCredentials = true
-  const [error, setError] = useState(null)
   const handleSubmit = (event) => {
     event.preventDefault();
     axios.post('http://localhost:8081/login', values) 
       .then(res => {
+        const token = res.data.token
         if (res.data.loginStatus) {
-          navigate('/profile')
+          localStorage.setItem('token',token)
+          toast.success("Login successfull",{onClose: ()=> {
+            navigate('/')
+          }})
         }
         else {
-          console.log('wrong email or password')
+          toast.error("wrong email or password")
         }
       })
       .catch(err => console.log(err));
   }
-
-
-
-
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -128,8 +129,9 @@ function Signup() {
           </Box>
         </Box>
       </Container>
+      <ToastContainer autoClose={2000}/>
     </ThemeProvider>
   );
 }
 
-export default Signup
+export default Login

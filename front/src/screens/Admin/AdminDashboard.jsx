@@ -1,67 +1,3 @@
-// import axios from 'axios';
-// import React, { useEffect, useState } from 'react';
-
-// function AdminDashboard() {
-//   const [users, setUsers] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     axios.get('http://localhost:8081/admin/userstable')
-//       .then(res => {
-//         setUsers(res.data);
-//         setLoading(false);
-//       })
-//       .catch(err => {
-//         setError(err.message);
-//         setLoading(false);
-//       });
-//   }, []);
-
-//   const handleDelete = (id) => {
-//     if (window.confirm('Are you sure you want to delete this user?')) {
-//       axios.put('http://localhost:8081/admin/deleteuser/' + id)
-//         .then(res => {
-//           window.location.reload();
-//         })
-//         .catch(err => setError(err.message));
-//     }
-//   };
-
-//   return (
-//     <div className='vh-100 vw-100 d-flex align-items-center justify-content-center'>
-//       {loading && <p>Loading...</p>}
-//       {error && <p>{error}</p>}
-//       {!loading && !error &&
-//         <table className='table w-50 border-black'>
-//           <thead>
-//             <tr>
-//               <th>Name</th>
-//               <th>Email</th>
-//               <th>Role</th>
-//               <th>Action</th>
-//             </tr>
-//           </thead>
-          // <tbody>
-          //   {users.map((data, i) => (
-          //     <tr key={i}>
-          //       <td>{data.name}</td>
-          //       <td>{data.email}</td>
-          //       <td>{data.role}</td>
-          //       <td>
-          //         <button className='' onClick={() => handleDelete(data.id)}>delete</button>
-          //       </td>
-          //     </tr>
-          //   ))}
-          // </tbody>
-//         </table>
-//       }
-//     </div>
-//   );
-// }
-
-// export default AdminDashboard;
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -130,18 +66,6 @@ function AdminDashboard() {
           </TableRow>
         </TableHead>
         
-        {/* <tbody>
-            {users.map((data, i) => (
-              <tr key={i}>
-                <td>{data.name}</td>
-                <td>{data.email}</td>
-                <td>{data.role}</td>
-                <td>
-                  <button className='' onClick={() => handleDelete(data.id)}>delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody> */}
         <TableBody>
           {users.map((data, i) => (
             <StyledTableRow key={i}>

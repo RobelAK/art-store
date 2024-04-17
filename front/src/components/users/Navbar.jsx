@@ -17,7 +17,6 @@ import AccountMenu from "./AccountMenu";
 import { Divider } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { useEffect } from "react";
-import Cookies from "js-cookie";
 
 const logoStyle = {
   width: "auto",
@@ -32,16 +31,17 @@ const Navbar = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isSeller, setisSeller] = useState(false);
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = localStorage.getItem('token')
     if (token) {
       setisLoggedIn(true);
-      const userInfo = JSON.parse(atob(token.split(".")[1]));
-      if (userInfo.role == "seller") {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      if (user.role == "seller") {
         setisSeller(true);
       } else {
         setisSeller(false);
       }
-    } else {
+    } 
+    else {
       setisLoggedIn(false);
     }
   });
@@ -119,7 +119,7 @@ const Navbar = () => {
                         sx={{ marginRight: 2, color: "black" }}
                       />
                     </Link>
-                    <Divider orientation="vertical" component="li" />
+                    <Divider orientation="vertical" component="li"/>
 
                     {isLoggedIn ? (
                       <AccountMenu />
