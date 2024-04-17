@@ -20,6 +20,8 @@ import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
 import SellerProfile from './screens/users/SellerProfile'
 import Bookmark from './screens/users/Bookmark'
+import BranchHome from './screens/Branch/BranchHome'
+
 
 function App() {
   return (
@@ -44,6 +46,7 @@ function App() {
         <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
         <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
         <Route path='/WaitingArt' element={<WaitingArt/>}></Route>
+        <Route path='/Branch' element={<BranchHome/>}></Route>
         <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>
     </BrowserRouter>

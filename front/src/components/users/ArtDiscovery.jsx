@@ -1,96 +1,98 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import { Button, Card, Container, CardMedia, CardContent, MenuItem, Select, Grid, Typography, Box, Link } from '@mui/material';
-import video from "../../utils/rr.mp4";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import {
+  Button,
+  Card,
+  Container,
+  CardMedia,
+  CardContent,
+  MenuItem,
+  Select,
+  Grid,
+  Typography,
+  Box,
+  Link,
+} from '@mui/material';
+import video from "../../utils/rr.mp4";
 
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
-
+  const navigate = useNavigate(); // Get the navigate function
+  
   useEffect(() => {
     fetchArtwork();
   }, [selectedCategory]);
 
   const fetchArtwork = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-      const user = JSON.parse(atob(token.split(".")[1]));
-      const userId = user.id;
-      
       const response = await axios.get('http://localhost:8081/art', {
         params: { category: selectedCategory }
       });
-  
+
       if (!response.data) {
         throw new Error('Failed to fetch artwork');
       }
-  
-      // Fetch bookmark status for the user
-      const bookmarkResponse = await axios.get(`http://localhost:8081/api/bookmarks/${userId}`);
-      const bookmarkData = bookmarkResponse.data;
-  
-      // Initialize bookmark status based on fetched data
-      const initialBookmarkStatus = {};
-      response.data.forEach(item => {
-        initialBookmarkStatus[item.id] = bookmarkData.includes(item.id);
-      });
-  
+
       setArt(response.data);
-      setBookmarkStatus(initialBookmarkStatus);
+
+      // Fetch bookmark status only if user is logged in
+      const token = localStorage.getItem("token");
+      if (token) {
+        const user = JSON.parse(atob(token.split(".")[1]));
+        const userId = user.id;
+
+        const bookmarkResponse = await axios.get(`http://localhost:8081/api/bookmarks/${userId}`);
+        const bookmarkData = bookmarkResponse.data;
+
+        const initialBookmarkStatus = {};
+        response.data.forEach(item => {
+          initialBookmarkStatus[item.id] = bookmarkData.includes(item.id);
+        });
+
+        setBookmarkStatus(initialBookmarkStatus);
+      }
     } catch (error) {
       console.error('Error fetching artwork:', error);
     }
   };
-  
 
   const handleChange = (event) => {
     const category = event.target.value;
     setSelectedCategory(category);
   };
 
-  
   const toggleBookmark = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // Redirect to login page if user is not logged in
+      navigate('/login');
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-  
       const user = JSON.parse(atob(token.split(".")[1]));
       const userId = user.id;
-  
+
       const response = await axios.post(`http://localhost:8081/api/art/bookmark/${id}`, { userId, artId: id });
-  
-      console.log('Response:', response.data); // Log the entire response data
-  
-      // Assuming the response contains the updated bookmark status
+
       const { message, bookmarked } = response.data;
-  
-      console.log(`Updated bookmark status for artwork ${id}: ${bookmarked}`);
-  
-      // Update the bookmark status in the state
+
       setBookmarkStatus(prevStatus => ({
         ...prevStatus,
         [id]: bookmarked
       }));
-  
-      console.log('Bookmark status after update:', bookmarkStatus); // Log the updated bookmarkStatus state
-  
+
       console.log(message);
     } catch (error) {
       console.error('Error toggling bookmark:', error);
     }
   };
-  
+
 
   return (
     <div>
@@ -225,7 +227,6 @@ const ArtDiscovery = () => {
           <Grid container spacing={3} sx={{ padding: "20px" }}>
             {art.map((Art, index) => (
               <Grid item key={`${Art.id}-${index}`} xs={12} sm={6} md={4} lg={3}>
-
                 <Card
                   sx={{
                     backgroundColor: '#f7fdff',
@@ -252,7 +253,7 @@ const ArtDiscovery = () => {
                     />
                   </Link>
                   <CardContent>
-                    <Grid container >
+                    <Grid container>
                       <Grid item xs={10.5} sm={10.5} md={10.5}>
                         <Typography variant="body1" fontWeight={"600"} fontFamily={'sora,sans-serif'}>
                           {Art.title}
@@ -270,13 +271,9 @@ const ArtDiscovery = () => {
                       ) : (
                         <BookmarkBorderIcon onClick={() => toggleBookmark(Art.id)} />
                       )}
-
                     </Grid>
                   </CardContent>
-
-
                 </Card>
-
               </Grid>
             ))}
           </Grid>
