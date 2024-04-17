@@ -58,7 +58,7 @@ const SignupAs = () => {
       .post("http://localhost:8081/signupas", value)
       .then((res) => {
         console.log(res.data.Message);
-        // navigate("/message");
+         navigate("/message");
       })
       .catch((error) => {
         console.error("Error updating user: ", error);
@@ -80,10 +80,11 @@ const SignupAs = () => {
         maxWidth="md"
         style={{ alignContent: "center", marginTop: "2%" }}
       >
-        <Grid container spacing={2}>
-          <Grid item sx={{ sm: "12", md: "6" }}>
+        <Grid container direction={"row"} spacing={2}>
+          <Grid item sx={{display:{xs:"none" , sm:"none" , md: "block" }}} xs={12} sm={12} md={6} lg={6}>
             <div
               style={{
+                
                 position: "relative",
                 width: "100%",
                 borderRadius: "2%",
@@ -138,9 +139,9 @@ const SignupAs = () => {
               </div>
             </div>
           </Grid>
-          <Grid item sx={{ sm: "12", md: "6" }}>
+          <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card
-              sx={{ padding: "12%", borderRadius: "4%", aspectRatio: "4/5" }}
+              sx={{ padding: "12%", borderRadius: "4%", aspectRatio:{xs:"auto" , sm:"auto" , md: 4/5 }}}
             >
               <Box justifyContent="center" display="flex">
                 <Link to="/">

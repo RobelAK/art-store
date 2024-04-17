@@ -18,6 +18,11 @@ import DeleteSeller from "./routes/DeleteSeller.js";
 import SignupAs from "./routes/SignupAs.js";
 import WaitingSellers from "./routes/WaitingSellers.js";
 import DeclineSeller from "./routes/DeclineSeller.js";
+import PostedArt from "./routes/PostedArt.js";
+import toggleArtBookmark from "./routes/ArtBookmark.js";
+import Bookmarks from "./routes/Bookmarks.js";
+import RemoveBookmark from "./routes/RemoveBookmark.js";
+
 
 const app = express();
 
@@ -52,6 +57,21 @@ app.post("/login", async (req, res) => {
   login(db, req, res);
 });
 
+
+app.post('/api/art/bookmark/:id', (req, res) => {
+  toggleArtBookmark(db, req, res);
+});
+
+
+app.get('/api/bookmarked-art/:userId', async (req, res) => {
+  Bookmarks(db, req, res);
+});
+
+app.delete("/api/bookmarks/:userId/:artId", async (req, res) => {
+  RemoveBookmark(db, req, res);
+});
+
+
 app.post("/profile/changename", (req, res) => {
   changename(db, req, res);
 });
@@ -68,6 +88,22 @@ app.get("/admin/userstable", (req, res) => {
   });
 });
 
+app.get('/api/bookmarks/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  const selectQuery = 'SELECT art_id FROM bookmarks WHERE user_id = ?';
+
+  db.query(selectQuery, [userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    const bookmarkedArtIds = result.map(row => row.art_id);
+    return res.status(200).json(bookmarkedArtIds);
+  });
+});
+
 app.get("/admin/sellerstable", (req, res) => {
   const sql = "SELECT * FROM users WHERE role = 'seller' ";
   db.query(sql, (err, data) => {
@@ -81,6 +117,10 @@ app.post("/art/upload", upload, async (req, res) => {
 
 app.get("/art", upload, async (req, res) => {
   displayArt(db, req, res);
+});
+
+app.get('/user/art', (req, res) => {
+  PostedArt(db, req, res);
 });
 
 app.get("/art/waiting", upload, async (req, res) => {
@@ -147,6 +187,8 @@ app.post("/cart", (req,res)=>{
     else return res.json(result)
   })
 })
+
+
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;

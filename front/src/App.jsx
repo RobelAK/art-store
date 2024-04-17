@@ -18,8 +18,9 @@ import AdminDashboard from './screens/Admin/AdminDashboard'
 import ResetPassword from './forgot_password/ResetPassword'
 import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
-
-
+import SellerProfile from './screens/users/SellerProfile'
+import Bookmark from './screens/users/Bookmark'
+import BranchHome from './screens/Branch/BranchHome'
 
 
 function App() {
@@ -36,13 +37,16 @@ function App() {
         <Route path='/message' element= {<ArtSubmissionMessage/>}></Route>
         <Route path='/addart' element = {<AddArt/>}></Route>
         <Route path='/dashboard' element = {<Dashboard/>}></Route>
+        <Route path='/SellerProfile' element={<SellerProfile/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
+        <Route path='/saved' element= {<Bookmark/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
         <Route path='/admindashboard' element={<AdminDashboard />}></Route>
         <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
         <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
         <Route path='/WaitingArt' element={<WaitingArt/>}></Route>
+        <Route path='/Branch' element={<BranchHome/>}></Route>
         <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>
     </BrowserRouter>

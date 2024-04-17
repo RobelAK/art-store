@@ -1,13 +1,14 @@
 export default async function AddArt(db, req, res) {
   try {
-    const sql = "INSERT INTO artwork (`title`, `description`, `category`, `price`, `art`, `user_id`) VALUES (?, ?, ?, ?, ?, ?)";
+    const sql = "INSERT INTO artwork (`title`, `description`, `category`, `price`, `art`, `user_id`, `artist`) VALUES (?,?, ?, ?, ?, ?, ?)";
     const values = [
       req.body.title || '',
       req.body.description || '',
       req.body.category || '',
       req.body.price || '',
       req.file ? req.file.filename : null,
-      req.body.user_id || null 
+      req.body.user_id || null ,
+      req.body.artist || null 
     ];
     db.query(sql, values, (err, result) => {
       if (err) {

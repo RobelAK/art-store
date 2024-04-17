@@ -93,7 +93,7 @@ const CartPage = () => {
                       >
                         <CardMedia
                           component="img"
-                          sx={{ width: 100, margin: 1 }}
+                          sx={{ width: 100, margin: 1 ,aspectRatio:4/5 }}
                           src={`http://localhost:8081/images/${cartItem.art}`}
                           alt="Product Image"
                         />
