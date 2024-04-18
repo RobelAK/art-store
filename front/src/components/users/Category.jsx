@@ -9,6 +9,7 @@ import animal from "../../utils/animal.jpg";
 import steam from "../../utils/steam.jpg";
 import nature from "../../utils/nature.jpg";
 import { Container, Divider, Grid } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 export default function Category() {
   return (
@@ -16,19 +17,21 @@ export default function Category() {
       <Typography variant="h5" component="div" fontFamily="sora,sans-serif" textAlign="center">
         Avilable Category's
       </Typography>
-      <Container sx={{ height: '60px', maxWidth: '325px', bgcolor: '#fffff' }}></Container>
+      <Container sx={{ height: '60px',  bgcolor: '#fffff' }}></Container>
       <Divider orientation="horizontal" flexItem variant="middle" sx={{ backgroundColor: "black" }} />
+      <Container sx={{alignItems:'center'}}>
 
-      <Grid container spacing={1}>
-        {/* Animals Card */}
-        <Grid item xs={12} md={4}
+      <Grid container >
+        
+        <Grid item sm={12} md={4}
           sx={{
+            textDecoration: 'none',
             '&:nth-child(1)': {
               transform: 'rotate(-10deg)',
-            },
-          }}>
+            }, 
+          }} component={Link}  to='/arts' >
           <Card sx={{
-            maxWidth: 345,
+            maxWidth: 315,
             color: '#d1d1d1',
             borderRadius: '10px',
             overflow: 'hidden',
@@ -42,12 +45,12 @@ export default function Category() {
             <CardMedia
               component="img"
               alt=''
-              sx={{ padding: '5px' }}
+              sx={{ padding: '5px',borderRadius: '10px', }}
               height="140"
               image={animal}
             />
             <CardContent>
-              <Typography component="div" fontWeight="bold" color={'Highlight'} fontFamily="Sora" mb={2}>
+              <Typography  component="div" fontWeight="bold" color={'Highlight'} fontFamily="Sora" mb={2}>
                 Animals
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -65,10 +68,10 @@ export default function Category() {
         <Grid item xs={12} md={4} sx={{
           '&:nth-child(2)': {
             transform: 'rotate(20deg)',
-          },
-        }}>
+          },textDecoration: 'none',
+        }} component={Link}  to='/arts' >
           <Card sx={{
-            maxWidth: 345,
+            maxWidth: 310,
             color: '#d1d1d1',
             borderRadius: '10px',
             overflow: 'hidden',
@@ -95,7 +98,7 @@ export default function Category() {
             <CardMedia
               component="img"
               alt=''
-              sx={{ padding: '5px' }}
+              sx={{ padding: '5px',borderRadius: '10px', }}
               height="140"
               image={nature}
             />
@@ -107,10 +110,10 @@ export default function Category() {
           sx={{
             '&:nth-child(3)': {
               transform: 'rotate(-6deg)',
-            },
-          }}>
+            },textDecoration: 'none',
+          }} component={Link}  to='/arts' >
           <Card sx={{
-            maxWidth: 345,
+            maxWidth: 320 ,
             color: '#d1d1d1',
             borderRadius: '10px',
             overflow: 'hidden',
@@ -124,7 +127,7 @@ export default function Category() {
             <CardMedia
               component="img"
               alt=''
-              sx={{ padding: '5px' }}
+              sx={{ padding: '5px' ,borderRadius: '10px', }}
               height="140"
               image={steam}
             />
@@ -143,6 +146,7 @@ export default function Category() {
           </Card>
         </Grid>
       </Grid>
+    </Container>
     </Container>
   );
 }

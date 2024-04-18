@@ -152,6 +152,7 @@ const Navbar = () => {
                   color="primary"
                   variant="text"
                   size="small"
+                  component={Link}  to='/category'
                   sx={{
                     color: "black",
                     fontWeight: "light",
@@ -166,6 +167,7 @@ const Navbar = () => {
                   color="primary"
                   variant="text"
                   size="small"
+                  component={Link}  to='/about'
                   sx={{
                     color: "black",
                     fontWeight: "light",
