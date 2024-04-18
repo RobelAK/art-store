@@ -62,26 +62,27 @@ app.post("/payment", async (req, res) => {
   });
 
   // const tx_ref = await chapa.generateTransactionReference();
-  const tx_ref = 'somethin_is_lumi';
+  const tx_ref = 'somethin_is_lumi384345346'; 
 
-  const response = await chapa.initialize({
-    first_name: "John",
-    last_name: "Doe",
-    email: "john@gmail.com",
-    currency: "ETB", 
-    amount: "200",
-    tx_ref: tx_ref,
-    callback_url: "",
-    return_url: "",
-    customization: {
-      title: "Test Title",
-      description: "Test Description",
-    },
-  });
-  // const response = await chapa.verify({
+  // const response = await chapa.initialize({
+  //   first_name: "John",
+  //   last_name: "Doe",
+  //   email: "john@gmail.com",
+  //   currency: "ETB", 
+  //   amount: "200",
   //   tx_ref: tx_ref,
+  //   callback_url: "",
+  //   return_url: "",
+  //   customization: {
+  //     title: "Test Title",
+  //     description: "Test Description",
+  //   },
   // });
-  return res.json(response)
+
+  const response = await chapa.verify({
+    tx_ref: tx_ref,
+  }); 
+  return res.json(response) 
 
 });
 
