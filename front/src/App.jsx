@@ -21,6 +21,7 @@ import WaitingArt from './components/admin/WaitingArt'
 import SellerProfile from './screens/users/SellerProfile'
 import Bookmark from './screens/users/Bookmark'
 import BranchHome from './screens/Branch/BranchHome'
+import Category from './components/users/Category'
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path='/cart' element = {<CartPage/>}></Route>
         <Route path='/message' element= {<ArtSubmissionMessage/>}></Route>
         <Route path='/addart' element = {<AddArt/>}></Route>
+        <Route path='/category' element= {<Category/>}></Route>
         <Route path='/dashboard' element = {<Dashboard/>}></Route>
         <Route path='/SellerProfile' element={<SellerProfile/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>

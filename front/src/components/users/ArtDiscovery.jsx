@@ -161,7 +161,6 @@ const ArtDiscovery = () => {
               <Select
                 value={selectedCategory}
                 onChange={handleChange}
-                displayEmpty
                 sx={{
                   textTransform: 'none',
                   color: 'black',
