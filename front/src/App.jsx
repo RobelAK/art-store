@@ -18,6 +18,7 @@ import AdminDashboard from './screens/Admin/AdminDashboard'
 import ResetPassword from './forgot_password/ResetPassword'
 import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
+import Payment from './Payment'
 
 
 
@@ -27,6 +28,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Landingpage />}></Route>
+        <Route path='/payment' element={<Payment />}></Route>
         <Route path='/arts' element={<DiscoverArt />}></Route>
         <Route path='/product/:id' element={<Product />}></Route>
         <Route path='/login' element={<Login />}></Route>

@@ -1,4 +1,11 @@
 import express from "express";
+import { Chapa } from 'chapa-nodejs';
+
+
+
+// import request from 'request';
+
+
 import mysql from "mysql";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -8,7 +15,7 @@ import signup from "./routes/signup.js";
 import changename from "./routes/changename.js";
 import changepassword from "./routes/changepassword.js";
 import AddArt from "./routes/AddArt.js";
-import displayArt from "./routes/DisplayArt.js";
+import displayArt from "./routes/DisplayArt.js"; 
 import WaitingArt from "./routes/WaitingArt.js";
 import ApproveArt from "./routes/ApproveArt.js";
 import declineArt from "./routes/DeclineArt.js";
@@ -18,6 +25,7 @@ import DeleteSeller from "./routes/DeleteSeller.js";
 import SignupAs from "./routes/SignupAs.js";
 import WaitingSellers from "./routes/WaitingSellers.js";
 import DeclineSeller from "./routes/DeclineSeller.js";
+import Payment from "./routes/Payment.js"; 
 
 const app = express();
 
@@ -46,6 +54,35 @@ const upload = multer({ storage }).single("art");
 
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
+});
+app.post("/payment", async (req, res) => {
+  const secretKey = 'CHASECK_TEST-P0aavmToP63MJFK6BP9MIueHARudT92C'
+  const chapa = new Chapa({
+    secretKey: secretKey,
+  });
+
+  // const tx_ref = await chapa.generateTransactionReference();
+  const tx_ref = 'somethin_is_lumi';
+
+  const response = await chapa.initialize({
+    first_name: "John",
+    last_name: "Doe",
+    email: "john@gmail.com",
+    currency: "ETB", 
+    amount: "200",
+    tx_ref: tx_ref,
+    callback_url: "",
+    return_url: "",
+    customization: {
+      title: "Test Title",
+      description: "Test Description",
+    },
+  });
+  // const response = await chapa.verify({
+  //   tx_ref: tx_ref,
+  // });
+  return res.json(response)
+
 });
 
 app.post("/login", async (req, res) => {
