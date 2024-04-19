@@ -43,7 +43,7 @@ function Payment() {
   const handleSubmit = (event) => {
 
     event.preventDefault();
-    axios.post('http://localhost:8081/payment', values) 
+    axios.post('http://localhost:8081/payment/pay', values) 
       .then(res => {
         if(res.data){
           window.location.href = res.data;

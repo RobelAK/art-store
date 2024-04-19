@@ -56,7 +56,7 @@ app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
 
-app.post("/payment", async (req, res) => {
+app.post("/payment/pay", async (req, res) => {
   try {
     const { name, email, id, amount } = req.body;
     const secretKey = "CHASECK_TEST-6mk5uDbs3okiwBBvaIfAOpBsLi0memZO";
@@ -69,8 +69,8 @@ app.post("/payment", async (req, res) => {
       size: 20,
     });
 
-    const paymentResponse = await chapa.mobileInitialize({
-      first_name: "John",
+    const paymentResponse = await chapa.initialize({
+      first_name: name,
       last_name: "Doe",
       email: "john@gmail.com",
       currency: "ETB",
