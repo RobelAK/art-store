@@ -69,7 +69,7 @@ app.post("/payment", async (req, res) => {
       size: 20,
     });
 
-    const paymentResponse = await chapa.initialize({
+    const paymentResponse = await chapa.mobileInitialize({
       first_name: "John",
       last_name: "Doe",
       email: "john@gmail.com",
