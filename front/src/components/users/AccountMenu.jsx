@@ -89,11 +89,21 @@ const AccountMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link to="/profilepage" style={{ textDecoration: "none" }}>
+        {isSeller ? (
+          <Link to="/sellerprofile" style={{ textDecoration: "none" }}>
           <MenuItem onClick={handleClose}>
             <Avatar /> Profile
           </MenuItem>
         </Link>
+        ) : (
+          <Link to="/profilepage" style={{ textDecoration: "none" }}>
+          <MenuItem onClick={handleClose}>
+            <Avatar /> Profile
+          </MenuItem>
+        </Link>
+          
+        )}
+        
         <Divider />
         {isSeller ? (
           ""

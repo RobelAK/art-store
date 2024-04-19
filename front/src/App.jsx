@@ -18,9 +18,11 @@ import AdminDashboard from './screens/Admin/AdminDashboard'
 import ResetPassword from './forgot_password/ResetPassword'
 import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
-import Payment from './Payment'
-
-
+import SellerProfile from './screens/users/SellerProfile'
+import Bookmark from './screens/users/Bookmark'
+import BranchHome from './screens/Branch/BranchHome'
+import Catagory from './screens/users/Catagory'
+import AboutUs from './screens/users/AboutUsPage'
 
 
 function App() {
@@ -28,7 +30,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Landingpage />}></Route>
-        <Route path='/payment' element={<Payment />}></Route>
         <Route path='/arts' element={<DiscoverArt />}></Route>
         <Route path='/product/:id' element={<Product />}></Route>
         <Route path='/login' element={<Login />}></Route>
@@ -37,14 +38,19 @@ function App() {
         <Route path='/cart' element = {<CartPage/>}></Route>
         <Route path='/message' element= {<ArtSubmissionMessage/>}></Route>
         <Route path='/addart' element = {<AddArt/>}></Route>
+        <Route path='/category' element= {<Catagory/>}></Route>
         <Route path='/dashboard' element = {<Dashboard/>}></Route>
+        <Route path='/SellerProfile' element={<SellerProfile/>}></Route>
         <Route path='/profilepage' element={<ProfilePage/>}></Route>
         <Route path='/signupas' element= {<SignupAs/>}></Route>
+        <Route path='/saved' element= {<Bookmark/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
         <Route path='/admindashboard' element={<AdminDashboard />}></Route>
         <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
         <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
         <Route path='/WaitingArt' element={<WaitingArt/>}></Route>
+        <Route path='/Branch' element={<BranchHome/>}></Route>
+        <Route path='/about' element={<AboutUs/>}></Route>
         <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>
     </BrowserRouter>

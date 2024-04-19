@@ -1,11 +1,4 @@
 import express from "express";
-import { Chapa } from 'chapa-nodejs';
-
-
-
-// import request from 'request';
-
-
 import mysql from "mysql";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -15,7 +8,7 @@ import signup from "./routes/signup.js";
 import changename from "./routes/changename.js";
 import changepassword from "./routes/changepassword.js";
 import AddArt from "./routes/AddArt.js";
-import displayArt from "./routes/DisplayArt.js"; 
+import displayArt from "./routes/DisplayArt.js";
 import WaitingArt from "./routes/WaitingArt.js";
 import ApproveArt from "./routes/ApproveArt.js";
 import declineArt from "./routes/DeclineArt.js";
@@ -25,7 +18,11 @@ import DeleteSeller from "./routes/DeleteSeller.js";
 import SignupAs from "./routes/SignupAs.js";
 import WaitingSellers from "./routes/WaitingSellers.js";
 import DeclineSeller from "./routes/DeclineSeller.js";
-import Payment from "./routes/Payment.js"; 
+import PostedArt from "./routes/PostedArt.js";
+import toggleArtBookmark from "./routes/ArtBookmark.js";
+import Bookmarks from "./routes/Bookmarks.js";
+import RemoveBookmark from "./routes/RemoveBookmark.js";
+
 
 const app = express();
 
@@ -56,62 +53,24 @@ app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
 
-app.post("/payment/pay", async (req, res) => {
-  try {
-    const { name, email, id, amount } = req.body;
-    const secretKey = "CHASECK_TEST-6mk5uDbs3okiwBBvaIfAOpBsLi0memZO";
-    const chapa = new Chapa({
-      secretKey: secretKey,
-    });
-
-    const tx_ref = await chapa.generateTransactionReference({
-      prefix: "TX",
-      size: 20,
-    });
-
-    const paymentResponse = await chapa.initialize({
-      first_name: name,
-      last_name: "Doe",
-      email: "john@gmail.com",
-      currency: "ETB",
-      amount: "100",
-      tx_ref: tx_ref,
-      callback_url: "",
-      return_url: "",
-      customization: {
-        title: "Test Title",
-        description: "Test Description",
-      },
-    });
-    const sql = "INSERT INTO payment (`user_id`,`tx_ref`) Values (?,?)";
-    db.query(sql, [id, tx_ref], (err, data) => {
-      if (err) return res.json({ Message: "query error" });
-      return res.json(
-        paymentResponse.data.checkout_url
-      );
-    });
-
-    // const verifyResponse = await chapa.verify({
-    //   tx_ref: tx_ref,
-    // });
-
-    // return res.json({ paymentResponse });
-  } catch (error) {
-    console.log("Error during payment processing:", error);
-
-    return res.status(500).json({
-      error: "An error occurred during payment processing.",
-      details: error.message,
-    });
-  }
-});
-
-
-
-
 app.post("/login", async (req, res) => {
   login(db, req, res);
 });
+
+
+app.post('/api/art/bookmark/:id', (req, res) => {
+  toggleArtBookmark(db, req, res);
+});
+
+
+app.get('/api/bookmarked-art/:userId', async (req, res) => {
+  Bookmarks(db, req, res);
+});
+
+app.delete("/api/bookmarks/:userId/:artId", async (req, res) => {
+  RemoveBookmark(db, req, res);
+});
+
 
 app.post("/profile/changename", (req, res) => {
   changename(db, req, res);
@@ -129,6 +88,22 @@ app.get("/admin/userstable", (req, res) => {
   });
 });
 
+app.get('/api/bookmarks/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  const selectQuery = 'SELECT art_id FROM bookmarks WHERE user_id = ?';
+
+  db.query(selectQuery, [userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    const bookmarkedArtIds = result.map(row => row.art_id);
+    return res.status(200).json(bookmarkedArtIds);
+  });
+});
+
 app.get("/admin/sellerstable", (req, res) => {
   const sql = "SELECT * FROM users WHERE role = 'seller' ";
   db.query(sql, (err, data) => {
@@ -142,6 +117,10 @@ app.post("/art/upload", upload, async (req, res) => {
 
 app.get("/art", upload, async (req, res) => {
   displayArt(db, req, res);
+});
+
+app.get('/user/art', (req, res) => {
+  PostedArt(db, req, res);
 });
 
 app.get("/art/waiting", upload, async (req, res) => {
@@ -208,6 +187,8 @@ app.post("/cart", (req,res)=>{
     else return res.json(result)
   })
 })
+
+
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;

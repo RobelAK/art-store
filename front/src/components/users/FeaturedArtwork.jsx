@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, Container } from '@mui/material';
 // ... (other imports)
 
 const FeaturedArtworks = ({ artworks }) => {
@@ -16,6 +16,7 @@ const FeaturedArtworks = ({ artworks }) => {
   };
 
   return (
+    <Container>
     <Grid container spacing={4} sx={{ marginTop: 4 }}>
       <Grid item xs={12}>
         <Typography
@@ -76,6 +77,7 @@ const FeaturedArtworks = ({ artworks }) => {
         </Grid>
       ))}
     </Grid>
+    </Container>
   );
 };
 
