@@ -55,36 +55,59 @@ const upload = multer({ storage }).single("art");
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
+
 app.post("/payment", async (req, res) => {
-  const secretKey = 'CHASECK_TEST-P0aavmToP63MJFK6BP9MIueHARudT92C'
-  const chapa = new Chapa({
-    secretKey: secretKey,
-  });
+  try {
+    const { name, email, id, amount } = req.body;
+    const secretKey = "CHASECK_TEST-6mk5uDbs3okiwBBvaIfAOpBsLi0memZO";
+    const chapa = new Chapa({
+      secretKey: secretKey,
+    });
 
-  // const tx_ref = await chapa.generateTransactionReference();
-  const tx_ref = 'somethin_is_lumi384345346'; 
+    const tx_ref = await chapa.generateTransactionReference({
+      prefix: "TX",
+      size: 20,
+    });
 
-  // const response = await chapa.initialize({
-  //   first_name: "John",
-  //   last_name: "Doe",
-  //   email: "john@gmail.com",
-  //   currency: "ETB", 
-  //   amount: "200",
-  //   tx_ref: tx_ref,
-  //   callback_url: "",
-  //   return_url: "",
-  //   customization: {
-  //     title: "Test Title",
-  //     description: "Test Description",
-  //   },
-  // });
+    const paymentResponse = await chapa.initialize({
+      first_name: "John",
+      last_name: "Doe",
+      email: "john@gmail.com",
+      currency: "ETB",
+      amount: "100",
+      tx_ref: tx_ref,
+      callback_url: "",
+      return_url: "",
+      customization: {
+        title: "Test Title",
+        description: "Test Description",
+      },
+    });
+    const sql = "INSERT INTO payment (`user_id`,`tx_ref`) Values (?,?)";
+    db.query(sql, [id, tx_ref], (err, data) => {
+      if (err) return res.json({ Message: "query error" });
+      return res.json(
+        paymentResponse.data.checkout_url
+      );
+    });
 
-  const response = await chapa.verify({
-    tx_ref: tx_ref,
-  }); 
-  return res.json(response) 
+    // const verifyResponse = await chapa.verify({
+    //   tx_ref: tx_ref,
+    // });
 
+    // return res.json({ paymentResponse });
+  } catch (error) {
+    console.log("Error during payment processing:", error);
+
+    return res.status(500).json({
+      error: "An error occurred during payment processing.",
+      details: error.message,
+    });
+  }
 });
+
+
+
 
 app.post("/login", async (req, res) => {
   login(db, req, res);

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -8,12 +9,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function Payment() {
 
+  const [id, setId] = useState('')
   const [name, setName] = useState('')
   const [amount, setAmount] = useState('')
+  const [email, setEmail] = useState('')
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      setId(user.id);
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, []);
   
   const handleName = (event) => {
-    setName(event.target.value)
+    // setName(event.target.value)
   }
   const handleAmount = (event) => {
     setAmount(event.target.value)
@@ -22,6 +34,8 @@ function Payment() {
 
   const values = {
     name: name,
+    email: email,
+    id: id,
     amount: amount,
   }
 
@@ -31,7 +45,9 @@ function Payment() {
     event.preventDefault();
     axios.post('http://localhost:8081/payment', values) 
       .then(res => {
-        console.log(res.data)
+        if(res.data){
+          window.location.href = res.data;
+        }
       })
       .catch(err => console.log(err));
   }
@@ -88,7 +104,10 @@ function Payment() {
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 0 }}>
-              Sign In
+              Pay
+            </Button>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 0 }}>
+              Check
             </Button>
             <Link to='/forgotpassword'>Forgot password</Link><br />
             <Link to='/signup'>Don't have an account</Link>
