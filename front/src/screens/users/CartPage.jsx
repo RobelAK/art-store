@@ -70,8 +70,21 @@ const CartPage = () => {
         console.log(err);
       });
   };
-  const handleCheckout = () => {
-    console.log(itemsInCart);
+
+  const values = {
+    cartData: cartData,
+    totalPrice: totalPrice,
+  }
+  const handleCheckout = (event) => {
+    event.preventDefault();
+    axios
+      .post("http://localhost:8081/payment/pay", values)
+      .then((res) => {
+        if (res.data) {
+          window.location.href = res.data;
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

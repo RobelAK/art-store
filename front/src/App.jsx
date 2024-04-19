@@ -23,6 +23,7 @@ import Bookmark from './screens/users/Bookmark'
 import BranchHome from './screens/Branch/BranchHome'
 import Catagory from './screens/users/Catagory'
 import AboutUs from './screens/users/AboutUsPage'
+import Payment from './Payment'
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Landingpage />}></Route>
+        <Route path='/payment' element={<Payment />}></Route>
         <Route path='/arts' element={<DiscoverArt />}></Route>
         <Route path='/product/:id' element={<Product />}></Route>
         <Route path='/login' element={<Login />}></Route>
