@@ -22,6 +22,7 @@ import PostedArt from "./routes/PostedArt.js";
 import toggleArtBookmark from "./routes/ArtBookmark.js";
 import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
+import { Chapa } from 'chapa-nodejs';
 
 
 const app = express();
@@ -48,6 +49,52 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage }).single("art");
+
+
+app.post("/payment", async (req, res) => {
+  try {
+    const secretKey = "CHASECK_TEST-6mk5uDbs3okiwBBvaIfAOpBsLi0memZO";
+    const chapa = new Chapa({
+      secretKey: secretKey,
+    });
+
+    const tx_ref = await chapa.generateTransactionReference({
+      prefix: 'TX',
+      size: 20,
+    });
+
+    const paymentResponse = await chapa.initialize({
+      first_name: "John",
+      last_name: "Doe",
+      email: "john@gmail.com",
+      currency: "ETB",
+      amount: "100",
+      tx_ref: tx_ref,
+      callback_url: "",
+      return_url: "",
+      customization: {
+        title: "Test Title",
+        description: "Test Description",
+      },
+    });
+
+    const verifyResponse = await chapa.verify({
+      tx_ref: tx_ref,
+    });
+
+    return res.json({
+      paymentResponse, tx_ref
+      // verifyResponse,
+    });
+  } catch (error) {
+    console.log("Error during payment processing:", error);
+
+    return res.status(500).json({
+      error: "An error occurred during payment processing.",
+      details: error.message,
+    });
+  }
+});
 
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
