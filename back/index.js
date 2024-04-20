@@ -22,6 +22,7 @@ import PostedArt from "./routes/PostedArt.js";
 import toggleArtBookmark from "./routes/ArtBookmark.js";
 import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
+import { Chapa } from 'chapa-nodejs';
 
 
 const app = express();
@@ -209,6 +210,76 @@ app.post('/removecartitem', (req,res)=>{
     return res.json('item deleted successfully')
   })
 })
+app.post('/payment/pay', async (req, res) => {
+  try {
+    const chapa = new Chapa({
+      secretKey: "CHASECK_TEST-ymFgSGJgkJpBy35eMV9YokOvwW2JKhdJ",
+    });
+
+    const tx_ref = await chapa.generateTransactionReference({
+      prefix: 'TX',
+      size: 20,
+    });
+
+    const { cartData, totalPrice, fname, lname, user_Id, email, location } = req.body;
+    const cartDataJson = JSON.stringify(cartData);
+    
+
+    // const pay = await chapa.initialize({
+    //   first_name: fname,
+    //   last_name: lname,
+    //   email: email,
+    //   currency: 'ETB',
+    //   amount: totalPrice,
+    //   tx_ref: tx_ref,
+    //   callback_url: "",
+    //   return_url: "",
+    // });
+
+    const sql = "INSERT INTO something (`user_id`,`data`,`tx_ref`) VALUES (?,?,?)";
+    db.query(sql, [user_Id,cartDataJson,tx_ref], (err, result) => {
+      if (err) {
+        console.error('Error inserting cart data:', err);
+        return res.status(500).json({ error: 'An error occurred while inserting cart data.' });
+      }
+      console.log('Cart data inserted successfully:', result.insertId);
+      return res.json('inserted successfully');
+    });
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    return res.status(500).json({ error: 'An error occurred while processing the payment.' });
+  }
+});
+
+
+
+
+app.get('/branch',(req, res) => {
+
+  const sql = "SELECT * FROM something"
+  db.query(sql, (err,results)=>{
+    if(err) return res.json(err)
+    else{
+      // const somethingincart = results.map(result => JSON.parse(result.data));
+      const somethingincart = results
+      return res.json(somethingincart)
+  }
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const db = mysql.createConnection({
   host: "localhost",
