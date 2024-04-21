@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -7,12 +7,23 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import EditIcon from '@mui/icons-material/Edit';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Logout from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, TextField, Button, Typography } from '@mui/material';
+import axios from 'axios'; // Add this line
 
 const AdminMenu = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openProfileDialog, setOpenProfileDialog] = useState(false);
+  const [openAddAdminDialog, setOpenAddAdminDialog] = useState(false);
+  const [openEditProfileDialog, setOpenEditProfileDialog] = useState(false);
+  const [adminName, setAdminName] = useState('');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -23,8 +34,62 @@ const AdminMenu = () => {
     setAnchorEl(null);
   };
 
+  const handleProfileDialogOpen = () => {
+    setOpenProfileDialog(true);
+    handleClose();
+  };
+
+  const handleProfileDialogClose = () => {
+    setOpenProfileDialog(false);
+  };
+
+  const handleAddAdminDialogOpen = () => {
+    setOpenAddAdminDialog(true);
+    handleClose();
+  };
+
+  const handleAddAdminDialogClose = () => {
+    setOpenAddAdminDialog(false);
+  };
+
+  const handleEditProfileDialogOpen = () => {
+    setOpenEditProfileDialog(true);
+    handleClose();
+  };
+
+  const handleEditProfileDialogClose = () => {
+    setOpenEditProfileDialog(false);
+  };
+
+  // Function to handle adding a new admin
+  const handleAddAdmin = async () => {
+    try {
+      const response = await axios.post('http://localhost:8081/add-admin', {
+        name: adminName,
+        email: adminEmail,
+        password: adminPassword
+      });
+      // Check if the admin was added successfully
+      if (response.data.signup) {
+        // Display success message
+        setSuccessMessage(response.data.Message);
+        // Clear form fields
+        setAdminName('');
+        setAdminEmail('');
+        setAdminPassword('');
+      } else {
+        // Display error message
+        setErrorMessage(response.data.Message);
+      }
+    } catch (error) {
+      // Handle error
+      console.error('Error adding admin:', error);
+    }
+  };
+
   return (
     <React.Fragment>
+      {/* Menu Button */}
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -39,6 +104,7 @@ const AdminMenu = () => {
           </IconButton>
         </Tooltip>
       </Box>
+      {/* Account Menu */}
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -74,12 +140,26 @@ const AdminMenu = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Link to='/profile'style={{ textDecoration: 'none' }} >
-        <MenuItem onClick={handleClose}>
+        {/* Profile MenuItem */}
+        <MenuItem onClick={handleProfileDialogOpen}>
           <Avatar /> Profile
         </MenuItem>
-        </Link>
         <Divider />
+        {/* Add Admin MenuItem */}
+        <MenuItem onClick={handleAddAdminDialogOpen}>
+          <ListItemIcon>
+            <PersonAdd fontSize="small" />
+          </ListItemIcon>
+          Add new Admin
+        </MenuItem>
+        {/* Edit Profile MenuItem */}
+        <MenuItem onClick={handleEditProfileDialogOpen}>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          Edit Profile
+        </MenuItem>
+        {/* Logout MenuItem */}
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -87,6 +167,102 @@ const AdminMenu = () => {
           Logout
         </MenuItem>
       </Menu>
+
+      {/* Profile Dialog */}
+      <Dialog open={openProfileDialog} onClose={handleProfileDialogClose}>
+        <DialogContent>
+          <Typography variant="h6" gutterBottom>
+            Admin Info
+          </Typography>
+          {/* Add your profile details here */}
+          <Avatar /> {/* Replace with actual avatar */}
+          <Typography fontFamily='sora' fontWeight='bold' variant="subtitle1" gutterBottom>
+            Name: John Doe {/* Replace with actual name */}
+          </Typography>
+          <Typography fontFamily='sora' fontWeight='light' variant="subtitle1" gutterBottom>
+            Email: john@example.com {/* Replace with actual email */}
+          </Typography>
+        </DialogContent>
+      </Dialog>
+
+
+      {/* Edit Profile Dialog */}
+      <Dialog open={openEditProfileDialog} onClose={handleEditProfileDialogClose}>
+        <DialogContent>
+          <Typography fontFamily='sora' fontWeight='bold' variant="h6" gutterBottom>
+            Edit Admins Profile
+          </Typography>
+          <TextField variant='filled' label="new Name" fullWidth margin="normal" />
+          <TextField variant='filled' label="new Email" fullWidth margin="normal" />
+          <TextField variant='filled' label="Password" type="password" fullWidth margin="normal" />
+          <TextField variant='filled' label="New Password" type="password" fullWidth margin="normal" />
+          <TextField variant='filled' label="New Password again" type="password" fullWidth margin="normal" />
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Button variant="outlined" onClick={handleEditProfileDialogClose} sx={{ mr: 1 }}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary">
+              Update
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog> 
+      
+      <Dialog open={openAddAdminDialog} onClose={handleAddAdminDialogClose}>
+        <DialogContent>
+          <Typography variant="h6" gutterBottom>
+            Add New Admin
+          </Typography>
+          <TextField
+            variant="filled"
+            label="Name"
+            fullWidth
+            margin="normal"
+            value={adminName}
+            onChange={(e) => setAdminName(e.target.value)}
+          />
+          <TextField
+            variant="filled"
+            label="Email"
+            fullWidth
+            margin="normal"
+            value={adminEmail}
+            onChange={(e) => setAdminEmail(e.target.value)}
+          />
+          <TextField
+            variant="filled"
+            label="Password"
+            type="password"
+            fullWidth
+            margin="normal"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Button variant="outlined" onClick={handleAddAdminDialogClose} sx={{ mr: 1 }}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleAddAdmin}>
+              Add
+            </Button>
+          </Box>
+          {/* Success message */}
+          {successMessage && (
+            <Typography variant="body2" color="success" gutterBottom>
+              {successMessage}
+            </Typography>
+          )}
+          {/* Error message */}
+          {errorMessage && (
+            <Typography variant="body2" color="error" gutterBottom>
+              {errorMessage}
+            </Typography>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Profile Dialog */}
+      {/* Dialog Content Here */}
     </React.Fragment>
   );
 };

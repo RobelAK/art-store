@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { TextField, Button, Typography, Card, CardContent, Container, Box } from '@mui/material';
 import axios from 'axios';
 
-const BranchLogin = () => {
-  const [branchName, setBranchName] = useState('');
-  const [branchPassword, setBranchPassword] = useState('');
+const AdminLogin = () => {
+  const [adminName, setAdminName] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -14,9 +14,9 @@ const BranchLogin = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:8081/branch-login', {
-        name: branchName,
-        password: branchPassword
+      const response = await axios.post('http://localhost:8081/admin-login', {
+        name: adminName,
+        password: adminPassword
       });
 
       if (response.data.loginStatus) {
@@ -25,7 +25,7 @@ const BranchLogin = () => {
         // Store the token in local storage
         localStorage.setItem('token', response.data.token);
         // Redirect to the WaitingPrint page
-        window.location.href = '/WaitingPrint';
+        window.location.href = '/Dashboard';
       } else {
         setError('Invalid credentials. Please try again.');
       }
@@ -50,14 +50,14 @@ const BranchLogin = () => {
       <Card>
         <CardContent>
           <Typography fontFamily='sora' fontWeight='bold' variant="h5" gutterBottom>
-            Branch Gateway
+            Admin Gateway
           </Typography>
           <form onSubmit={handleLogin}>
             <TextField
-              label="Branch Name"
+              label="Admin Name"
               variant="filled"
-              value={branchName}
-              onChange={(e) => setBranchName(e.target.value)}
+              value={adminName}
+              onChange={(e) => setAdminName(e.target.value)}
               fullWidth
               margin="normal"
             />
@@ -65,8 +65,8 @@ const BranchLogin = () => {
               label="Password"
               variant="filled"
               type="password"
-              value={branchPassword}
-              onChange={(e) => setBranchPassword(e.target.value)}
+              value={adminPassword}
+              onChange={(e) => setAdminPassword(e.target.value)}
               fullWidth
               margin="normal"
             />
@@ -90,4 +90,8 @@ const BranchLogin = () => {
   );
 };
 
-export default BranchLogin;
+export default AdminLogin;
+
+
+
+

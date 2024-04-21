@@ -4,10 +4,10 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import axios from 'axios';
 
 const Branch = () => {
-  const [Branches, setBranches] = useState([]);
+  const [branches, setBranches] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [branchName, setBranchName] = useState('');
-  const [branchLocation, setBranchLocation] = useState('');
+  const [branchEmail, setBranchEmail] = useState('');
   const [branchPassword, setBranchPassword] = useState('');
 
   useEffect(() => {
@@ -21,9 +21,9 @@ const Branch = () => {
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this Branch?')) {
       axios
-        .delete(`http://localhost:8081/Branch/delete/${id}`)
+        .delete(`http://localhost:8081/user/delete/${id}`)
         .then((res) => {
-          setBranches(Branches.filter((user) => user.id !== id));
+          setBranches(branches.filter((branch) => branch.id !== id));
           console.log(res.data);
         })
         .catch((err) => console.log(err));
@@ -33,7 +33,7 @@ const Branch = () => {
   const handleAddBranch = () => {
     const branchData = {
       name: branchName,
-      location: branchLocation,
+      email: branchEmail,
       password: branchPassword
     };
 
@@ -56,7 +56,7 @@ const Branch = () => {
     setOpenDialog(false);
     // Clear the input fields
     setBranchName('');
-    setBranchLocation('');
+    setBranchEmail('');
     setBranchPassword('');
   };
 
@@ -83,13 +83,13 @@ const Branch = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Branches.map((data, i) => (
-              <TableRow key={i}>
-                <TableCell>{data.id}</TableCell>
-                <TableCell>{data.Name}</TableCell>
-                <TableCell>{data.Location}</TableCell>
+            {branches.map((branch) => (
+              <TableRow key={branch.id}>
+                <TableCell>{branch.id}</TableCell>
+                <TableCell>{branch.name}</TableCell>
+                <TableCell>{branch.email}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleDelete(data.id)}> <DeleteIcon/> </IconButton> 
+                  <IconButton onClick={() => handleDelete(branch.id)}> <DeleteIcon/> </IconButton> 
                 </TableCell>
               </TableRow>
             ))}
@@ -115,13 +115,13 @@ const Branch = () => {
             margin="normal"
             label="Branch Location"
             variant="filled"
-            value={branchLocation}
-            onChange={(e) => setBranchLocation(e.target.value)}
+            value={branchEmail}
+            onChange={(e) => setBranchEmail(e.target.value)}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="password"
+            label="Password"
             variant="filled"
             value={branchPassword}
             onChange={(e) => setBranchPassword(e.target.value)}

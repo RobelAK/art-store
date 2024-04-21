@@ -26,6 +26,8 @@ import AddAvatar from "./routes/AddAvatar.js";
 import { Chapa } from 'chapa-nodejs';
 import CreateBranch from "./routes/CreateBranch.js";
 import BranchLogin from "./routes/BranchLogin.js";
+import CreateAdmin from "./routes/CreateAdmin.js";
+import AdminLogin from "./routes/AdminLogin.js";
 
 
 
@@ -68,6 +70,10 @@ app.post("/add-branch", async (req, res) => {
   CreateBranch(db, req, res);
 });
 
+app.post("/add-admin", async (req, res) => {
+  CreateAdmin(db, req, res);
+});
+
 app.post("/login", async (req, res) => {
   login(db, req, res);
 });
@@ -104,7 +110,7 @@ app.get("/admin/userstable", (req, res) => {
 });
 
 app.get("/admin/branches", (req, res) => {
-  const sql = "SELECT * FROM Branches";
+  const sql = "SELECT * FROM users WHERE role = 'branch' ";
   db.query(sql, (err, data) => {
     if (err) return res.json(err);
     return res.json(data);
@@ -225,20 +231,13 @@ app.delete("/user/delete/:id", (req, res) => {
   });
 });
 
-app.delete("/Branch/delete/:id", (req, res) => {
-  const id = req.params.id;
-  const deleteBranches = "DELETE FROM Branches WHERE id = ?";
-  db.query(deleteBranches, id, (error, results) => {
-    if (error) {
-      res.json({ error: "Internal server error" });
-    } else {
-      res.json({ Message: "Branch deleted succefully" });
-    }
-  });
-});
 
 app.post('/branch-login', (req, res) => {
   BranchLogin(db, req, res);
+});
+
+app.post('/admin-login', (req, res) => {
+  AdminLogin(db, req, res);
 });
 
 
@@ -306,19 +305,6 @@ app.get('/branch',(req, res) => {
   }
   })
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const db = mysql.createConnection({

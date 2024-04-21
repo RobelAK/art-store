@@ -24,6 +24,7 @@ import Catagory from './screens/users/Catagory'
 import AboutUs from './screens/users/AboutUsPage'
 import BranchLogin from './screens/Branch/BranchLogin'
 import PrintedScreen from './screens/Branch/PrintedScreen'
+import AdminLogin from './screens/Admin/AdminLogin'
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
         <Route path='/WaitingPrint' element={<BranchHome/>}></Route>
         <Route path='/Printed' element={<PrintedScreen/>}></Route>
         <Route path='/Branch' element={<BranchLogin/>}></Route>
+        <Route path='/Admin' element={<AdminLogin/>}></Route>
         <Route path='/about' element={<AboutUs/>}></Route>
         <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>

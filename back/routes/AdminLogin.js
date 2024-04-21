@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-export default function BranchLogin(db, req, res) {
+export default function AdminLogin(db, req, res) {
   const { name, password } = req.body;
-  const sql = "SELECT * FROM users WHERE name = ? AND role = 'branch'";
+  const sql = "SELECT * FROM users WHERE name = ? AND role = 'admin'";
   
   db.query(sql, [name], async (err, result) => {
     if (err) return res.json({ loginStatus: false, Error: "Query error" });

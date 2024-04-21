@@ -97,7 +97,7 @@ export default function BranchHome() {
         </NavbarTitle>
         <NavLinks>
           <Link to="/branch">Waiting</Link>
-          <Link to="/present">Printed</Link>
+          <Link to="/Printed">Printed</Link>
           <Link to="/delivered">Delivered</Link>
         </NavLinks>
         <div>
