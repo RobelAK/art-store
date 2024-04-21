@@ -5,12 +5,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
-import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 
 const Navbar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
+  boxShadow: 'none',
+  background: 'linear-gradient(to right, #2980B9, #6DD5FA)',
+  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
 }));
 
 const NavbarTitle = styled(Typography)(({ theme }) => ({
@@ -19,6 +22,19 @@ const NavbarTitle = styled(Typography)(({ theme }) => ({
     display: 'block',
   },
 }));
+
+const NavLinks = styled('div')({
+  marginRight: '20px',
+  '& a': {
+    textDecoration: 'none',
+    color: 'white',
+    marginRight: '20px',
+    transition: 'color 0.3s ease',
+    '&:hover': {
+      color: '#F9A825',
+    },
+  },
+});
 
 export default function NavBranch() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -32,40 +48,17 @@ export default function NavBranch() {
   };
 
   return (
-    <Navbar position="fixed" sx={{
-      boxShadow: 2,
-      bgcolor: "#7db8f0",
-      mt: 2,
-      flexShrink: 0,
-      backdropFilter: "blur(24px)",
-    }}>
-      <Toolbar style={{
-        marginRight: '20px', bgcolor:
-          "#7db8f0",
-        backdropFilter: "blur(24px)",
-        maxHeight: 40,
-      }}>
-        <NavbarTitle variant="h6" color="black" component="div">
+    <Navbar position="fixed">
+      <Toolbar>
+        <NavbarTitle variant="h6" color="inherit" component="div">
           My Branch
         </NavbarTitle>
-        <div style={{ marginRight: '20px' }}>
-          <Link to="/waiting" style={{ textDecoration: 'none', color: 'Black' }}>
-            <Typography variant="button" sx={{ marginRight: 2 }}>
-              Waiting
-            </Typography>
-          </Link>
-          <Link to="/present" style={{ textDecoration: 'none', color: 'Black' }}>
-            <Typography variant="button" sx={{ marginRight: 2 }}>
-              Printed
-            </Typography>
-          </Link>
-          <Link to="/delivered" style={{ textDecoration: 'none', color: 'Black' }}>
-            <Typography variant="button" sx={{ marginRight: 2 }}>
-              Delivered
-            </Typography>
-          </Link>
-        </div>
-        <div style={{ marginRight: '30px' }}>
+        <NavLinks>
+          <Link to="/branch">Waiting</Link>
+          <Link to="/present">Printed</Link>
+          <Link to="/delivered">Delivered</Link>
+        </NavLinks>
+        <div>
           <IconButton
             size="large"
             edge="end"

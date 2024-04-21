@@ -15,8 +15,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
 import DrawerComponent from "./DrawerComponent";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import {Typography } from '@mui/material';
-import SearchBar from "./SearchBar";
+import { Typography } from '@mui/material';
+import SearchBar from './SearchBar';
+
 
 const logoStyle = {
   width: "auto",
@@ -100,31 +101,31 @@ const Navbar = () => {
               </IconButton>
             </Box>
             <Box
-  sx={{
-    display: { xs: "none", md: "flex" },
-    alignItems: "center",
-    ml: "-18px",
-    px: 0,
-    textDecoration: 'none', // Remove underline from the text
-  }}
->
-  <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}> {/* Remove underline from the link */}
-    <img src={Logo} style={logoStyle} alt="Habesha Art" />
-    <Typography
-      variant="body2"
-      component="h1"
-      sx={{
-        
-        fontFamily: 'Sora, sans-serif',
-        fontWeight: 200,
-        color: 'gray', // Text color on top of the overlay
-        marginLeft: '5px', // Add margin for spacing between the logo and text
-      }}
-    >
-      Habesha Art Store
-    </Typography>
-  </Link>
-</Box>
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                ml: "-18px",
+                px: 0,
+                textDecoration: 'none', // Remove underline from the text
+              }}
+            >
+              <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                <img src={Logo} style={logoStyle} alt="Habesha Art" />
+                <Typography
+                  variant="body2"
+                  component="h1"
+                  sx={{
+
+                    fontFamily: 'Sora, sans-serif',
+                    fontWeight: 200,
+                    color: 'gray', // Text color on top of the overlay
+                    marginLeft: '5px', // Add margin for spacing between the logo and text
+                  }}
+                >
+                  Habesha Art Store
+                </Typography>
+              </Link>
+            </Box>
 
             <Box
               sx={{
@@ -147,12 +148,11 @@ const Navbar = () => {
                   Discover Art
                 </Button>
               </Link>
-              <Link>
                 <Button
                   color="primary"
                   variant="text"
                   size="small"
-                  component={Link}  to='/category'
+                  component={Link} to='/category'
                   sx={{
                     color: "black",
                     fontWeight: "light",
@@ -161,13 +161,11 @@ const Navbar = () => {
                 >
                   category
                 </Button>
-              </Link>
-              <Link>
                 <Button
                   color="primary"
                   variant="text"
                   size="small"
-                  component={Link}  to='/about'
+                  component={Link} to='/about'
                   sx={{
                     color: "black",
                     fontWeight: "light",
@@ -176,9 +174,8 @@ const Navbar = () => {
                 >
                   About Us
                 </Button>
-              </Link>
             </Box>
-            <SearchBar/>
+            <SearchBar />
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -186,42 +183,33 @@ const Navbar = () => {
                 alignItems: "center",
               }}
             >
-              {isSeller ? (
-                <Link to="/addart">
-                  <AddPhotoAlternateIcon
-                    color="primary"
-                    sx={{ marginRight: 2, color: "black" }}
-                  />
+              {isSeller && (
+                <Link to="/addart" sx={{ marginRight: 2 }}>
+                  <AddPhotoAlternateIcon color="primary" />
                 </Link>
-              ) : (
-                ""
               )}
 
               <Link to="/cart">
-                <ShoppingCartIcon
-                  color="primary"
-                  sx={{ marginRight: 2, color: "black" }}
-                />
+                <ShoppingCartIcon color="primary" sx={{ marginRight: 2 }} />
               </Link>
+
               <Link to="/saved">
-              <BookmarkIcon
-              color="primary"
-              sx={{ marginRight: 2, color: "black" }}
-              />
+                <BookmarkIcon color="primary" sx={{ marginRight: 2 }} />
               </Link>
+
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (
                 <Link to="/login">
-                  <LoginIcon sx={{ color: "black"}} />
+                  <LoginIcon sx={{ color: "black" }} />
                 </Link>
               )}
             </Box>
+
           </Toolbar>
         </Container>
       </AppBar>
 
-      {/* Drawer component */}
       <DrawerComponent
         open={isDrawerOpen}
         handleClose={handleDrawerClose}

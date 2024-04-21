@@ -22,7 +22,9 @@ import PostedArt from "./routes/PostedArt.js";
 import toggleArtBookmark from "./routes/ArtBookmark.js";
 import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
+import AddAvatar from "./routes/AddAvatar.js";
 import { Chapa } from 'chapa-nodejs';
+
 
 
 const app = express();
@@ -49,7 +51,11 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage }).single("art");
+const Add = multer({ storage }).single("avatar");
 
+app.post("/profile/changeavatar", Add, (req, res) => {
+  AddAvatar(db, req, res)
+});
 
 app.post("/payment", async (req, res) => {
   try {

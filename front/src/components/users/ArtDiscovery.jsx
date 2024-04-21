@@ -183,8 +183,8 @@ const ArtDiscovery = () => {
                         backgroundColor: '#333',
                       },
                     },
-                    '& .MuiMenuItem-root:first-child': {
-                      borderTop: '1px solid #eee', // Add top border to the first item
+                    '& .MuiMenuItem-root:first-of-type': {
+                      borderTop: '1px solid #eee', // Change to :first-of-type
                     },
                     '& .MuiList-root': {
                       display: 'flex',
