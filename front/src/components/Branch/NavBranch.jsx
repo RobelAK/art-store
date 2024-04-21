@@ -54,8 +54,8 @@ export default function NavBranch() {
           My Branch
         </NavbarTitle>
         <NavLinks>
-          <Link to="/branch">Waiting</Link>
-          <Link to="/present">Printed</Link>
+          <Link to="/WaitingPrint">Waiting</Link>
+          <Link to="/Printed">Printed</Link>
           <Link to="/delivered">Delivered</Link>
         </NavLinks>
         <div>

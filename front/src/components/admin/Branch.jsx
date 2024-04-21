@@ -1,0 +1,139 @@
+import React, { useState, useEffect } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Container, Card, CardContent, Typography, TextField } from "@mui/material";
+import axios from 'axios';
+
+const Branch = () => {
+  const [Branches, setBranches] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [branchName, setBranchName] = useState('');
+  const [branchLocation, setBranchLocation] = useState('');
+  const [branchPassword, setBranchPassword] = useState('');
+
+  useEffect(() => {
+    axios.get('http://localhost:8081/admin/branches')
+      .then(res => {
+        setBranches(res.data);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this Branch?')) {
+      axios
+        .delete(`http://localhost:8081/Branch/delete/${id}`)
+        .then((res) => {
+          setBranches(Branches.filter((user) => user.id !== id));
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleAddBranch = () => {
+    const branchData = {
+      name: branchName,
+      location: branchLocation,
+      password: branchPassword
+    };
+
+    axios.post('http://localhost:8081/add-branch', branchData)
+      .then((res) => {
+        console.log(res.data);
+        // Refresh the list of branches
+        axios.get('http://localhost:8081/admin/branches')
+          .then(res => {
+            setBranches(res.data);
+          })
+          .catch(err => console.log(err));
+      })
+      .catch((err) => {
+        console.log(err);
+        // Handle error
+      });
+
+    // Close the dialog
+    setOpenDialog(false);
+    // Clear the input fields
+    setBranchName('');
+    setBranchLocation('');
+    setBranchPassword('');
+  };
+
+  return (
+    <div>
+      <Container>
+        <Card sx={{margin:'10px', justifyContent:'center',}}>
+          <CardContent>
+            <Typography gutterBottom fontFamily='sora'> Click here to Create a new Branch</Typography>
+            <Button variant='outlined' fullWidth onClick={() => setOpenDialog(true)}>
+              Add Branch
+            </Button>
+          </CardContent>
+        </Card>
+        <Typography marginTop='20px' align='center' gutterBottom fontFamily='sora' fontWeight='bold'> List of available Branches</Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow >
+              <TableCell style={{fontWeight:'bold'}}>ID</TableCell>
+              <TableCell style={{fontWeight:'bold'}}>Name</TableCell>
+              <TableCell style={{fontWeight:'bold'}}>Location</TableCell>
+              <TableCell style={{fontWeight:'bold'}}>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Branches.map((data, i) => (
+              <TableRow key={i}>
+                <TableCell>{data.id}</TableCell>
+                <TableCell>{data.Name}</TableCell>
+                <TableCell>{data.Location}</TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleDelete(data.id)}> <DeleteIcon/> </IconButton> 
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </Container>
+
+      {/* Add Branch Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Add New Branch</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Branch Name"
+            variant="filled"
+            value={branchName}
+            onChange={(e) => setBranchName(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Branch Location"
+            variant="filled"
+            value={branchLocation}
+            onChange={(e) => setBranchLocation(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="password"
+            variant="filled"
+            value={branchPassword}
+            onChange={(e) => setBranchPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+          <Button onClick={handleAddBranch} variant="contained" color="primary">Add</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Branch;

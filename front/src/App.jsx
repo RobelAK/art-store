@@ -23,6 +23,8 @@ import Bookmark from './screens/users/Bookmark'
 import BranchHome from './screens/Branch/BranchHome'
 import Catagory from './screens/users/Catagory'
 import AboutUs from './screens/users/AboutUsPage'
+import BranchLogin from './screens/Branch/BranchLogin'
+import PrintedScreen from './screens/Branch/PrintedScreen'
 
 
 function App() {
@@ -49,7 +51,9 @@ function App() {
         <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
         <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
         <Route path='/WaitingArt' element={<WaitingArt/>}></Route>
-        <Route path='/Branch' element={<BranchHome/>}></Route>
+        <Route path='/WaitingPrint' element={<BranchHome/>}></Route>
+        <Route path='/Printed' element={<PrintedScreen/>}></Route>
+        <Route path='/Branch' element={<BranchLogin/>}></Route>
         <Route path='/about' element={<AboutUs/>}></Route>
         <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>
