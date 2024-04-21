@@ -14,7 +14,6 @@ import Dashboard from './screens/Admin/Dashboard'
 import SignupAs from './screens/users/SignupAs'
 import AddArt from './screens/users/AddArt'
 import ArtSubmissionMessage from './components/users/ArtSubmissionMessage'
-import AdminDashboard from './screens/Admin/AdminDashboard'
 import ResetPassword from './forgot_password/ResetPassword'
 import ReceiveEmail from './forgot_password/ReceiveEmail'
 import WaitingArt from './components/admin/WaitingArt'
@@ -47,7 +46,6 @@ function App() {
         <Route path='/signupas' element= {<SignupAs/>}></Route>
         <Route path='/saved' element= {<Bookmark/>}></Route>
         <Route path='/forgotpassword' element={<Forgotpassword />}></Route>
-        <Route path='/admindashboard' element={<AdminDashboard />}></Route>
         <Route path='/ResetPassword' element={<ResetPassword/>}></Route>
         <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
         <Route path='/WaitingArt' element={<WaitingArt/>}></Route>

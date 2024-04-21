@@ -59,50 +59,6 @@ app.post("/profile/changeavatar", Add, (req, res) => {
   AddAvatar(db, req, res)
 });
 
-app.post("/payment", async (req, res) => {
-  try {
-    const secretKey = "CHASECK_TEST-6mk5uDbs3okiwBBvaIfAOpBsLi0memZO";
-    const chapa = new Chapa({
-      secretKey: secretKey,
-    });
-
-    const tx_ref = await chapa.generateTransactionReference({
-      prefix: 'TX',
-      size: 20,
-    });
-
-    const paymentResponse = await chapa.initialize({
-      first_name: "John",
-      last_name: "Doe",
-      email: "john@gmail.com",
-      currency: "ETB",
-      amount: "100",
-      tx_ref: tx_ref,
-      callback_url: "",
-      return_url: "",
-      customization: {
-        title: "Test Title",
-        description: "Test Description",
-      },
-    });
-
-    const verifyResponse = await chapa.verify({
-      tx_ref: tx_ref,
-    });
-
-    return res.json({
-      paymentResponse, tx_ref
-      // verifyResponse,
-    });
-  } catch (error) {
-    console.log("Error during payment processing:", error);
-
-    return res.status(500).json({
-      error: "An error occurred during payment processing.",
-      details: error.message,
-    });
-  }
-});
 
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
@@ -294,6 +250,76 @@ app.post('/removecartitem', (req,res)=>{
     return res.json('item deleted successfully')
   })
 })
+app.post('/payment/pay', async (req, res) => {
+  try {
+    const chapa = new Chapa({
+      secretKey: "CHASECK_TEST-ymFgSGJgkJpBy35eMV9YokOvwW2JKhdJ",
+    });
+
+    const tx_ref = await chapa.generateTransactionReference({
+      prefix: 'TX',
+      size: 20,
+    });
+
+    const { cartData, totalPrice, fname, lname, user_Id, email, location } = req.body;
+    const cartDataJson = JSON.stringify(cartData);
+    
+
+    // const pay = await chapa.initialize({
+    //   first_name: fname,
+    //   last_name: lname,
+    //   email: email,
+    //   currency: 'ETB',
+    //   amount: totalPrice,
+    //   tx_ref: tx_ref,
+    //   callback_url: "",
+    //   return_url: "",
+    // });
+
+    const sql = "INSERT INTO something (`user_id`,`fname`,`lname`,`data`,`tx_ref`) VALUES (?,?,?)";
+    db.query(sql, [user_Id,fname,lname,cartDataJson,tx_ref], (err, result) => {
+      if (err) {
+        console.error('Error inserting cart data:', err);
+        return res.status(500).json({ error: 'An error occurred while inserting cart data.' });
+      }
+      console.log('Cart data inserted successfully:', result.insertId);
+      return res.json('inserted successfully');
+    });
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    return res.status(500).json({ error: 'An error occurred while processing the payment.' });
+  }
+});
+
+
+
+
+app.get('/branch',(req, res) => {
+
+  const sql = "SELECT * FROM something"
+  db.query(sql, (err,results)=>{
+    if(err) return res.json(err)
+    else{
+      // const somethingincart = results.map(result => JSON.parse(result.data));
+      const somethingincart = results
+      return res.json(somethingincart)
+  }
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const db = mysql.createConnection({
   host: "localhost",
