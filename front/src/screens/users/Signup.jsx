@@ -30,25 +30,18 @@ function Signup() {
 
   const [name, setName] = useState('');
   const [isValidName, setIsValidName] = useState(false);
-  const [userFocus,setUserFocus] = useState(false)
 
   const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
 
   const [password, setPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
-  const [passwordFocus,setPasswordFocus] = useState(false)
 
   const [matchPassword, setMatchPassword] = useState('');
   const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus,setMatchFocus] = useState(false)
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
-  
-  const [errMsg, setErrMsg] = useState('');
-  const [success, setSuccess] = useState(false);
 
   useEffect(()=>{
 
@@ -72,9 +65,6 @@ function Signup() {
     setIsValidEmail(result)
   },[email])
   
-  useEffect(()=>{
-    setErrMsg('')
-  },[name,password,matchPassword,email])
   
   
   
@@ -253,7 +243,6 @@ function Signup() {
                   }}
                 />
               </Grid>
-              <p className={"offscreen"} aria-live="assertive">{errMsg}</p>
               <Grid item xs={12}>
                 <FormControlLabel
                   control={

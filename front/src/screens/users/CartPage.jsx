@@ -20,17 +20,33 @@ import {
 } from "@mui/material";
 import Footer from "../../components/users/Footer";
 import Navbar from "../../components/users/Navbar";
+import { useNavigate } from "react-router-dom";
+
+
+const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_/]{3,20}$/;
+const PHONE_VALID = /^[0-9]{9}$/;
 
 const CartPage = () => {
+  
+  const navigate = useNavigate()
+  const [location, setLocation] = useState("Addis Ababa, Akaky Kaliti, Branch");
   const [cartData, setCartData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemsInCart, setItemsInCart] = useState(false);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [location, setLocation] = useState("Addis Ababa, Akaky Kaliti, Branch");
+
   const [fname, setFname] = useState("");
+  const [validFname, setValidFname] = useState(false)
+
+
   const [lname, setLname] = useState("");
+  const [validLname, setValidLname] = useState(false);
+
+
+  const [phoneNo, setPhoneNo] = useState("");
+  const [validPhoneNo, setValidPhoneNo] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -48,8 +64,9 @@ const CartPage = () => {
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      console.log("token not available");
+    } 
+    else {
+      navigate('/login')
     }
   }, []);
   useEffect(() => {
@@ -61,6 +78,23 @@ const CartPage = () => {
       setItemsInCart(true);
     }
   }, [cartData]);
+
+
+  useEffect(()=>{
+    const result = NAME_VALID.test(fname)
+    console.log('FName validation: ',result)
+    setValidFname(result)
+  },[fname])
+  useEffect(()=>{
+    const result = NAME_VALID.test(lname)
+    console.log('LName validation: ',result)
+    setValidLname(result)
+  },[lname])
+  useEffect(()=>{
+    const result = PHONE_VALID.test(phoneNo)
+    console.log('Phone validation: ',result)
+    setValidPhoneNo(result)
+  },[phoneNo])
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -75,7 +109,6 @@ const CartPage = () => {
       .post("http://localhost:8081/removecartitem", { id: id })
       .then((res) => {
         console.log(res.data);
-        // setCartData(cartData.filter((cart) => cart.id !== id));
         setCartData((prevCartData) =>
           prevCartData.filter((cart) => cart.id !== id)
         );
@@ -86,6 +119,7 @@ const CartPage = () => {
   };
 
   const values = {
+    phoneNo: phoneNo,
     cartData: cartData,
     totalPrice: totalPrice,
     user_Id: id,
@@ -96,16 +130,26 @@ const CartPage = () => {
   };
   const handleCheckout = (event) => {
     event.preventDefault();
-    axios
-      .post("http://localhost:8081/payment/pay", values)
-      .then((res) => {
-        // if (res.data) {
-        //   window.location.href = res.data;
-        // }
-        console.log(res.data);
-      })
-      .catch((err) => console.log(err));
+
+    
+    if(validFname && validLname && validPhoneNo){
+      axios
+        .post("http://localhost:8081/payment/pay", values)
+        .then((res) => {
+          // if (res.data) {
+          //   window.location.href = res.data;
+          // }
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+    else console.log("not good")
+
+
   };
+
+
+  
 
   return (
     <>
@@ -237,7 +281,7 @@ const CartPage = () => {
                       padding: 5,
                     }}
                   >
-                    <Box component="form" sx={{ mt: 1 }}>
+                    <Box sx={{ mt: 1 }}>
                       <CardContent>
                         <Typography
                           variant="h6"
@@ -373,132 +417,163 @@ const CartPage = () => {
                           Fill The Form Correctly
                         </Typography>
                       </CardContent>
-                      <Grid container rowSpacing={1}>
-                        <Grid item xs={12}>
-                          <TextField
-                            type="text"
-                            required
-                            fullWidth
-                            size="small"
-                            id="first_name"
-                            label="First Name"
-                            name="first_name"
-                            onChange={(e) => setFname(e.target.value)}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TextField
-                            type="text"
-                            size="small"
-                            required
-                            fullWidth
-                            id="last_name"
-                            label="Last Name"
-                            name="last_name"
-                            onChange={(e) => setLname(e.target.value)}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TextField
-                            type="email"
-                            required
-                            fullWidth
-                            size="small"
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            value={email}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TextField
-                            type="number"
-                            required
-                            fullWidth
-                            size="small"
-                            id="phone_number"
-                            label="Phone Number"
-                            name="phone_number"
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <FormControl fullWidth>
-                            <InputLabel>Location</InputLabel>
-                            <Select
-                              label="Location"
-                              onChange={(e) => setLocation(e.target.value)}
-                              fullWidth
+
+                      <Box component="form" onSubmit={handleCheckout}>
+                        <Grid container rowSpacing={1}>
+                          <Grid item xs={12}>
+                            <TextField
+                              type="text"
                               required
-                              defaultValue="Addis Ababa, Akaky Kaliti, Branch"
+                              fullWidth
+                              size="small"
+                              id="first_name"
+                              label="First Name"
+                              name="first_name"
+                              onChange={(e) => setFname(e.target.value)}
+                              helperText={
+                                !validFname &&
+                                fname &&
+                                "Name must start with letter, must be between 3 to 20 characters long and can't contain space"
+                              }
+                              error={!validFname && fname}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              type="text"
+                              size="small"
+                              required
+                              fullWidth
+                              id="last_name"
+                              label="Last Name"
+                              name="last_name"
+                              onChange={(e) => setLname(e.target.value)}
+                              helperText={
+                                !validLname &&
+                                lname &&
+                                "Name must start with letter, must be between 3 to 20 characters long and can't contain space"
+                              }
+                              error={!validLname && lname}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              type="email"
+                              required
+                              fullWidth
+                              size="small"
+                              id="email"
+                              label="Email Address"
+                              name="email"
+                              value={email}
+                              disabled
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              type="tel"
+                              required
+                              fullWidth
+                              size="small"
+                              id="phone_number"
+                              label="Phone Number"
+                              name="phone_number"
+                              onChange={(e) => setPhoneNo(e.target.value)}
+                              InputProps={{
+                                startAdornment: '+251',
+                              }}
+                              inputProps={{
+                                maxLength: 9,
+                              }}
+                              
+                              helperText={
+                                !validPhoneNo &&
+                                phoneNo &&
+                                "phone_no must contain 9 numbers"
+                              }
+                              error={!validPhoneNo && phoneNo}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <FormControl fullWidth>
+                              <InputLabel>Location</InputLabel>
+                              <Select
+                                label="Location"
+                                onChange={(e) => setLocation(e.target.value)}
+                                fullWidth
+                                required
+                                defaultValue="Addis Ababa, Akaky Kaliti, Branch"
+                              >
+                                <MenuItem value="Addis Ababa, Akaky Kaliti, Branch">
+                                  Addis Ababa, Akaky Kaliti, Branch
+                                </MenuItem>
+                                <MenuItem value="Addis Ababa, Bole, Branch">
+                                  Addis Ababa, Bole, Branch
+                                </MenuItem>
+                                <MenuItem value="Addis Ababa, Lideta, Branch">
+                                  Addis Ababa, Lideta, Branch
+                                </MenuItem>
+                                <MenuItem value="Wolkite, Gubre, Branch">
+                                  Wolkite, Gubre, Branch
+                                </MenuItem>
+                                <MenuItem value="Wolkite, Branch">
+                                  Wolkite, Branch
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Button
+                              fullWidth
+                              type="submit"
+                              variant="contained"
+                              sx={{
+                                marginTop: "10px",
+                                bgcolor: "darkblue",
+                                color: "white",
+                              }}
                             >
-                              <MenuItem value="Addis Ababa, Akaky Kaliti, Branch">
-                                Addis Ababa, Akaky Kaliti, Branch
-                              </MenuItem>
-                              <MenuItem value="Addis Ababa, Bole, Branch">
-                                Addis Ababa, Bole, Branch
-                              </MenuItem>
-                              <MenuItem value="Addis Ababa, Lideta, Branch">
-                                Addis Ababa, Lideta, Branch
-                              </MenuItem>
-                              <MenuItem value="Wolkite, Gubre, Branch">
-                                Wolkite, Gubre, Branch
-                              </MenuItem>
-                              <MenuItem value="Wolkite, Branch">
-                                Wolkite, Branch
-                              </MenuItem>
-                            </Select>
-                          </FormControl>
+                              Pay
+                            </Button>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        onClick={handleCheckout}
-                        sx={{
-                          marginTop: "10px",
-                          bgcolor: "darkblue",
-                          color: "white",
-                        }}
-                      >
-                        Pay
-                      </Button>
+                      </Box>
                     </Box>
                   </Card>
                 </Container>
               </Grid>
             </Grid>
           ) : (
-          <Grid
-            container
-            height={"50vh"}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Typography variant="h5" mb={1}>
-              Nothing here
-            </Typography>
-            <Link variant="h6" underline="none" href="/arts">
-              Back to shopping
-            </Link>
-          </Grid>
-        )}
-      </Container>
-      <Divider
-        orientation="vertical"
-        flexItem
-        variant="middle"
-        sx={{ backgroundColor: "black" }}
-      />
+            <Grid
+              container
+              height={"50vh"}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Typography variant="h5" mb={1}>
+                Nothing here
+              </Typography>
+              <Link variant="h6" underline="none" href="/arts">
+                Back to shopping
+              </Link>
+            </Grid>
+          )}
+        </Container>
+        <Divider
+          orientation="vertical"
+          flexItem
+          variant="middle"
+          sx={{ backgroundColor: "black" }}
+        />
 
-
-      <Footer />
-    </Box>
-  </>
-);
+        <Footer />
+      </Box>
+    </>
+  );
 };
 
 export default CartPage;

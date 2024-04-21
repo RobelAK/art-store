@@ -220,8 +220,10 @@ app.post('/payment/pay', async (req, res) => {
       prefix: 'TX',
       size: 20,
     });
+    
+    const currentDateAndTime = new Date();
 
-    const { cartData, totalPrice, fname, lname, user_Id, email, location } = req.body;
+    const { cartData, totalPrice, fname, lname, user_Id, email, location,phoneNo} = req.body;
     const cartDataJson = JSON.stringify(cartData);
     
 
@@ -235,9 +237,10 @@ app.post('/payment/pay', async (req, res) => {
     //   callback_url: "",
     //   return_url: "",
     // });
+    
 
-    const sql = "INSERT INTO something (`user_id`,`fname`,`lname`,`data`,`tx_ref`) VALUES (?,?,?)";
-    db.query(sql, [user_Id,fname,lname,cartDataJson,tx_ref], (err, result) => {
+    const sql = "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
+    db.query(sql, [user_Id,fname,lname,phoneNo,email,location,cartDataJson,tx_ref,currentDateAndTime], (err, result) => {
       if (err) {
         console.error('Error inserting cart data:', err);
         return res.status(500).json({ error: 'An error occurred while inserting cart data.' });
@@ -245,7 +248,7 @@ app.post('/payment/pay', async (req, res) => {
       console.log('Cart data inserted successfully:', result.insertId);
       return res.json('inserted successfully');
     });
-  } catch (error) {
+  } catch (error) { 
     console.error('Error processing payment:', error);
     return res.status(500).json({ error: 'An error occurred while processing the payment.' });
   }
@@ -256,11 +259,22 @@ app.post('/payment/pay', async (req, res) => {
 
 app.get('/branch',(req, res) => {
 
-  const sql = "SELECT * FROM something"
+  const sql = "SELECT * FROM payment_detail"
   db.query(sql, (err,results)=>{
     if(err) return res.json(err)
     else{
-      // const somethingincart = results.map(result => JSON.parse(result.data));
+      const somethingincart = results
+      return res.json(somethingincart)
+  }
+  })
+})
+
+app.get('/branch/verifypayment',(req, res) => {
+
+  const sql = "SELECT * FROM payment_detail"
+  db.query(sql, (err,results)=>{
+    if(err) return res.json(err)
+    else{
       const somethingincart = results
       return res.json(somethingincart)
   }
