@@ -236,8 +236,8 @@ app.post('/payment/pay', async (req, res) => {
     //   return_url: "",
     // });
 
-    const sql = "INSERT INTO something (`user_id`,`data`,`tx_ref`) VALUES (?,?,?)";
-    db.query(sql, [user_Id,cartDataJson,tx_ref], (err, result) => {
+    const sql = "INSERT INTO something (`user_id`,`fname`,`lname`,`data`,`tx_ref`) VALUES (?,?,?)";
+    db.query(sql, [user_Id,fname,lname,cartDataJson,tx_ref], (err, result) => {
       if (err) {
         console.error('Error inserting cart data:', err);
         return res.status(500).json({ error: 'An error occurred while inserting cart data.' });

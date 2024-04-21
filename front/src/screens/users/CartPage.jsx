@@ -109,7 +109,7 @@ const CartPage = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
       <Box style={{ backgroundColor: "#f0f1f2", minHeight: "100vh" }}>
         <Container
           sx={{
