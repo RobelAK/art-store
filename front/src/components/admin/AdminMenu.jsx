@@ -7,7 +7,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import EditIcon from '@mui/icons-material/Edit';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Logout from '@mui/icons-material/Logout';
 import { Dialog, DialogContent, TextField, Button, Typography } from '@mui/material';
@@ -17,7 +16,6 @@ const AdminMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openAddAdminDialog, setOpenAddAdminDialog] = useState(false);
-  const [openEditProfileDialog, setOpenEditProfileDialog] = useState(false);
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
@@ -52,14 +50,11 @@ const AdminMenu = () => {
     setOpenAddAdminDialog(false);
   };
 
-  const handleEditProfileDialogOpen = () => {
-    setOpenEditProfileDialog(true);
-    handleClose();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = '/admin';
   };
 
-  const handleEditProfileDialogClose = () => {
-    setOpenEditProfileDialog(false);
-  };
 
   // Function to handle adding a new admin
   const handleAddAdmin = async () => {
@@ -152,15 +147,8 @@ const AdminMenu = () => {
           </ListItemIcon>
           Add new Admin
         </MenuItem>
-        {/* Edit Profile MenuItem */}
-        <MenuItem onClick={handleEditProfileDialogOpen}>
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          Edit Profile
-        </MenuItem>
         {/* Logout MenuItem */}
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
@@ -186,28 +174,6 @@ const AdminMenu = () => {
       </Dialog>
 
 
-      {/* Edit Profile Dialog */}
-      <Dialog open={openEditProfileDialog} onClose={handleEditProfileDialogClose}>
-        <DialogContent>
-          <Typography fontFamily='sora' fontWeight='bold' variant="h6" gutterBottom>
-            Edit Admins Profile
-          </Typography>
-          <TextField variant='filled' label="new Name" fullWidth margin="normal" />
-          <TextField variant='filled' label="new Email" fullWidth margin="normal" />
-          <TextField variant='filled' label="Password" type="password" fullWidth margin="normal" />
-          <TextField variant='filled' label="New Password" type="password" fullWidth margin="normal" />
-          <TextField variant='filled' label="New Password again" type="password" fullWidth margin="normal" />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-            <Button variant="outlined" onClick={handleEditProfileDialogClose} sx={{ mr: 1 }}>
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary">
-              Update
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog> 
-      
       <Dialog open={openAddAdminDialog} onClose={handleAddAdminDialogClose}>
         <DialogContent>
           <Typography variant="h6" gutterBottom>
@@ -260,9 +226,6 @@ const AdminMenu = () => {
           )}
         </DialogContent>
       </Dialog>
-
-      {/* Edit Profile Dialog */}
-      {/* Dialog Content Here */}
     </React.Fragment>
   );
 };
