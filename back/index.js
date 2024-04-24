@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }).single("art");
 
 const chapa = new Chapa({
-  secretKey: "CHASECK_TEST-igZvyM82A2OKhK0DOzdsnULPsH5aMPjS",
+  secretKey: "CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy",
 });
 
 app.post("/signup", async (req, res) => {
@@ -214,42 +214,83 @@ app.post('/removecartitem', (req,res)=>{
     return res.json('item deleted successfully')
   })
 })
-app.post('/payment/pay', async (req, res) => {
-  try {
+app.post("/payment/pay", async (req, res) => {
+  const tx_ref = await chapa.generateTransactionReference({
+    prefix: "TX",
+    size: 20,
+  });
 
-    const tx_ref = await chapa.generateTransactionReference({
-      prefix: 'TX',
-      size: 20,
-    }); 
-    
-    const currentDateAndTime = new Date();
+  const currentDateAndTime = new Date();
 
-    const { cartData, totalPrice, fname, lname, user_Id, email, location,phoneNo} = req.body;
-    const cartDataJson = JSON.stringify(cartData);
-
-    const response = await chapa.initialize({
+  const {
+    cartData,
+    totalPrice,
+    fname,
+    lname,
+    user_Id,
+    email,
+    location,
+    phoneNo,
+  } = req.body;
+  const cartDataJson = JSON.stringify(cartData);
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount: totalPrice,
+      currency: "ETB",
+      email: email,
       first_name: fname,
       last_name: lname,
-      email: email,
-      currency: 'ETB',
-      amount: totalPrice,
+      phone_number : ('+251' + phoneNo),
       tx_ref: tx_ref,
-      callback_url: 'http://localhost:5173/cart',
-      return_url: 'http://localhost:5173/cart',
-    });
-    
+      // "callback_url": "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+      return_url: "http://localhost:5173/payed",
+      customization: {
+        title: "Payment",
+        description: "I love online payments",
+      },
+    }),
+  };
 
-    const sql = "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
-    db.query(sql, [user_Id,fname,lname,phoneNo,email,location,cartDataJson,tx_ref,currentDateAndTime], (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: 'An error occurred while inserting cart data.' });
+  fetch("https://api.chapa.co/v1/transaction/initialize", options)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status == "success") {
+        const sql =
+          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
+        db.query(
+          sql,
+          [
+            user_Id,
+            fname,
+            lname,
+            phoneNo,
+            email,
+            location,
+            cartDataJson,
+            tx_ref,
+            currentDateAndTime,
+          ],
+          (err, result) => {
+            if (err) {
+              return res
+                .status(500)
+                .json({
+                  error: "An error occurred while inserting cart data.",
+                });
+            }
+            return res.json(data);
+          }
+        );
+      } else {
+        return res.json(data);
       }
-      return res.json(response);
-    });
-  } catch (error) { 
-    console.error('Error processing payment:', error);
-    return res.status(500).json({ error: 'An error occurred while processing the payment.' });
-  }
+    })
+    .catch((error) => console.error("Error:", error));
 });
 
 

@@ -22,6 +22,7 @@ import Bookmark from './screens/users/Bookmark'
 import BranchHome from './screens/Branch/BranchHome'
 import Catagory from './screens/users/Catagory'
 import AboutUs from './screens/users/AboutUsPage'
+import Payed from './screens/users/Payed'
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
         <Route path='/ReceiveEmail' element={<ReceiveEmail/>}></Route>
         <Route path='/WaitingArt' element={<WaitingArt/>}></Route>
         <Route path='/Branch' element={<BranchHome/>}></Route>
+        <Route path='/payed' element={<Payed/>}></Route>
         <Route path='/about' element={<AboutUs/>}></Route>
         <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
       </Routes>
