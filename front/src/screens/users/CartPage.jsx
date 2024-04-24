@@ -136,10 +136,10 @@ const CartPage = () => {
       axios
         .post("http://localhost:8081/payment/pay", values)
         .then((res) => {
-          // if (res.data) {
-          //   window.location.href = res.data;
+          // if (res.data.data.checkout_url) {
+          //   window.location.href = res.data.data.checkout_url;
           // }
-          console.log(res.data);
+          console.log(res.data.data.checkout_url);
         })
         .catch((err) => console.log(err));
     }

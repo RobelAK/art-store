@@ -97,7 +97,6 @@ const ArtDiscovery = () => {
   return (
     <div>
       <Container>
-        {/* Card with video background and overlay */}
         <Card
           sx={{
             position: 'relative',
@@ -107,7 +106,6 @@ const ArtDiscovery = () => {
             overflow: 'hidden',
           }}
         >
-          {/* Video background */}
           <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', zIndex: -2 }}>
             <source src={video} type="video/mp4" />
           </video>
@@ -120,10 +118,9 @@ const ArtDiscovery = () => {
               left: 0,
               width: '100%',
               height: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.1)', // 50% transparent black color
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
             }}
           />
-          {/* Content */}
           <CardContent>
             <Typography
               variant="h4"
@@ -132,8 +129,8 @@ const ArtDiscovery = () => {
                 fontFamily: 'Sora, sans-serif',
                 fontWeight: 700,
                 marginTop: 6,
-                color: 'black', // Text color on top of the overlay
-                zIndex: 6, // Ensure text is on top of the overlay
+                color: 'black', 
+                zIndex: 6,
               }}
             >
               Habesha Art Store
@@ -143,13 +140,12 @@ const ArtDiscovery = () => {
               color="textSecondary"
               sx={{
                 marginBottom: 1,
-                color: 'CaptionText', // Text color on top of the overlay
-                zIndex: 1, // Ensure text is on top of the overlay
+                color: 'CaptionText', 
+                zIndex: 1, 
               }}
             >
               Discover a world of creative and unique artworks.
             </Typography>
-            {/* Navigation Bar */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'left', marginTop: 2 }}>
               <Typography sx={{
                 fontFamily: 'Sora, sans-serif',
@@ -166,7 +162,7 @@ const ArtDiscovery = () => {
                   color: 'black',
                   '&:hover': {
                     color: 'white',
-                    backgroundColor: '#333', // Darker color on hover
+                    backgroundColor: '#333', 
                   },
                 }}
                 MenuProps={{

@@ -50,6 +50,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage }).single("art");
 
+const chapa = new Chapa({
+  secretKey: "CHASECK_TEST-igZvyM82A2OKhK0DOzdsnULPsH5aMPjS",
+});
+
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
@@ -212,41 +216,35 @@ app.post('/removecartitem', (req,res)=>{
 })
 app.post('/payment/pay', async (req, res) => {
   try {
-    const chapa = new Chapa({
-      secretKey: "CHASECK_TEST-ymFgSGJgkJpBy35eMV9YokOvwW2JKhdJ",
-    });
 
     const tx_ref = await chapa.generateTransactionReference({
       prefix: 'TX',
       size: 20,
-    });
+    }); 
     
     const currentDateAndTime = new Date();
 
     const { cartData, totalPrice, fname, lname, user_Id, email, location,phoneNo} = req.body;
     const cartDataJson = JSON.stringify(cartData);
-    
 
-    // const pay = await chapa.initialize({
-    //   first_name: fname,
-    //   last_name: lname,
-    //   email: email,
-    //   currency: 'ETB',
-    //   amount: totalPrice,
-    //   tx_ref: tx_ref,
-    //   callback_url: "",
-    //   return_url: "",
-    // });
+    const response = await chapa.initialize({
+      first_name: fname,
+      last_name: lname,
+      email: email,
+      currency: 'ETB',
+      amount: totalPrice,
+      tx_ref: tx_ref,
+      callback_url: 'http://localhost:5173/cart',
+      return_url: 'http://localhost:5173/cart',
+    });
     
 
     const sql = "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
     db.query(sql, [user_Id,fname,lname,phoneNo,email,location,cartDataJson,tx_ref,currentDateAndTime], (err, result) => {
       if (err) {
-        console.error('Error inserting cart data:', err);
         return res.status(500).json({ error: 'An error occurred while inserting cart data.' });
       }
-      console.log('Cart data inserted successfully:', result.insertId);
-      return res.json('inserted successfully');
+      return res.json(response);
     });
   } catch (error) { 
     console.error('Error processing payment:', error);
@@ -269,17 +267,19 @@ app.get('/branch',(req, res) => {
   })
 })
 
-app.get('/branch/verifypayment',(req, res) => {
-
-  const sql = "SELECT * FROM payment_detail"
-  db.query(sql, (err,results)=>{
-    if(err) return res.json(err)
-    else{
-      const somethingincart = results
-      return res.json(somethingincart)
+app.post('/branch/verifypayment', async (req, res) => {
+  try {
+    const {tx_ref} = req.body;
+    const response = await chapa.verify({
+      tx_ref: tx_ref,
+    });
+    return res.json(response);
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return res.status(500).json({ error: "An error occurred while verifying the payment." });
   }
-  })
-})
+});
+
 
 
 
