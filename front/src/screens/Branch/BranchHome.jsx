@@ -56,7 +56,6 @@ export default function BranchHome() {
       .get("http://localhost:8081/branch")
       .then((res) => {
         setUserData(res.data)
-        console.log(res.data)
       })
       .catch((err) => console.log(err));
   }, []);
@@ -107,8 +106,9 @@ export default function BranchHome() {
                 aria-controls={`panel${item.name}-content`}
                 id={`panel${item.tx_ref}-header`}
               >
-                <Typography variant="h6" marginRight='25px' >Buyers name </Typography>
-                <Typography variant="h6">Tx_ref</Typography>
+                <Typography variant="h6" marginRight='25px' >{item.fname+" "+item.lname}</Typography>
+                <Typography variant="h6">{item.tx_ref}</Typography>
+                <Button variant='contained' onClick={handleCheckTransaction(item.tx_ref)}>this</Button>
               </AccordionSummary>
               <AccordionDetails>
                 <div>
@@ -118,9 +118,6 @@ export default function BranchHome() {
                         <Typography sx={{marginRight:'5px'}} variant="subtitle1">Title: {art.art}</Typography>
                         <Typography sx={{marginRight:'5px'}} variant="subtitle1">Size: {art.size}</Typography>
                         <Typography sx={{marginRight:'5px'}} variant="subtitle1">Quantity: {art.quantity}</Typography>
-                        
-                        
-                        
                       </CardContent>
                     </Card>
                   ))}
