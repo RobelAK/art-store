@@ -247,7 +247,7 @@ app.post("/payment/pay", async (req, res) => {
       last_name: lname,
       phone_number : ('+251' + phoneNo),
       tx_ref: tx_ref,
-      // "callback_url": "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+      // "callback_url": "",
       return_url: "http://localhost:5173/payed",
       customization: {
         title: "Payment",
