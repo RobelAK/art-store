@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,17 +7,17 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import Logo from "../../utils/logo.png";
-import LoginIcon from "@mui/icons-material/Login";
+import Logo from "../../utils/logo1.png";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import AccountMenu from './AccountMenu';
 import { Link } from "react-router-dom";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import AccountMenu from "./AccountMenu";
-import { Divider } from "@mui/material";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { useEffect } from "react";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LoginIcon from "@mui/icons-material/Login";
+import DrawerComponent from "./DrawerComponent";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { Typography } from '@mui/material';
+import SearchBar from './SearchBar';
+
 
 const logoStyle = {
   width: "auto",
@@ -30,21 +31,21 @@ const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isSeller, setisSeller] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
       setisLoggedIn(true);
       const user = JSON.parse(atob(token.split(".")[1]));
-      if (user.role == "seller") {
+      if (user.role === "seller") {
         setisSeller(true);
       } else {
         setisSeller(false);
       }
-    } 
-    else {
+    } else {
       setisLoggedIn(false);
     }
-  });
+  }, []);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -62,7 +63,7 @@ const Navbar = () => {
           boxShadow: 0,
           bgcolor: "transparent",
           backgroundImage: "none",
-          mt: 2,
+          mt: 1,
         }}
       >
         <Container maxWidth="lg">
@@ -98,87 +99,34 @@ const Navbar = () => {
               >
                 <MenuIcon />
               </IconButton>
-              <Drawer
-                anchor="left"
-                open={isDrawerOpen}
-                onClose={handleDrawerClose}
-                sx={{
-                  "& .MuiDrawer-paper": {
-                    backdropFilter: "blur(64px)",
-                    width: "220px",
-                    borderRadius: "10px",
-                    backgroundColor: "Background",
-                  },
-                }}
-              >
-                <List>
-                  <ListItem sx={{ justifyContent: "space-between" }}>
-                    <Link to="/cart">
-                      <ShoppingCartIcon
-                        color="primary"
-                        sx={{ marginRight: 2, color: "black" }}
-                      />
-                    </Link>
-                    <Divider orientation="vertical" component="li" />
-
-                    {isLoggedIn ? (
-                      <AccountMenu />
-                    ) : (
-                      <Link to="/login">
-                        <LoginIcon sx={{ color: "black" }} />
-                      </Link>
-                    )}
-                  </ListItem>
-                  <Divider component="li" />
-                  <ListItem>
-                    <Link to="/arts" style={{ textDecoration: "none" }}>
-                      <Button
-                        fullWidth
-                        sx={{ color: "black" }}
-                        size="small"
-                        onClick={handleDrawerClose}
-                      >
-                        Discover Art
-                      </Button>
-                    </Link>
-                  </ListItem>
-                  <Divider component="li" />
-                  <ListItem>
-                    <Link style={{ textDecoration: "none" }}>
-                      <Button
-                        fullWidth
-                        sx={{ color: "black" }}
-                        size="small"
-                        onClick={handleDrawerClose}
-                      >
-                        Features
-                      </Button>
-                    </Link>
-                  </ListItem>
-                  <Divider component="li" />
-                  <ListItem>
-                    <Link style={{ textDecoration: "none" }}>
-                      <Button
-                        fullWidth
-                        sx={{ color: "black" }}
-                        size="small"
-                        onClick={handleDrawerClose}
-                      >
-                        About Us
-                      </Button>
-                    </Link>
-                  </ListItem>
-                  <Divider component="li" />
-                </List>
-              </Drawer>
             </Box>
             <Box
-              sx={{ display: "flex", alignItems: "center", ml: "-18px", px: 0 }}
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                ml: "-18px",
+                px: 0,
+                textDecoration: 'none', // Remove underline from the text
+              }}
             >
-              <Link to="/">
+              <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                 <img src={Logo} style={logoStyle} alt="Habesha Art" />
+                <Typography
+                  variant="body2"
+                  component="h1"
+                  sx={{
+
+                    fontFamily: 'Sora, sans-serif',
+                    fontWeight: 200,
+                    color: 'gray', // Text color on top of the overlay
+                    marginLeft: '5px', // Add margin for spacing between the logo and text
+                  }}
+                >
+                  Habesha Art Store
+                </Typography>
               </Link>
             </Box>
+
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -200,25 +148,24 @@ const Navbar = () => {
                   Discover Art
                 </Button>
               </Link>
-              <Link>
                 <Button
                   color="primary"
                   variant="text"
                   size="small"
+                  component={Link} to='/category'
                   sx={{
                     color: "black",
                     fontWeight: "light",
                     fontFamily: "sora,sans-serif",
                   }}
                 >
-                  Features
+                  category
                 </Button>
-              </Link>
-              <Link>
                 <Button
                   color="primary"
                   variant="text"
                   size="small"
+                  component={Link} to='/about'
                   sx={{
                     color: "black",
                     fontWeight: "light",
@@ -227,8 +174,8 @@ const Navbar = () => {
                 >
                   About Us
                 </Button>
-              </Link>
             </Box>
+            <SearchBar />
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -236,23 +183,20 @@ const Navbar = () => {
                 alignItems: "center",
               }}
             >
-              {isSeller ? (
-                <Link to="/addart">
-                  <AddPhotoAlternateIcon
-                    color="primary"
-                    sx={{ marginRight: 2, color: "black" }}
-                  />
+              {isSeller && (
+                <Link to="/addart" sx={{ marginRight: 2 }}>
+                  <AddPhotoAlternateIcon color="primary" />
                 </Link>
-              ) : (
-                ""
               )}
 
               <Link to="/cart">
-                <ShoppingCartIcon
-                  color="primary"
-                  sx={{ marginRight: 2, color: "black" }}
-                />
+                <ShoppingCartIcon color="primary" sx={{ marginRight: 2 }} />
               </Link>
+
+              <Link to="/saved">
+                <BookmarkIcon color="primary" sx={{ marginRight: 2 }} />
+              </Link>
+
               {isLoggedIn ? (
                 <AccountMenu />
               ) : (
@@ -261,9 +205,17 @@ const Navbar = () => {
                 </Link>
               )}
             </Box>
+
           </Toolbar>
         </Container>
       </AppBar>
+
+      <DrawerComponent
+        open={isDrawerOpen}
+        handleClose={handleDrawerClose}
+        isLoggedIn={isLoggedIn}
+        isSeller={isSeller}
+      />
     </div>
   );
 };

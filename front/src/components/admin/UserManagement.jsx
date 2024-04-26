@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Container } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Container, IconButton } from "@mui/material";
 import axios from 'axios';
 
 const UserManagement = () => {
@@ -15,20 +16,23 @@ const UserManagement = () => {
       .then(res => {
         setUsers(res.data);
         setOriginalUsers(res.data);
+        // console.log(res.data)
       })
       .catch(err => console.log(err));
   }, []);
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      axios.put('http://localhost:8081/admin/deleteuser/' + id)
-        .then(res => {
-          setUsers(users.filter(user => user.id !== id));
+      axios
+        .delete(`http://localhost:8081/user/delete/${id}`)
+        .then((res) => {
+          setUsers(users.filter((user) => user.id !== id));
+          console.log(res.data);
+          // window.location.reload()
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   };
-
   const handleSearch = () => {
     const filteredUsers = originalUsers.filter(
       (user) =>
@@ -43,10 +47,10 @@ const UserManagement = () => {
     setSelectedRole(selectedRole);
     
     if (selectedRole === 'all') {
-      setUsers(originalUsers); // Reset to original users if 'All Roles' selected
+      setUsers(originalUsers);
     } else {
       const filteredUsers = originalUsers.filter(user => user.role === selectedRole);
-      setUsers(filteredUsers); // Filter based on selected role
+      setUsers(filteredUsers);
     }
   };
 
@@ -102,7 +106,7 @@ const UserManagement = () => {
                 <TableCell>{data.email}</TableCell>
                 <TableCell>{data.role}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleDelete(data.id)}>Delete</Button>
+                  <IconButton onClick={() => handleDelete(data.id)}> <DeleteIcon/> </IconButton> 
                   <Button onClick={() => handleViewDetails(data)}>Detail</Button>
                 </TableCell>
               </TableRow>
