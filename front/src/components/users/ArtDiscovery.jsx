@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import {
@@ -20,9 +20,9 @@ import video from "../../utils/rr.mp4";
 
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All categories');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
-  const navigate = useNavigate(); // Get the navigate function
+  const navigate = useNavigate();
   
   useEffect(() => {
     fetchArtwork();
@@ -40,7 +40,6 @@ const ArtDiscovery = () => {
 
       setArt(response.data);
 
-      // Fetch bookmark status only if user is logged in
       const token = localStorage.getItem("token");
       if (token) {
         const user = JSON.parse(atob(token.split(".")[1]));
@@ -69,7 +68,6 @@ const ArtDiscovery = () => {
   const toggleBookmark = async (id) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      // Redirect to login page if user is not logged in
       navigate('/login');
       return;
     }
@@ -189,7 +187,7 @@ const ArtDiscovery = () => {
                   },
                 }}
               >
-                <MenuItem>All Categories</MenuItem>
+                <MenuItem value="All categories">All Categories</MenuItem>
                 <MenuItem value="Abstract">Abstract</MenuItem>
                 <MenuItem value="Animals">Animals</MenuItem>
                 <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>
