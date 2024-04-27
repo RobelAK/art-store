@@ -22,7 +22,13 @@ import PostedArt from "./routes/PostedArt.js";
 import toggleArtBookmark from "./routes/ArtBookmark.js";
 import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
+import AddAvatar from "./routes/AddAvatar.js";
 import { Chapa } from 'chapa-nodejs';
+import CreateBranch from "./routes/CreateBranch.js";
+import BranchLogin from "./routes/BranchLogin.js";
+import CreateAdmin from "./routes/CreateAdmin.js";
+import AdminLogin from "./routes/AdminLogin.js";
+
 
 
 const app = express();
@@ -49,6 +55,12 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage }).single("art");
+const Add = multer({ storage }).single("avatar");
+
+app.post("/profile/changeavatar", Add, (req, res) => {
+  AddAvatar(db, req, res)
+});
+
 
 const chapa = new Chapa({
   secretKey: "CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy",
@@ -56,6 +68,14 @@ const chapa = new Chapa({
 
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
+});
+
+app.post("/add-branch", async (req, res) => {
+  CreateBranch(db, req, res);
+});
+
+app.post("/add-admin", async (req, res) => {
+  CreateAdmin(db, req, res);
 });
 
 app.post("/login", async (req, res) => {
@@ -93,6 +113,14 @@ app.get("/admin/userstable", (req, res) => {
   });
 });
 
+app.get("/admin/branches", (req, res) => {
+  const sql = "SELECT * FROM users WHERE role = 'branch' ";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
 app.get('/api/bookmarks/:userId', async (req, res) => {
   const { userId } = req.params;
 
@@ -106,6 +134,14 @@ app.get('/api/bookmarks/:userId', async (req, res) => {
 
     const bookmarkedArtIds = result.map(row => row.art_id);
     return res.status(200).json(bookmarkedArtIds);
+  });
+});
+
+app.get("/userinfo", (req, res) => {
+  const sql = "SELECT * FROM users WHERE id = ? ";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
   });
 });
 
@@ -206,6 +242,17 @@ app.delete("/user/delete/:id", (req, res) => {
     }
   });
 });
+
+
+app.post('/branch-login', (req, res) => {
+  BranchLogin(db, req, res);
+});
+
+app.post('/admin-login', (req, res) => {
+  AdminLogin(db, req, res);
+});
+
+
 app.post('/removecartitem', (req,res)=>{
   const {id} = req.body
   const sql = "DELETE FROM cart WHERE id=?"
@@ -320,19 +367,6 @@ app.post('/branch/verifypayment', async (req, res) => {
     return res.status(500).json({ error: "An error occurred while verifying the payment." });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

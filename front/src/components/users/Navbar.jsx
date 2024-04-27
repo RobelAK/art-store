@@ -184,17 +184,17 @@ const Navbar = () => {
               }}
             >
               {isSeller && (
-                <Link to="/addart" sx={{ marginRight: 2 }}>
-                  <AddPhotoAlternateIcon color="primary" />
+                <Link to="/addart"  >
+                  <AddPhotoAlternateIcon color="primary" sx={{ marginRight: 2 , color: "black",}} />
                 </Link>
               )}
 
               <Link to="/cart">
-                <ShoppingCartIcon color="primary" sx={{ marginRight: 2 }} />
+                <ShoppingCartIcon color="primary" sx={{ marginRight: 2, color: "black", }} />
               </Link>
 
               <Link to="/saved">
-                <BookmarkIcon color="primary" sx={{ marginRight: 2 }} />
+                <BookmarkIcon color="primary" sx={{ marginRight: 2, color: "black", }} />
               </Link>
 
               {isLoggedIn ? (

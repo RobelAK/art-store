@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Container, Card, CardContent, Grid } from '@mui/material';
+import BranchMenu from '../../components/Branch/BranchMenu';
 
 const Navbar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -58,9 +59,7 @@ export default function BranchHome() {
       })
       .catch((err) => console.log(err));
   }, []);
-  const handleClick = (e)=>{
-    console.log(parsed)
-  }
+
   const parseData = (stringifiedData) => {
     try {
       return JSON.parse(stringifiedData);
@@ -70,26 +69,6 @@ export default function BranchHome() {
     }
   };
 
-
-  
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  const handleCheckTransaction = (tx_ref) => (event) => {
-    event.stopPropagation();
-    axios
-      .post("http://localhost:8081/branch/verifypayment", {tx_ref})
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((err) => console.log(err));
-  };
   return (
     <Box sx={{
       backgroundColor:'#d4d6d9',
@@ -105,40 +84,10 @@ export default function BranchHome() {
         </NavbarTitle>
         <NavLinks>
           <Link to="/branch">Waiting</Link>
-          <Link to="/present">Printed</Link>
+          <Link to="/Printed">Printed</Link>
           <Link to="/delivered">Delivered</Link>
         </NavLinks>
-        <div>
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenuOpen}
-            color="inherit"
-          >
-            <Avatar alt="Profile Picture" src="/static/images/avatar/1.jpg" />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-          </Menu>
-        </div>
+        <BranchMenu/>
       </Toolbar>
     </Navbar>
     
