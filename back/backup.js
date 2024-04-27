@@ -18,6 +18,12 @@ import DeleteSeller from "./routes/DeleteSeller.js";
 import SignupAs from "./routes/SignupAs.js";
 import WaitingSellers from "./routes/WaitingSellers.js";
 import DeclineSeller from "./routes/DeclineSeller.js";
+import PostedArt from "./routes/PostedArt.js";
+import toggleArtBookmark from "./routes/ArtBookmark.js";
+import Bookmarks from "./routes/Bookmarks.js";
+import RemoveBookmark from "./routes/RemoveBookmark.js";
+import { Chapa } from 'chapa-nodejs';
+
 
 const app = express();
 
@@ -44,6 +50,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage }).single("art");
 
+const chapa = new Chapa({
+  secretKey: "CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy",
+});
+
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
@@ -51,6 +61,21 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
   login(db, req, res);
 });
+
+
+app.post('/api/art/bookmark/:id', (req, res) => {
+  toggleArtBookmark(db, req, res);
+});
+
+
+app.get('/api/bookmarked-art/:userId', async (req, res) => {
+  Bookmarks(db, req, res);
+});
+
+app.delete("/api/bookmarks/:userId/:artId", async (req, res) => {
+  RemoveBookmark(db, req, res);
+});
+
 
 app.post("/profile/changename", (req, res) => {
   changename(db, req, res);
@@ -68,6 +93,22 @@ app.get("/admin/userstable", (req, res) => {
   });
 });
 
+app.get('/api/bookmarks/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  const selectQuery = 'SELECT art_id FROM bookmarks WHERE user_id = ?';
+
+  db.query(selectQuery, [userId], (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    const bookmarkedArtIds = result.map(row => row.art_id);
+    return res.status(200).json(bookmarkedArtIds);
+  });
+});
+
 app.get("/admin/sellerstable", (req, res) => {
   const sql = "SELECT * FROM users WHERE role = 'seller' ";
   db.query(sql, (err, data) => {
@@ -81,6 +122,10 @@ app.post("/art/upload", upload, async (req, res) => {
 
 app.get("/art", upload, async (req, res) => {
   displayArt(db, req, res);
+});
+
+app.get('/user/art', (req, res) => {
+  PostedArt(db, req, res);
 });
 
 app.get("/art/waiting", upload, async (req, res) => {
@@ -148,6 +193,8 @@ app.post("/cart", (req,res)=>{
   })
 })
 
+
+
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;
   const deleteUser = "DELETE FROM users WHERE id = ?";
@@ -167,6 +214,114 @@ app.post('/removecartitem', (req,res)=>{
     return res.json('item deleted successfully')
   })
 })
+app.post("/payment/pay", async (req, res) => {
+  const tx_ref = await chapa.generateTransactionReference({
+    prefix: "TX",
+    size: 20,
+  });
+
+  const currentDateAndTime = new Date();
+
+  const {
+    cartData,
+    totalPrice,
+    fname,
+    lname,
+    user_Id,
+    email,
+    location,
+    phoneNo,
+  } = req.body;
+  const cartDataJson = JSON.stringify(cartData);
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount: totalPrice,
+      currency: "ETB",
+      email: email,
+      first_name: fname,
+      last_name: lname,
+      phone_number : ('+251' + phoneNo),
+      tx_ref: tx_ref,
+      // "callback_url": "",
+      return_url: "http://localhost:5173/payed",
+      customization: {
+        title: "Payment",
+        description: "I love online payments",
+      },
+    }),
+  };
+
+  fetch("https://api.chapa.co/v1/transaction/initialize", options)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status == "success") {
+        const sql =
+          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
+        db.query(
+          sql,
+          [
+            user_Id,
+            fname,
+            lname,
+            phoneNo,
+            email,
+            location,
+            cartDataJson,
+            tx_ref,
+            currentDateAndTime,
+          ],
+          (err, result) => {
+            if (err) {
+              return res
+                .status(500)
+                .json({
+                  error: "An error occurred while inserting cart data.",
+                });
+            }
+            return res.json(data);
+          }
+        );
+      } else {
+        return res.json(data);
+      }
+    })
+    .catch((error) => console.error("Error:", error));
+});
+
+
+
+
+app.get('/branch',(req, res) => {
+
+  const sql = "SELECT * FROM payment_detail"
+  db.query(sql, (err,results)=>{
+    if(err) return res.json(err)
+    else{
+      const somethingincart = results
+      return res.json(somethingincart)
+  }
+  })
+})
+
+app.post('/branch/verifypayment', async (req, res) => {
+  try {
+    const {tx_ref} = req.body;
+    const response = await chapa.verify({
+      tx_ref: tx_ref,
+    });
+    return res.json(response);
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return res.status(500).json({ error: "An error occurred while verifying the payment." });
+  }
+});
+
+
 
 const db = mysql.createConnection({
   host: "localhost",
