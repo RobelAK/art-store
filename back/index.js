@@ -62,6 +62,10 @@ app.post("/profile/changeavatar", Add, (req, res) => {
 });
 
 
+const chapa = new Chapa({
+  secretKey: "CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy",
+});
+
 app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
@@ -257,48 +261,83 @@ app.post('/removecartitem', (req,res)=>{
     return res.json('item deleted successfully')
   })
 })
-app.post('/payment/pay', async (req, res) => {
-  try {
-    const chapa = new Chapa({
-      secretKey: "CHASECK_TEST-ymFgSGJgkJpBy35eMV9YokOvwW2JKhdJ",
-    });
+app.post("/payment/pay", async (req, res) => {
+  const tx_ref = await chapa.generateTransactionReference({
+    prefix: "TX",
+    size: 20,
+  });
 
-    const tx_ref = await chapa.generateTransactionReference({
-      prefix: 'TX',
-      size: 20,
-    });
-    
-    const currentDateAndTime = new Date();
+  const currentDateAndTime = new Date();
 
-    const { cartData, totalPrice, fname, lname, user_Id, email, location,phoneNo} = req.body;
-    const cartDataJson = JSON.stringify(cartData);
-    
+  const {
+    cartData,
+    totalPrice,
+    fname,
+    lname,
+    user_Id,
+    email,
+    location,
+    phoneNo,
+  } = req.body;
+  const cartDataJson = JSON.stringify(cartData);
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount: totalPrice,
+      currency: "ETB",
+      email: email,
+      first_name: fname,
+      last_name: lname,
+      phone_number : ('+251' + phoneNo),
+      tx_ref: tx_ref,
+      // "callback_url": "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+      return_url: "http://localhost:5173/payed",
+      customization: {
+        title: "Payment",
+        description: "I love online payments",
+      },
+    }),
+  };
 
-    // const pay = await chapa.initialize({
-    //   first_name: fname,
-    //   last_name: lname,
-    //   email: email,
-    //   currency: 'ETB',
-    //   amount: totalPrice,
-    //   tx_ref: tx_ref,
-    //   callback_url: "",
-    //   return_url: "",
-    // });
-    
-
-    const sql = "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
-    db.query(sql, [user_Id,fname,lname,phoneNo,email,location,cartDataJson,tx_ref,currentDateAndTime], (err, result) => {
-      if (err) {
-        console.error('Error inserting cart data:', err);
-        return res.status(500).json({ error: 'An error occurred while inserting cart data.' });
+  fetch("https://api.chapa.co/v1/transaction/initialize", options)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status == "success") {
+        const sql =
+          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
+        db.query(
+          sql,
+          [
+            user_Id,
+            fname,
+            lname,
+            phoneNo,
+            email,
+            location,
+            cartDataJson,
+            tx_ref,
+            currentDateAndTime,
+          ],
+          (err, result) => {
+            if (err) {
+              return res
+                .status(500)
+                .json({
+                  error: "An error occurred while inserting cart data.",
+                });
+            }
+            return res.json(data);
+          }
+        );
+      } else {
+        return res.json(data);
       }
-      console.log('Cart data inserted successfully:', result.insertId);
-      return res.json('inserted successfully');
-    });
-  } catch (error) { 
-    console.error('Error processing payment:', error);
-    return res.status(500).json({ error: 'An error occurred while processing the payment.' });
-  }
+    })
+    .catch((error) => console.error("Error:", error));
 });
 
 
@@ -316,17 +355,19 @@ app.get('/branch',(req, res) => {
   })
 })
 
-app.get('/branch/verifypayment',(req, res) => {
-
-  const sql = "SELECT * FROM payment_detail"
-  db.query(sql, (err,results)=>{
-    if(err) return res.json(err)
-    else{
-      const somethingincart = results
-      return res.json(somethingincart)
+app.post('/branch/verifypayment', async (req, res) => {
+  try {
+    const {tx_ref} = req.body;
+    const response = await chapa.verify({
+      tx_ref: tx_ref,
+    });
+    return res.json(response);
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return res.status(500).json({ error: "An error occurred while verifying the payment." });
   }
-  })
-})
+});
+
 
 
 const db = mysql.createConnection({
