@@ -56,7 +56,7 @@ function App() {
         <Route path='/message' element={<ArtSubmissionMessage />} />
         <Route path='/addart' element={ isAuthorized('seller') ?  <AddArt /> : <Navigate to="/signupas" replace /> } />
         <Route path='/category' element={<Catagory />} />
-        <Route path='/profilepage' element={ isAuthorized('buyer') ?  <ProfilePage /> : <Navigate to="/login" replace /> } />
+        <Route path='/profilepage' element={ isAuthorized('buyer') ?  <ProfilePage /> : <Navigate to="/SellerProfile" replace /> } />
         <Route path='/signupas' element={ isAuthorized('buyer') ?  <SignupAs /> : <Navigate to="/login" replace /> } />
         <Route path='/saved' element={<Bookmark />} />
         <Route path='/forgotpassword' element={<Forgotpassword />} />

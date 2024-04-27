@@ -183,27 +183,18 @@ const Navbar = () => {
                 alignItems: "center",
               }}
             >
-              {isSeller ? (
-                <Link to="/addart">
-                  <AddPhotoAlternateIcon
-                    color="primary"
-                    sx={{ marginRight: 2, color: "black" }}
-                  />
+              {isSeller && (
+                <Link to="/addart"  >
+                  <AddPhotoAlternateIcon color="primary" sx={{ marginRight: 2 , color: "black",}} />
                 </Link>
               )}
 
               <Link to="/cart">
-                <ShoppingCartIcon
-                  color="primary"
-                  sx={{ marginRight: 2, color: "black" }}
-                />
+                <ShoppingCartIcon color="primary" sx={{ marginRight: 2, color: "black", }} />
               </Link>
 
               <Link to="/saved">
-              <BookmarkIcon
-              color="primary"
-              sx={{ marginRight: 2, color: "black" }}
-              />
+                <BookmarkIcon color="primary" sx={{ marginRight: 2, color: "black", }} />
               </Link>
 
               {isLoggedIn ? (

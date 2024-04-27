@@ -133,6 +133,14 @@ app.get('/api/bookmarks/:userId', async (req, res) => {
   });
 });
 
+app.get("/userinfo", (req, res) => {
+  const sql = "SELECT * FROM users WHERE id = ? ";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
 app.get("/admin/sellerstable", (req, res) => {
   const sql = "SELECT * FROM users WHERE role = 'seller' ";
   db.query(sql, (err, data) => {

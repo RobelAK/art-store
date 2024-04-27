@@ -45,7 +45,7 @@ const AccountMenu = () => {
 
   const handleChangeAvatar = async () => {
     try {
-      const response = await axios.post("http://localhost:8081/profile/changepassword");
+      const response = await axios.get("http://localhost:8081/userinfo");
       console.log("Avatar updated:", response.data);
       // Update the avatar state or perform any other necessary actions based on the response
     } catch (error) {
@@ -115,6 +115,10 @@ const AccountMenu = () => {
               <Avatar /> Profile
             </MenuItem>
           </Link>
+        ) : (""
+        )}
+
+        {isSeller ? ( ""
         ) : (
           <Link to="/profilepage" style={{ textDecoration: "none" }}>
             <MenuItem onClick={handleChangeAvatar}>
