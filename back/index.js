@@ -248,7 +248,7 @@ app.post("/payment/pay", async (req, res) => {
       phone_number : ('+251' + phoneNo),
       tx_ref: tx_ref,
       // "callback_url": "",
-      return_url: "http://localhost:5173/payed",
+      return_url: "",
       customization: {
         title: "Payment",
         description: "I love online payments",
