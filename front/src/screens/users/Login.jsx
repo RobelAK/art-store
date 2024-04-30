@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, json } from 'react-router-dom';
 import axios from 'axios';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -41,10 +41,20 @@ function Login() {
     axios.post('http://localhost:8081/login', values) 
       .then(res => {
         const token = res.data.token
+        
         if (res.data.loginStatus) {
           localStorage.setItem('token',token)
+          const user = JSON.parse(atob(token.split(".")[1]));
+          
+          
           toast.success("Login successfull",{onClose: ()=> {
-            navigate('/')
+            if (user.role === 'branch') {
+              navigate('/branch');
+            } else if (user.role === 'admin') {
+              navigate('/dashboard');
+            } else {
+              navigate('/');
+            }
           }})
         }
         else {
@@ -87,7 +97,7 @@ function Login() {
             <Grid container rowSpacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  type='email'
+                  type='text'
                   required
                   fullWidth
                   id="email"

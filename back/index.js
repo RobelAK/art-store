@@ -70,7 +70,7 @@ app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
 
-app.post("/add-branch", async (req, res) => {
+app.post("/addbranch", async (req, res) => {
   CreateBranch(db, req, res);
 });
 

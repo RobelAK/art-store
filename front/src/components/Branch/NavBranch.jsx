@@ -45,7 +45,7 @@ export default function NavBranch() {
         <NavLinks>
           <Link to="/WaitingPrint">Waiting</Link>
           <Link to="/Printed">Printed</Link>
-          <Link to="/delivered">Delivered</Link>
+          <Link to="/delivered">asdf</Link>
         </NavLinks>
         <BranchMenu/>
       </Toolbar>

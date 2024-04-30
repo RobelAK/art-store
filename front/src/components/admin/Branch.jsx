@@ -37,7 +37,7 @@ const Branch = () => {
       password: branchPassword
     };
 
-    axios.post('http://localhost:8081/add-branch', branchData)
+    axios.post('http://localhost:8081/addbranch', branchData)
       .then((res) => {
         console.log(res.data);
         // Refresh the list of branches

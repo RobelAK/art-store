@@ -22,9 +22,9 @@ import Bookmark from './screens/users/Bookmark';
 import BranchHome from './screens/Branch/BranchHome';
 import Catagory from './screens/users/Catagory';
 import AboutUs from './screens/users/AboutUsPage';
-import BranchLogin from './screens/Branch/BranchLogin';
+// import BranchLogin from './screens/Branch/BranchLogin';
 import PrintedScreen from './screens/Branch/PrintedScreen';
-import AdminLogin from './screens/Admin/AdminLogin';
+// import AdminLogin from './screens/Admin/AdminLogin';
 
 
 const decodeToken = (token) => {
@@ -63,12 +63,17 @@ function App() {
         <Route path='/ResetPassword' element={<ResetPassword />} />
         <Route path='/ReceiveEmail' element={<ReceiveEmail />} />
         <Route path='/WaitingArt' element={ isAuthorized('admin') ? <WaitingArt /> : <Navigate to="/admin" replace /> } />
-        <Route path='/WaitingPrint' element={isAuthorized('branch') ?  <BranchHome /> : <Navigate to="/Branch" replace /> } />
-        <Route path='/Printed' element={isAuthorized('branch') ? <PrintedScreen />: <Navigate to="/Branch" replace /> } />
-        <Route path='/Branch' element={<BranchLogin />} />
-        <Route path='/Admin' element={<AdminLogin />} />
+        {/* <Route path='/branch' element={<BranchHome />} /> */}
+
+
+        <Route path='/branch' element={ isAuthorized('branch') ? <BranchHome /> : <Navigate to="/" replace />} />
+        <Route path='/WaitingPrint' element={isAuthorized('branch') ?  <BranchHome /> : <Navigate to="/" replace /> } />
+        <Route path='/Printed' element={isAuthorized('branch') ? <PrintedScreen />: <Navigate to="/" replace /> } />
+
+        
         <Route path='/about' element={<AboutUs />} />
-        <Route path='/dashboard' element={ isAuthorized('admin') ? <Dashboard /> : <Navigate to="/admin" replace />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+        {/* <Route path='/dashboard' element={ isAuthorized('admin') ? <Dashboard /> : <Navigate to="/admin" replace />} /> */}
         <Route path='/sellerprofile' element={ isAuthorized('seller') ? <SellerProfile /> : <Navigate to="/signupas" replace />} />
       </Routes>
     </BrowserRouter>
