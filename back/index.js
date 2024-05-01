@@ -368,6 +368,21 @@ app.post('/branch/verifypayment', async (req, res) => {
   }
 });
 
+app.get('/fetchBranch', async (req, res) => {
+  try{
+    const sql = "SELECT * FROM users WHERE role = 'branch' "
+    db.query(sql,(err,result)=>{
+      if(err) return res.json(err)
+      else{
+    return res.json(result)
+    }
+    })
+  }
+  catch(error){
+    console.log(error)
+    return res.json(error)
+  }
+});
 
 
 const db = mysql.createConnection({

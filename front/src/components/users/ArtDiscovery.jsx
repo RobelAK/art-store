@@ -20,12 +20,13 @@ import video from "../../utils/rr.mp4";
 
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('All categories');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
   const navigate = useNavigate();
   
   useEffect(() => {
     fetchArtwork();
+    console.log(selectedCategory)
   }, [selectedCategory]);
 
   const fetchArtwork = async () => {
@@ -187,7 +188,7 @@ const ArtDiscovery = () => {
                   },
                 }}
               >
-                <MenuItem value="All categories">All Categories</MenuItem>
+                <MenuItem value="All">All</MenuItem>
                 <MenuItem value="Abstract">Abstract</MenuItem>
                 <MenuItem value="Animals">Animals</MenuItem>
                 <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>

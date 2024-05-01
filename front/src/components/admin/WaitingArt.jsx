@@ -51,10 +51,12 @@ const WaitingArt = () => {
     }
   };
 
-  const handleOpenDialog = (art) => {
-    setSelectedImage(art);
+  const handleOpenDialog = (artId) => {
+    setSelectedImage(artId);
     setOpen(true);
+    console.log(art)
   };
+
 
   const handleCloseDialog = () => {
     setOpen(false);
@@ -69,7 +71,7 @@ const WaitingArt = () => {
               <CardActionArea>
                 <CardMedia
                   component="img"
-                  onClick={() => handleOpenDialog(art)} 
+                  onClick={() => handleOpenDialog(art.id)} 
                   src={`http://localhost:8081/images/${art.art}`}
                   alt={art.title}
                   sx={{
@@ -105,7 +107,7 @@ const WaitingArt = () => {
         <DialogTitle>Image Description</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {/* Render description or additional information here */}
+            {selectedImage}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

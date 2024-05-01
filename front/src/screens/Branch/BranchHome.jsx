@@ -59,6 +59,15 @@ export default function BranchHome() {
       })
       .catch((err) => console.log(err));
   }, []);
+  const handleCheckTransaction = (tx_ref) => (event) => {
+    event.stopPropagation();
+    axios
+      .post("http://localhost:8081/branch/verifypayment", {tx_ref})
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => console.log(err));
+  };
 
   const parseData = (stringifiedData) => {
     try {

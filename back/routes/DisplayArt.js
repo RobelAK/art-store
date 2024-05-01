@@ -1,13 +1,16 @@
 export default function displayArt(db, req, res) {
-  const category = req.query.category; // Assuming the category is provided in the query parameters
+  const category = req.query.category;
 
   let sql = 'SELECT * FROM artwork WHERE status=true';
   const params = [];
 
-  if (category) {
-    sql += ' AND category = ?';
-    params.push(category);
-  }
+    if(category == 'All'){
+      sql += '';
+    }
+    else{
+      sql += ' AND category = ?';
+      params.push(category);
+    }
 
   db.query(sql, params, (err, results) => {
     if (err) {

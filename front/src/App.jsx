@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Signup from './screens/users/Signup';
@@ -37,8 +37,9 @@ const decodeToken = (token) => {
 
 function App() {
   
+  const token = localStorage.getItem('token');
   const isAuthorized = (role) => {
-    const token = localStorage.getItem('token');
+    // const [userRole , setUserRole] = useState(null)
     const userRole = token ? decodeToken(token).role : null;
     return userRole === role;
   };
@@ -49,24 +50,27 @@ function App() {
         <Route path='/' element={<Landingpage />} />
         <Route path='/arts' element={<DiscoverArt />} />
         <Route path='/product/:id' element={<Product />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
+
+        <Route path='/login' element={!token ?  <Login /> : <Navigate to="/" replace />} />
+        <Route path='/signup' element={!token ?  <Signup /> : <Navigate to="/" replace />} />
+
         <Route path='/Checkout' element={<Checkout />} />
         <Route path='/cart' element={<CartPage />} />
         <Route path='/message' element={<ArtSubmissionMessage />} />
+        {/* <Route path='/addart' element={<AddArt />} /> */}
         <Route path='/addart' element={ isAuthorized('seller') ?  <AddArt /> : <Navigate to="/signupas" replace /> } />
         <Route path='/category' element={<Catagory />} />
         <Route path='/profilepage' element={ isAuthorized('buyer') ?  <ProfilePage /> : <Navigate to="/SellerProfile" replace /> } />
-        <Route path='/signupas' element={ isAuthorized('buyer') ?  <SignupAs /> : <Navigate to="/login" replace /> } />
+        <Route path='/signupas' element={ isAuthorized('buyer') ?  <SignupAs /> : <Navigate to="/" replace /> } />
         <Route path='/saved' element={<Bookmark />} />
         <Route path='/forgotpassword' element={<Forgotpassword />} />
         <Route path='/ResetPassword' element={<ResetPassword />} />
         <Route path='/ReceiveEmail' element={<ReceiveEmail />} />
-        <Route path='/WaitingArt' element={ isAuthorized('admin') ? <WaitingArt /> : <Navigate to="/admin" replace /> } />
-        {/* <Route path='/branch' element={<BranchHome />} /> */}
+        <Route path='/WaitingArt' element={ isAuthorized('admin') ? <WaitingArt /> : <Navigate to="/" replace /> } />
+        <Route path='/branch' element={<BranchHome />} />
 
 
-        <Route path='/branch' element={ isAuthorized('branch') ? <BranchHome /> : <Navigate to="/" replace />} />
+        {/* <Route path='/branch' element={ isAuthorized('branch') ? <BranchHome /> : <Navigate to="/" replace />} /> */}
         <Route path='/WaitingPrint' element={isAuthorized('branch') ?  <BranchHome /> : <Navigate to="/" replace /> } />
         <Route path='/Printed' element={isAuthorized('branch') ? <PrintedScreen />: <Navigate to="/" replace /> } />
 
