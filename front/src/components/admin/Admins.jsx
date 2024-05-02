@@ -3,17 +3,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Container, Card, CardContent, Typography, TextField } from "@mui/material";
 import axios from 'axios';
 
-const Branch = () => {
-  const [branches, setBranches] = useState([]);
+const Admins = () => {
+  const [admins, setAdmins] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
-  const [branchName, setBranchName] = useState('');
-  const [branchEmail, setBranchEmail] = useState('');
-  const [branchPassword, setBranchPassword] = useState('');
+  const [adminName, setAdminName] = useState('');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8081/admin/branches')
+    axios.get('http://localhost:8081/admin/admins')
       .then(res => {
-        setBranches(res.data);
+        setAdmins(res.data);
       })
       .catch(err => console.log(err));
   }, []);
@@ -23,37 +23,41 @@ const Branch = () => {
       axios
         .delete(`http://localhost:8081/user/delete/${id}`)
         .then((res) => {
-          setBranches(branches.filter((branch) => branch.id !== id));
+          setAdmins(branches.filter((branch) => branch.id !== id));
           console.log(res.data);
         })
         .catch((err) => console.log(err));
     }
   };
 
-  const handleAddBranch = () => {
+  const handleAddAdmin = () => {
     const branchData = {
-      name: branchName,
-      email: branchEmail,
-      password: branchPassword
+      name: adminName,
+      email: adminEmail,
+      password: adminPassword
     };
 
-    axios.post('http://localhost:8081/createbranch', branchData)
+    axios.post('http://localhost:8081/addadmin', branchData)
       .then((res) => {
         console.log(res.data);
+        // Refresh the list of branches
         axios.get('http://localhost:8081/admin/branches')
           .then(res => {
-            setBranches(res.data);
+            setAdmins(res.data);
           })
           .catch(err => console.log(err));
       })
       .catch((err) => {
         console.log(err);
+        // Handle error
       });
 
+    // Close the dialog
     setOpenDialog(false);
-    setBranchName('');
-    setBranchEmail('');
-    setBranchPassword('');
+    // Clear the input fields
+    setAdminName('');
+    setAdminPassword('');
+    setAdminEmail('');
   };
 
   return (
@@ -63,7 +67,7 @@ const Branch = () => {
           <CardContent>
             <Typography gutterBottom fontFamily='sora'> Click here to Create a new Branch</Typography>
             <Button variant='outlined' fullWidth onClick={() => setOpenDialog(true)}>
-              Add Branch
+              Add Admin
             </Button>
           </CardContent>
         </Card>
@@ -79,13 +83,13 @@ const Branch = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {branches.map((branch) => (
-              <TableRow key={branch.id}>
-                <TableCell>{branch.id}</TableCell>
-                <TableCell>{branch.name}</TableCell>
-                <TableCell>{branch.email}</TableCell>
+            {admins.map((admin) => (
+              <TableRow key={admin.id}>
+                <TableCell>{admin.id}</TableCell>
+                <TableCell>{admin.name}</TableCell>
+                <TableCell>{admin.email}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleDelete(branch.id)}> <DeleteIcon/> </IconButton> 
+                  <IconButton onClick={() => handleDelete(admin.id)}> <DeleteIcon/> </IconButton> 
                 </TableCell>
               </TableRow>
             ))}
@@ -101,35 +105,35 @@ const Branch = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Branch Name"
+            label="Admin Name"
             variant="filled"
-            value={branchName}
-            onChange={(e) => setBranchName(e.target.value)}
+            value={adminName}
+            onChange={(e) => setAdminName(e.target.value)}
           />
           <TextField
             fullWidth
             margin="normal"
             label="Branch Location"
             variant="filled"
-            value={branchEmail}
-            onChange={(e) => setBranchEmail(e.target.value)}
+            value={adminEmail}
+            onChange={(e) => setAdminEmail(e.target.value)}
           />
           <TextField
             fullWidth
             margin="normal"
             label="Password"
             variant="filled"
-            value={branchPassword}
-            onChange={(e) => setBranchPassword(e.target.value)}
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Button onClick={handleAddBranch} variant="contained" color="primary">Add</Button>
+          <Button onClick={handleAddAdmin} variant="contained" color="primary">Add</Button>
         </DialogActions>
       </Dialog>
     </div>
   );
 };
 
-export default Branch;
+export default Admins

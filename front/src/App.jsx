@@ -22,9 +22,7 @@ import Bookmark from './screens/users/Bookmark';
 import BranchHome from './screens/Branch/BranchHome';
 import Catagory from './screens/users/Catagory';
 import AboutUs from './screens/users/AboutUsPage';
-// import BranchLogin from './screens/Branch/BranchLogin';
 import PrintedScreen from './screens/Branch/PrintedScreen';
-// import AdminLogin from './screens/Admin/AdminLogin';
 
 
 const decodeToken = (token) => {
@@ -39,7 +37,6 @@ function App() {
   
   const token = localStorage.getItem('token');
   const isAuthorized = (role) => {
-    // const [userRole , setUserRole] = useState(null)
     const userRole = token ? decodeToken(token).role : null;
     return userRole === role;
   };

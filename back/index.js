@@ -24,10 +24,9 @@ import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
 import AddAvatar from "./routes/AddAvatar.js";
 import { Chapa } from 'chapa-nodejs';
-import CreateBranch from "./routes/CreateBranch.js";
-import BranchLogin from "./routes/BranchLogin.js";
-import CreateAdmin from "./routes/CreateAdmin.js";
-import AdminLogin from "./routes/AdminLogin.js";
+import AddBranch from "./routes/AddBranch.js";
+import AddAdmin from "./routes/AddAdmin.js";
+import AddToCart from "./routes/AddToCart.js";
 
 
 
@@ -71,11 +70,11 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/addbranch", async (req, res) => {
-  CreateBranch(db, req, res);
+  AddBranch(db,req,res)
 });
 
-app.post("/add-admin", async (req, res) => {
-  CreateAdmin(db, req, res);
+app.post("/addadmin", async (req, res) => {
+  AddAdmin(db, req, res);
 });
 
 app.post("/login", async (req, res) => {
@@ -207,19 +206,9 @@ app.post("/product", (req, res) => {
   });
 });
 app.post("/addtocart", (req, res) => {
-  const { artId, userId, artPrice, quantity, size, artTitle,art, sellerName} = req.body;
-  const check = "SELECT * FROM cart WHERE user_id = ? And art_id = ? AND size = ?";
-  const sql = "INSERT INTO cart (`user_id`,`art_id`,`price`,`quantity`,`size`,`art`,`art_title`,`seller_name`) Values (?,?,?,?,?,?,?,?)";
-  db.query(check, [userId, artId, size], (err, result) => {
-    if (err) return res.json("query error"); 
-    if (result.length == 0) {
-      db.query(sql, [userId, artId, artPrice, quantity, size,art,artTitle,sellerName], (err, result) => {
-        if (err) return res.json(err);
-        return res.json("item added to cart");
-      });
-    } else return res.json("item already in cart");
-  });
+  AddToCart(db,req,res)
 });
+
 app.post("/cart", (req,res)=>{
   const userId = req.body.userId
   const sql = "SELECT * FROM cart WHERE user_id = ?" 
@@ -244,13 +233,13 @@ app.delete("/user/delete/:id", (req, res) => {
 });
 
 
-app.post('/branch-login', (req, res) => {
-  BranchLogin(db, req, res);
-});
+// app.post('/branch-login', (req, res) => {
+//   BranchLogin(db, req, res);
+// });
 
-app.post('/admin-login', (req, res) => {
-  AdminLogin(db, req, res);
-});
+// app.post('/admin-login', (req, res) => { 
+//   AdminLogin(db, req, res);
+// });
 
 
 app.post('/removecartitem', (req,res)=>{
@@ -266,9 +255,6 @@ app.post("/payment/pay", async (req, res) => {
     prefix: "TX",
     size: 20,
   });
-
-  const currentDateAndTime = new Date();
-
   const {
     cartData,
     totalPrice,
@@ -308,7 +294,7 @@ app.post("/payment/pay", async (req, res) => {
     .then((data) => {
       if (data.status == "success") {
         const sql =
-          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
+          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`print_status`) VALUES (?,?,?,?,?,?,?,?,?)";
         db.query(
           sql,
           [
@@ -320,10 +306,11 @@ app.post("/payment/pay", async (req, res) => {
             location,
             cartDataJson,
             tx_ref,
-            currentDateAndTime,
+            "waiting",
           ],
           (err, result) => {
             if (err) {
+              console.log(err)
               return res
                 .status(500)
                 .json({
@@ -343,10 +330,10 @@ app.post("/payment/pay", async (req, res) => {
 
 
 
-app.get('/branch',(req, res) => {
-
-  const sql = "SELECT * FROM payment_detail"
-  db.query(sql, (err,results)=>{
+app.post('/branch',(req, res) => {
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ?"
+  db.query(sql,[branchName], (err,results)=>{
     if(err) return res.json(err)
     else{
       const somethingincart = results
@@ -382,6 +369,70 @@ app.get('/fetchBranch', async (req, res) => {
     console.log(error)
     return res.json(error)
   }
+});
+app.post('/ordereditems', async (req,res) =>{
+  try{
+    const id = req.body.userId
+    const sql = "SELECT * FROM payment_detail WHERE user_id = ?"
+    db.query(sql,[id], (err,result)=>{
+      if(err) return res.json(err)
+      else{
+        return res.json(result)
+    }
+    })
+  }
+  catch(error){
+    console.log(error)
+    return res.json(error)
+  }
+})
+app.get("/admin/admins", (req, res) => {
+  const sql = "SELECT * FROM users WHERE role = 'admin' ";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+app.get("/overview", (req, res) => {
+  const usersQuery = "SELECT COUNT(*) AS userCount FROM users";
+  const adminsQuery = "SELECT COUNT(*) AS adminCount FROM users WHERE role = 'admin'"
+  const sellersQuery = "SELECT COUNT(*) AS sellerCount FROM users WHERE role = 'seller'"
+  const buyersQuery = "SELECT COUNT(*) AS buyerCount FROM users WHERE role = 'buyer'"
+  const artsQuery = "SELECT COUNT(*) AS artCount FROM artwork WHERE status = 1";
+  const branchsQuery = "SELECT COUNT(*) AS branchCount FROM users WHERE role = 'branch'";
+  let userCount, artCount, branchCount, adminCount, sellerCount, buyerCount;
+  db.query(usersQuery, (err, userResult) => {
+    if (err) {
+      console.error("Error executing user SQL query:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    userCount = userResult[0].userCount;
+    db.query(artsQuery, (err, artResult) => {
+      if (err) {
+        console.error("Error executing art SQL query:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+      artCount = artResult[0].artCount;
+      db.query(branchsQuery, (err,branchResult)=>{
+        if(err) return res.json(err)
+        branchCount = branchResult[0].branchCount
+        db.query(adminsQuery, (err,adminResult)=>{
+          if(err) return res.json(err)
+          adminCount = adminResult[0].adminCount
+          db.query(sellersQuery, (err,sellerReslut)=>{
+            if(err) return res.json(err)
+            sellerCount = sellerReslut[0].sellerCount
+            db.query(buyersQuery, (err,buyerResult)=>{
+              if(err) return res.json(err)
+              buyerCount = buyerResult[0].buyerCount
+              
+              res.json({ userCount,artCount ,branchCount,adminCount,sellerCount,buyerCount});
+            })
+          })
+        })
+      })
+    });
+  });
 });
 
 

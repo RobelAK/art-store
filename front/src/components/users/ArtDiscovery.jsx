@@ -108,7 +108,6 @@ const ArtDiscovery = () => {
           <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', zIndex: -2 }}>
             <source src={video} type="video/mp4" />
           </video>
-          {/* Overlay */}
           <Box
             sx={{
               zIndex: -2,

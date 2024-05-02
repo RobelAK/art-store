@@ -17,6 +17,14 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
 } from "@mui/material";
 import Footer from "../../components/users/Footer";
 import Navbar from "../../components/users/Navbar";
@@ -27,11 +35,14 @@ const PHONE_VALID = /^[0-9]{9}$/;
 
 const CartPage = () => {
   const navigate = useNavigate();
-  const [location, setLocation] = useState("");
+  
+  const [openOrdereInfo, setOpenOrderInfo] = useState(false);
+  const [location, setLocation] = useState('');
   const [cartData, setCartData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemsInCart, setItemsInCart] = useState(false);
   const [id, setId] = useState("");
+  const [orderedItems, setOrderedItems] = useState([]);
 
   const [branch, setBranchs] = useState([]);
 
@@ -63,6 +74,16 @@ const CartPage = () => {
         .catch((err) => {
           console.log(err);
         });
+
+        axios
+        .post("http://localhost:8081/ordereditems", { userId: user.id})
+        .then((res) => {
+          setOrderedItems(res.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
     } else {
       navigate("/login");
     }
@@ -70,6 +91,12 @@ const CartPage = () => {
       setBranchs(res.data);
       console.log(res.data);
     });
+
+
+    
+    
+
+
   }, []);
   useEffect(() => {
     const totalPrice = calculateTotalPrice();
@@ -104,7 +131,9 @@ const CartPage = () => {
     });
     return totalPrice;
   };
-
+  const handleOpenOrderInfo = () => {
+    setOpenOrderInfo(true);
+  };
   const handleRemoveItem = (id) => {
     axios
       .post("http://localhost:8081/removecartitem", { id: id })
@@ -139,11 +168,20 @@ const CartPage = () => {
           if (res.data.data.checkout_url) {
             window.location.href = res.data.data.checkout_url;
           }
-          // console.log(res.data.data.checkout_url);
-          // console.log(res.data)
         })
         .catch((err) => console.log(err));
     } else console.log("not good");
+  };
+  const handleclick =()=>{
+    console.log(orderedItems)
+  }
+  const parseData = (stringifiedData) => {
+    try {
+      return JSON.parse(stringifiedData);
+    } catch (error) {
+      console.error("Error parsing data:", error);
+      return [];
+    }
   };
 
   return (
@@ -496,6 +534,7 @@ const CartPage = () => {
                                 onChange={(e) => setLocation(e.target.value)}
                                 fullWidth
                                 required
+                                value={location}
                               >
                                 {branch.map((branch) => (
                                   <MenuItem key={branch.id} value={branch.name}>
@@ -552,9 +591,44 @@ const CartPage = () => {
           variant="middle"
           sx={{ backgroundColor: "black" }}
         />
-
+        <Button variant="contained" onClick={handleOpenOrderInfo}>
+          Order information
+        </Button>
         <Footer />
       </Box>
+      <Dialog open={openOrdereInfo} onClose={() => setOpenOrderInfo(false)}>
+        <DialogTitle>Ordered Items</DialogTitle>
+        <DialogContent>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Container>
+              {orderedItems.map((items, i) => (
+                <Grid key={i} spacing={2}>
+                  {parseData(items.data).map((item, j) => (
+                    <Card key={j} sx={{ display: 'flex'}}>
+                      <CardMedia
+                        component="img"
+                        sx={{
+                          width: 70,
+                          margin: 1,
+                          aspectRatio: 4 / 6,
+                        }}
+                        src={`http://localhost:8081/images/${item.art}`}
+                        alt="Product Image"
+                      />
+                      <CardContent>
+                        {item.art_title}
+                        <Typography>Sizze: {item.size}</Typography>
+                        <Typography>Status: {items.print_status}</Typography>
+                        {/* <Typography>Estimated date: 5d</Typography> */}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Grid>
+              ))}
+            </Container>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

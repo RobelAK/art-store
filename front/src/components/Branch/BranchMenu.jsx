@@ -22,7 +22,8 @@ const BranchMenu = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate('/login')
+    navigate('/')
+    window.location.reload()
   };
 
   const handleProfile = () => {

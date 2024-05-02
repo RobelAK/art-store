@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 
-export default async function CreateBranch(db, req, res) {
+export default async function AddBranch(db,req,res) {
+  
   const { email, name, password } = req.body;
   
   const hashedPassword = await bcrypt.hash(password, 10);

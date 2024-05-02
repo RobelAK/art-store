@@ -4,7 +4,6 @@ import {
   Container,
   CssBaseline,
   Grid,
-  Stack,
   Typography,
   Box,
   Card,
@@ -14,9 +13,7 @@ import {
   Divider,
   CardMedia,
   Rating,
-  TextField
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import Footer from "../../components/users/Footer";
 import {useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -32,6 +29,7 @@ function Product() {
   const [selectedButton, setSelectedButton] = useState('small');
   const [rating, setRating] = useState(4);
   const id = useParams();
+  const [message, setMessage] = useState('')
   
 const navigate = useNavigate()
 
@@ -55,6 +53,7 @@ const navigate = useNavigate()
   const handleSizeChange = (size) => {
     setSelectedButton(size);
     setSize(size);
+    setMessage('')
   };
 
   const handleRatingChange = (event, newValue) => {
@@ -88,7 +87,7 @@ const navigate = useNavigate()
     axios
       .post("http://localhost:8081/addtocart", values)
       .then((res) => {
-        console.log(res.data)
+        setMessage(res.data)
       })
       .catch((err) => {
         console.log(err);
@@ -268,7 +267,6 @@ const navigate = useNavigate()
                           {rating}/5
                         </Typography>
                       </Box>
-
                       <Button
                         variant="contained"
                         color="primary"
@@ -277,6 +275,7 @@ const navigate = useNavigate()
                       >
                         Add to Cart
                       </Button>
+                      <Typography>{message}</Typography>
                     </CardContent>
                   </Card>
                 </Box>
