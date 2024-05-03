@@ -19,7 +19,7 @@ const BranchMenu = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = '/branch';
+    window.location.href = '/login';
   };
 
   const handleProfile = () => {

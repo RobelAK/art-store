@@ -5,7 +5,7 @@ export default function login(db, req, res) {
   
   
   const { email, password } = req.body
-  const sql = "SELECT * From users Where email = ?";
+  const sql = "SELECT id, name, email, role, password FROM users WHERE email = ?";
   db.query(sql, [email], async (err, result) => {
     if (err) return res.json({ loginStatus: false, Error: "Query error" })
     if (result.length > 0) {

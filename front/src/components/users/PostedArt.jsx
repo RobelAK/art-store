@@ -12,13 +12,13 @@ const PostedArt = () => {
     const fetchArtworks = async () => {
       try {
         const token = localStorage.getItem('token');
-        
         const response = await axios.get("http://localhost:8081/user/art", {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
         setArtImages(response.data);
+        console.log( "response :",response.data)
       } catch (error) {
         console.error('Error fetching posted artworks:', error);
       }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Signup from './screens/users/Signup';
@@ -22,10 +22,8 @@ import Bookmark from './screens/users/Bookmark';
 import BranchHome from './screens/Branch/BranchHome';
 import Catagory from './screens/users/Catagory';
 import AboutUs from './screens/users/AboutUsPage';
-import BranchLogin from './screens/Branch/BranchLogin';
 import PrintedScreen from './screens/Branch/PrintedScreen';
-import AdminLogin from './screens/Admin/AdminLogin';
-
+import NotFound from './components/users/NotFound';
 
 const decodeToken = (token) => {
   try {
@@ -36,17 +34,57 @@ const decodeToken = (token) => {
 }
 
 function App() {
-  
-  const isAuthorized = (role) => {
+  const isAuthorized = (roles) => {
     const token = localStorage.getItem('token');
     const userRole = token ? decodeToken(token).role : null;
-    return userRole === role;
+    return roles.includes(userRole);
   };
+
+  const RenderProfilePage = () => {
+    if (isAuthorized(['seller'])) {
+      return <SellerProfile />;
+    }
+    else if (isAuthorized(['buyer'])){
+      return <ProfilePage/>;
+    } else {
+      return <Navigate to="/NotFound" replace />;
+    }
+  };
+  const RenderSignas = () => {
+    if (isAuthorized(['buyer'])) {
+      return <SignupAs />;
+    } else {
+      return <Navigate to="/NotFound" replace />;
+    }
+  };
+
+
+  const RenderAddart = () => {
+    if (isAuthorized(['seller'])) {
+      return <AddArt />;
+    } else {
+      return <Navigate to="/NotFound" replace />;
+    }
+  };
+  const RenderLogin = () => {
+    if (isAuthorized(['branch'])) {
+      return <BranchHome />;
+    }
+    else if (isAuthorized(['admin'])){
+      return <Dashboard />;
+    }
+    
+    else {
+      return <Landingpage/>;
+    }
+  }
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Landingpage />} />
+        <Route path='/' element={<RenderLogin/>} />
+        <Route path='*' element={<NotFound />} />
+        <Route path='/Home' element={<Landingpage />} />
         <Route path='/arts' element={<DiscoverArt />} />
         <Route path='/product/:id' element={<Product />} />
         <Route path='/login' element={<Login />} />
@@ -54,22 +92,20 @@ function App() {
         <Route path='/Checkout' element={<Checkout />} />
         <Route path='/cart' element={<CartPage />} />
         <Route path='/message' element={<ArtSubmissionMessage />} />
-        <Route path='/addart' element={ isAuthorized('seller') ?  <AddArt /> : <Navigate to="/signupas" replace /> } />
+        <Route path='/addart' element={<RenderAddart/>} />
         <Route path='/category' element={<Catagory />} />
-        <Route path='/profilepage' element={ isAuthorized('buyer') ?  <ProfilePage /> : <Navigate to="/SellerProfile" replace /> } />
-        <Route path='/signupas' element={ isAuthorized('buyer') ?  <SignupAs /> : <Navigate to="/login" replace /> } />
+        <Route path='/profilepage' element={<RenderProfilePage />} />
+        <Route path='/signupas' element={<RenderSignas/>} />
         <Route path='/saved' element={<Bookmark />} />
         <Route path='/forgotpassword' element={<Forgotpassword />} />
         <Route path='/ResetPassword' element={<ResetPassword />} />
         <Route path='/ReceiveEmail' element={<ReceiveEmail />} />
-        <Route path='/WaitingArt' element={ isAuthorized('admin') ? <WaitingArt /> : <Navigate to="/admin" replace /> } />
-        <Route path='/WaitingPrint' element={isAuthorized('branch') ?  <BranchHome /> : <Navigate to="/Branch" replace /> } />
-        <Route path='/Printed' element={isAuthorized('branch') ? <PrintedScreen />: <Navigate to="/Branch" replace /> } />
-        <Route path='/Branch' element={<BranchLogin />} />
-        <Route path='/Admin' element={<AdminLogin />} />
+        <Route path='/WaitingArt' element={isAuthorized(['admin']) ? <WaitingArt /> : <Navigate to="/NotFound" replace />} />
+        <Route path='/WaitingPrint' element={isAuthorized(['branch']) ? <BranchHome /> : <Navigate to="/NotFound" replace />} />
+        <Route path='/Printed' element={isAuthorized(['branch']) ? <PrintedScreen /> : <Navigate to="/NotFound" replace />} />
         <Route path='/about' element={<AboutUs />} />
-        <Route path='/dashboard' element={ isAuthorized('admin') ? <Dashboard /> : <Navigate to="/admin" replace />} />
-        <Route path='/sellerprofile' element={ isAuthorized('seller') ? <SellerProfile /> : <Navigate to="/signupas" replace />} />
+        <Route path='/dashboard' element={isAuthorized(['admin']) ? <Dashboard /> : <Navigate to="/NotFound" replace />} />
+        <Route path='/sellerprofile' element={isAuthorized(['seller']) ? <SellerProfile /> : <Navigate to="/Notfound" replace />} />
       </Routes>
     </BrowserRouter>
   );

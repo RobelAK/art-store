@@ -105,7 +105,7 @@ const Branch = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Branch Name"
+            label="Branch Location"
             variant="filled"
             value={branchName}
             onChange={(e) => setBranchName(e.target.value)}
@@ -113,7 +113,7 @@ const Branch = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Branch Location"
+            label="Branch Email"
             variant="filled"
             value={branchEmail}
             onChange={(e) => setBranchEmail(e.target.value)}

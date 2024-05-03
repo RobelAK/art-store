@@ -25,12 +25,18 @@ const WaitingUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:8081/sellers/waiting")
-    .then(res =>{
-      setUsers(res.data);
-      setOriginalUsers(res.data);
-    });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/sellers/waiting");
+      setUsers(response.data);
+      setOriginalUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleSearch = () => {
     const filteredUsers = originalUsers.filter(
@@ -50,22 +56,27 @@ const WaitingUsers = () => {
     setOpenDialog(false);
   };
 
-  const handleApprove =  (id) => {
-      // console.log("Approving seller with ID:", id);
-      axios.put(`http://localhost:8081/seller/approve/${id}`)
-      .then(res =>{
-        console.log(res.data)
-      });
+  const handleApprove = async (id) => {
+    if (window.confirm('Are you sure you want to Approve this user?')) {
+      try {
+        await axios.put(`http://localhost:8081/seller/approve/${id}`);
+        // Refresh data after approval
+        fetchData();
+      } catch (error) {
+        console.error("Error approving user:", error);
+      }
+    }
   };
 
   const handleDecline = async (id) => {
-    try {
-      console.log("Declining seller with ID:", id);
-      await axios.delete(`http://localhost:8081/seller/decline/${id}`);
-      console.log("Seller declined successfully");
-      fetchData();
-    } catch (error) {
-      console.error("Error declining seller:", error);
+    if (window.confirm('Are you sure you want to decline this user?')) {
+      try {
+        await axios.delete(`http://localhost:8081/seller/decline/${id}`);
+        // Refresh data after decline
+        fetchData();
+      } catch (error) {
+        console.error("Error declining user:", error);
+      }
     }
   };
 
@@ -104,33 +115,40 @@ const WaitingUsers = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    onClick={() => window.open(user.portfolio_link, "_blank")}
-                  >
-                    View
-                  </Button>
-                </TableCell>
-
-                <TableCell>
-                  <Button onClick={() => handleApprove(user.id)}>
-                    Approve
-                  </Button>
-                  <Button onClick={() => handleDecline(user.id)}>
-                    Decline
-                  </Button>
-                  <Button onClick={() => handleViewDetails(user)}>
-                    Detail
-                  </Button>
+            {users.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  No users found
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      onClick={() => window.open(user.portfolio_link, "_blank")}
+                    >
+                      View
+                    </Button>
+                  </TableCell>
+
+                  <TableCell>
+                    <Button onClick={() => handleApprove(user.id)}>
+                      Approve
+                    </Button>
+                    <Button onClick={() => handleDecline(user.id)}>
+                      Decline
+                    </Button>
+                    <Button onClick={() => handleViewDetails(user)}>
+                      Detail
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -157,7 +175,6 @@ const WaitingUsers = () => {
           <Button onClick={handleCloseDialog}>Close</Button>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 };
