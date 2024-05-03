@@ -351,6 +351,22 @@ app.post('/branch/verifypayment', async (req, res) => {
     return res.status(500).json({ error: "An error occurred while verifying the payment." });
   }
 });
+app.post('/branch/delete', async (req, res) => {
+  try {
+    const {tx_ref} = req.body;
+    const sql = "DELETE FROM payment_detail WHERE tx_ref = ?"
+    db.query(sql,[tx_ref], (err,results)=>{
+      if(err) return res.json(err)
+      else{
+        return res.json("order deleted successfully")
+    }
+    })
+  } catch (error) {
+    return res.json(error)
+  }
+});
+
+
 
 app.get('/fetchBranch', async (req, res) => {
   try{
