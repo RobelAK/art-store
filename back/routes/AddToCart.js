@@ -10,8 +10,8 @@ export default function AddToCart(db,req,res) {
     if (result.length == 0) {
       db.query(sql, [userId, artId, artPrice, quantity, size,art,artTitle,sellerName], (err, result) => {
         if (err) return res.json(err);
-        return res.json("item added to cart");
+        return res.json("Item added to cart");
       });
-    } else return res.json("item already in cart");
+    } else return res.json("Item already in cart");
   });
 }

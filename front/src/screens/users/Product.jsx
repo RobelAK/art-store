@@ -26,8 +26,9 @@ function Product() {
   const [size, setSize] = useState('small')
   const [quantity, setQuantity] = useState(1)
   const [userid, setUserId] = useState('')
+  const [color, setColor] = useState('green')
   const [selectedButton, setSelectedButton] = useState('small');
-  const [rating, setRating] = useState(4);
+  // const [rating, setRating] = useState(4);
   const id = useParams();
   const [message, setMessage] = useState('')
   
@@ -56,9 +57,6 @@ const navigate = useNavigate()
     setMessage('')
   };
 
-  const handleRatingChange = (event, newValue) => {
-    setRating(newValue);
-  };
   const handleIncrement = (e)=>{
     if(quantity == 3) setQuantity(3)
     else setQuantity(prevCount=> prevCount + 1)
@@ -88,6 +86,14 @@ const navigate = useNavigate()
       .post("http://localhost:8081/addtocart", values)
       .then((res) => {
         setMessage(res.data)
+        setTimeout(() => {
+          setMessage('');
+        }, 2000);
+        if(res.data == "Item already in cart"){
+          setColor('#f07971')
+        }
+        else setColor('#1976d2')
+        console.log(res.data)
       })
       .catch((err) => {
         console.log(err);
@@ -249,23 +255,6 @@ const navigate = useNavigate()
                           mb: 2,
                         }}
                       >
-                        <Typography
-                          variant="h6"
-                          component="span"
-                          sx={{ mr: 1 }}
-                        >
-                          Rating:
-                        </Typography>
-                        <Rating
-                          name="product-rating"
-                          value={rating}
-                          onChange={handleRatingChange}
-                          precision={0.5}
-                          sx={{ ml: 1 }}
-                        />
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ ml: 1 }}>
-                          {rating}/5
-                        </Typography>
                       </Box>
                       <Button
                         variant="contained"
@@ -275,7 +264,7 @@ const navigate = useNavigate()
                       >
                         Add to Cart
                       </Button>
-                      <Typography>{message}</Typography>
+                      <Typography color={color}>{message}</Typography>
                     </CardContent>
                   </Card>
                 </Box>

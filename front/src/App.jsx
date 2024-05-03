@@ -41,7 +41,6 @@ function App() {
     const userRole = token ? decodeToken(token).role : null;
     return userRole === role;
   };
-
   return (
     <BrowserRouter>
       <Routes>
@@ -65,19 +64,18 @@ function App() {
         <Route path='/ResetPassword' element={<ResetPassword />} />
         <Route path='/ReceiveEmail' element={<ReceiveEmail />} />
         <Route path='/WaitingArt' element={ isAuthorized('admin') ? <WaitingArt /> : <Navigate to="/" replace /> } />
-        <Route path='/branch' element={<BranchHome />} />
 
 
-        {/* <Route path='/branch' element={ isAuthorized('branch') ? <BranchHome /> : <Navigate to="/" replace />} /> */}
+        <Route path='/branch' element={ isAuthorized('branch') ? <BranchHome /> : <Navigate to="/" replace />} />
         <Route path='/WaitingPrint' element={isAuthorized('branch') ?  <BranchHome /> : <Navigate to="/" replace /> } />
         <Route path='/Printed' element={isAuthorized('branch') ? <PrintedScreen />: <Navigate to="/" replace /> } />
 
         
         <Route path='/about' element={<AboutUs />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        {/* <Route path='/dashboard' element={ isAuthorized('admin') ? <Dashboard /> : <Navigate to="/admin" replace />} /> */}
+        <Route path='/dashboard' element={ isAuthorized('admin') ? <Dashboard /> : <Navigate to="/admin" replace />} />
         <Route path='/sellerprofile' element={ isAuthorized('seller') ? <SellerProfile /> : <Navigate to="/signupas" replace />} />
-        <Route path='/postpayed' element={< PostPayed/>} />  
+        <Route path='/postpayed' element={< PostPayed/>} />
+
       </Routes>
     </BrowserRouter>
   );

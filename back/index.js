@@ -233,14 +233,6 @@ app.delete("/user/delete/:id", (req, res) => {
 });
 
 
-// app.post('/branch-login', (req, res) => {
-//   BranchLogin(db, req, res);
-// });
-
-// app.post('/admin-login', (req, res) => { 
-//   AdminLogin(db, req, res);
-// });
-
 
 app.post('/removecartitem', (req,res)=>{
   const {id} = req.body
@@ -323,9 +315,13 @@ app.post("/payment/pay", async (req, res) => {
     })
     .catch((error) => console.error("Error:", error));
 });
-app.post('/payment/callback',(req,res)=>{
-  const tx_ref = req.body
-  return res.json(tx_ref)
+app.post('/postpayment',(req,res)=>{ 
+  const {userId} = req.body
+  const sql = 'DELETE FROM cart WHERE user_id = ?'
+  db.query(sql,[userId],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Payment successful")
+  })
 })
 
 

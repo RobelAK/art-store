@@ -1,18 +1,30 @@
+import { Button, Container } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 function PostPayed() {
   useEffect(() => {
     const token = localStorage.getItem('token')
-    axios
-        .post("http://localhost:8081/payment/callback")
-        .then((res) => {
-          console.log(res.data)
-        })
-        .catch((err) => console.log(err));
+    if(token) {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      axios
+      .post("http://localhost:8081/postpayment", {userId: user.id})
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => console.log(err));
+    }
   }, []);
+  const navigate = useNavigate()
+  const handleClick = ()=>{
+    navigate('/')
+  }
   return (
-    <div>Thank u for purchasing items from out store u can track items status in the cart</div>
+    <Container>
+      <div>Thank u for purchasing items from out store u can track items status in the cart</div>
+      <Button onClick={handleClick}>back to home</Button>
+    </Container>
   )
 }
 

@@ -602,7 +602,7 @@ const CartPage = () => {
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Container>
               {orderedItems.map((items, i) => (
-                <Grid key={i} spacing={2}>
+                <Grid container key={i} spacing={2}>
                   {parseData(items.data).map((item, j) => (
                     <Card key={j} sx={{ display: 'flex'}}>
                       <CardMedia
@@ -617,7 +617,7 @@ const CartPage = () => {
                       />
                       <CardContent>
                         {item.art_title}
-                        <Typography>Sizze: {item.size}</Typography>
+                        <Typography>Size: {item.size}</Typography>
                         <Typography>Status: {items.print_status}</Typography>
                         {/* <Typography>Estimated date: 5d</Typography> */}
                       </CardContent>
