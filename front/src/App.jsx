@@ -23,6 +23,7 @@ import BranchHome from './screens/Branch/BranchHome';
 import Catagory from './screens/users/Catagory';
 import AboutUs from './screens/users/AboutUsPage';
 import PrintedScreen from './screens/Branch/PrintedScreen';
+import PostPayed from './screens/users/PostPayed';
 
 
 const decodeToken = (token) => {
@@ -76,6 +77,7 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />} />
         {/* <Route path='/dashboard' element={ isAuthorized('admin') ? <Dashboard /> : <Navigate to="/admin" replace />} /> */}
         <Route path='/sellerprofile' element={ isAuthorized('seller') ? <SellerProfile /> : <Navigate to="/signupas" replace />} />
+        <Route path='/postpayed' element={< PostPayed/>} />  
       </Routes>
     </BrowserRouter>
   );

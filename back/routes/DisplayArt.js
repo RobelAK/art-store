@@ -3,7 +3,7 @@ export default function displayArt(db, req, res) {
 
   let sql = 'SELECT * FROM artwork WHERE status=true';
   const params = [];
-
+  if(category){
     if(category == 'All'){
       sql += '';
     }
@@ -11,7 +11,7 @@ export default function displayArt(db, req, res) {
       sql += ' AND category = ?';
       params.push(category);
     }
-
+  }
   db.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching artwork:', err);

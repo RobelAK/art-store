@@ -280,12 +280,9 @@ app.post("/payment/pay", async (req, res) => {
       last_name: lname,
       phone_number : ('+251' + phoneNo),
       tx_ref: tx_ref,
-      // "callback_url": "",
-      return_url: "",
-      customization: {
-        title: "Payment",
-        description: "I love online payments",
-      },
+      // callback_url: "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+      // callback_url: "http://localhost:8081/payment/callback",
+      return_url: "http://localhost:5173/postpayed",
     }),
   };
 
@@ -326,6 +323,10 @@ app.post("/payment/pay", async (req, res) => {
     })
     .catch((error) => console.error("Error:", error));
 });
+app.post('/payment/callback',(req,res)=>{
+  const tx_ref = req.body
+  return res.json(tx_ref)
+})
 
 
 

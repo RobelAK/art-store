@@ -20,7 +20,6 @@ import BranchMenu from "../../components/Branch/BranchMenu";
 const Navbar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
   boxShadow: "none",
-  background: "linear-gradient(to right, #2980B9, #6DD5FA)",
   borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
 }));
 
