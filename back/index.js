@@ -29,6 +29,11 @@ import CreateAdmin from "./routes/CreateAdmin.js";
 import Notifications from "./routes/Notifications.js";
 import Rating from "./routes/Rating.js";
 import RatingAverage from "./routes/RatingAverage.js";
+import { Chapa } from 'chapa-nodejs';
+import AddBranch from "./routes/AddBranch.js";
+import AddAdmin from "./routes/AddAdmin.js";
+import AddToCart from "./routes/AddToCart.js";
+
 
 
 const app = express();
@@ -245,6 +250,19 @@ app.post("/cart", (req, res) => {
     else return res.json(result);
   });
 });
+  AddToCart(db,req,res)
+});
+
+app.post("/cart", (req,res)=>{
+  const userId = req.body.userId
+  const sql = "SELECT * FROM cart WHERE user_id = ?" 
+  db.query(sql, [userId], (err,result)=>{
+    if(err) return res.json(err) 
+    else return res.json(result)
+  })
+})
+
+
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;
@@ -344,6 +362,12 @@ app.post("/payment/pay", async (req, res) => {
               return res.status(500).json({
                 error: "An error occurred while inserting cart data.",
               });
+              console.log(err)
+              return res
+                .status(500)
+                .json({
+                  error: "An error occurred while inserting cart data.",
+                });
             }
             return res.json(data);
           }
@@ -365,6 +389,29 @@ app.get("/branch", (req, res) => {
     }
   });
 });
+app.post('/postpayment',(req,res)=>{ 
+  const {userId} = req.body
+  const sql = 'DELETE FROM cart WHERE user_id = ?'
+  db.query(sql,[userId],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Payment successful")
+  })
+})
+
+
+
+
+app.post('/branch',(req, res) => {
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ?"
+  db.query(sql,[branchName], (err,results)=>{
+    if(err) return res.json(err)
+    else{
+      const somethingincart = results
+      return res.json(somethingincart)
+  }
+  })
+})
 
 app.post("/branch/verifypayment", async (req, res) => {
   try {
@@ -380,6 +427,103 @@ app.post("/branch/verifypayment", async (req, res) => {
       .json({ error: "An error occurred while verifying the payment." });
   }
 });
+app.post('/branch/delete', async (req, res) => {
+  try {
+    const {tx_ref} = req.body;
+    const sql = "DELETE FROM payment_detail WHERE tx_ref = ?"
+    db.query(sql,[tx_ref], (err,results)=>{
+      if(err) return res.json(err)
+      else{
+        return res.json("order deleted successfully")
+    }
+    })
+  } catch (error) {
+    return res.json(error)
+  }
+});
+
+
+
+app.get('/fetchBranch', async (req, res) => {
+  try{
+    const sql = "SELECT * FROM users WHERE role = 'branch' "
+    db.query(sql,(err,result)=>{
+      if(err) return res.json(err)
+      else{
+    return res.json(result)
+    }
+    })
+  }
+  catch(error){
+    console.log(error)
+    return res.json(error)
+  }
+});
+app.post('/ordereditems', async (req,res) =>{
+  try{
+    const id = req.body.userId
+    const sql = "SELECT * FROM payment_detail WHERE user_id = ?"
+    db.query(sql,[id], (err,result)=>{
+      if(err) return res.json(err)
+      else{
+        return res.json(result)
+    }
+    })
+  }
+  catch(error){
+    console.log(error)
+    return res.json(error)
+  }
+})
+app.get("/admin/admins", (req, res) => {
+  const sql = "SELECT * FROM users WHERE role = 'admin' ";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+app.get("/overview", (req, res) => {
+  const usersQuery = "SELECT COUNT(*) AS userCount FROM users";
+  const adminsQuery = "SELECT COUNT(*) AS adminCount FROM users WHERE role = 'admin'"
+  const sellersQuery = "SELECT COUNT(*) AS sellerCount FROM users WHERE role = 'seller'"
+  const buyersQuery = "SELECT COUNT(*) AS buyerCount FROM users WHERE role = 'buyer'"
+  const artsQuery = "SELECT COUNT(*) AS artCount FROM artwork WHERE status = 1";
+  const branchsQuery = "SELECT COUNT(*) AS branchCount FROM users WHERE role = 'branch'";
+  let userCount, artCount, branchCount, adminCount, sellerCount, buyerCount;
+  db.query(usersQuery, (err, userResult) => {
+    if (err) {
+      console.error("Error executing user SQL query:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    userCount = userResult[0].userCount;
+    db.query(artsQuery, (err, artResult) => {
+      if (err) {
+        console.error("Error executing art SQL query:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+      artCount = artResult[0].artCount;
+      db.query(branchsQuery, (err,branchResult)=>{
+        if(err) return res.json(err)
+        branchCount = branchResult[0].branchCount
+        db.query(adminsQuery, (err,adminResult)=>{
+          if(err) return res.json(err)
+          adminCount = adminResult[0].adminCount
+          db.query(sellersQuery, (err,sellerReslut)=>{
+            if(err) return res.json(err)
+            sellerCount = sellerReslut[0].sellerCount
+            db.query(buyersQuery, (err,buyerResult)=>{
+              if(err) return res.json(err)
+              buyerCount = buyerResult[0].buyerCount
+              
+              res.json({ userCount,artCount ,branchCount,adminCount,sellerCount,buyerCount});
+            })
+          })
+        })
+      })
+    });
+  });
+});
+
 
 const db = mysql.createConnection({
   host: "localhost",
