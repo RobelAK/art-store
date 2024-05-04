@@ -26,9 +26,11 @@ function Product() {
   const [size, setSize] = useState('small')
   const [quantity, setQuantity] = useState(1)
   const [userid, setUserId] = useState('')
+  const [color, setColor] = useState('green')
   const [selectedButton, setSelectedButton] = useState('small');
   const [basePrice, setBasePrice] = useState(0);
   const id = useParams();
+  const [message, setMessage] = useState('')
   
 const navigate = useNavigate()
 
@@ -96,6 +98,14 @@ const navigate = useNavigate()
     axios
       .post("http://localhost:8081/addtocart", values)
       .then((res) => {
+        setMessage(res.data)
+        setTimeout(() => {
+          setMessage('');
+        }, 2000);
+        if(res.data == "Item already in cart"){
+          setColor('#f07971')
+        }
+        else setColor('#1976d2')
         console.log(res.data)
       })
       .catch((err) => {
@@ -265,6 +275,7 @@ const navigate = useNavigate()
                       >
                         Add to Cart
                       </Button>
+                      <Typography color={color}>{message}</Typography>
                     </CardContent>
                   </Card>
                 </Box>
