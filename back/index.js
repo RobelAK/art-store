@@ -30,6 +30,7 @@ import Notifications from "./routes/Notifications.js";
 import Rating from "./routes/Rating.js";
 import RatingAverage from "./routes/RatingAverage.js";
 
+
 const app = express();
 
 app.use(

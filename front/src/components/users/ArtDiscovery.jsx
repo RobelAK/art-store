@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import {
+  Rating,
   Button,
   Card,
   Container,
@@ -22,11 +23,22 @@ const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
+  const [averageRating, setAverageRating] = useState(0);
   const navigate = useNavigate(); // Get the navigate function
-  
+
   useEffect(() => {
+    fetchAverageRating();
     fetchArtwork();
   }, [selectedCategory]);
+
+  const fetchAverageRating = async (art_id) => {
+    try {
+      const response = await axios.get(`http://localhost:8081/api/rating/average/${art_id}`);
+      setAverageRating(response.data.averageRating);
+    } catch (error) {
+      console.error('Error fetching average rating:', error);
+    }
+  };
 
   const fetchArtwork = async () => {
     try {
@@ -129,7 +141,7 @@ const ArtDiscovery = () => {
                 fontFamily: 'Sora, sans-serif',
                 fontWeight: 700,
                 marginTop: 6,
-                color: 'black', 
+                color: 'black',
                 zIndex: 6,
               }}
             >
@@ -140,8 +152,8 @@ const ArtDiscovery = () => {
               color="textSecondary"
               sx={{
                 marginBottom: 1,
-                color: 'CaptionText', 
-                zIndex: 1, 
+                color: 'CaptionText',
+                zIndex: 1,
               }}
             >
               Discover a world of creative and unique artworks.
@@ -162,7 +174,7 @@ const ArtDiscovery = () => {
                   color: 'black',
                   '&:hover': {
                     color: 'white',
-                    backgroundColor: '#333', 
+                    backgroundColor: '#333',
                   },
                 }}
                 MenuProps={{
@@ -253,13 +265,14 @@ const ArtDiscovery = () => {
                         <Typography variant="body1" fontWeight={"600"} fontFamily={'sora,sans-serif'}>
                           {Art.title}
                         </Typography>
-                        <Typography
-                          variant="body2"
-                          fontFamily={'sora,sans-serif'}
-                          gutterBottom
-                        >
-                          Price : {Art.price} birr
-                        </Typography>
+                        <div style={{marginBottom:'19px'}}>
+                        <Rating
+                          value={averageRating}
+                          name="rating"
+                          size='small'
+                          precision={0.5}
+                        />
+                        </div>
                       </Grid>
                       {bookmarkStatus[Art.id] ? (
                         <BookmarkIcon onClick={() => toggleBookmark(Art.id)} />
