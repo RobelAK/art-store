@@ -23,17 +23,12 @@ import toggleArtBookmark from "./routes/ArtBookmark.js";
 import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
 import AddAvatar from "./routes/AddAvatar.js";
-import { Chapa } from "chapa-nodejs";
 import CreateBranch from "./routes/CreateBranch.js";
 import CreateAdmin from "./routes/CreateAdmin.js";
 import Notifications from "./routes/Notifications.js";
 import Rating from "./routes/Rating.js";
 import RatingAverage from "./routes/RatingAverage.js";
 import { Chapa } from 'chapa-nodejs';
-import AddBranch from "./routes/AddBranch.js";
-import AddAdmin from "./routes/AddAdmin.js";
-import AddToCart from "./routes/AddToCart.js";
-
 
 
 const app = express();
@@ -249,8 +244,6 @@ app.post("/cart", (req, res) => {
     if (err) return res.json(err);
     else return res.json(result);
   });
-});
-  AddToCart(db,req,res)
 });
 
 app.post("/cart", (req,res)=>{
