@@ -17,6 +17,7 @@ import DrawerComponent from "./DrawerComponent";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { Typography } from '@mui/material';
 import SearchBar from './SearchBar';
+import Notifications from "./Notifications";
 
 
 const logoStyle = {
@@ -196,6 +197,9 @@ const Navbar = () => {
               <Link to="/saved">
                 <BookmarkIcon color="primary" sx={{ marginRight: 2, color: "black", }} />
               </Link>
+              {isLoggedIn && (
+                  <Notifications   />
+              )}
 
               {isLoggedIn ? (
                 <AccountMenu />

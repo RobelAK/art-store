@@ -8,7 +8,8 @@ const AboutUs = () => {
     <Box
       id="about-us"
       sx={{
-        backgroundColor: '#06090a',
+        boxShadow:'5px',
+        backgroundColor: 'gray',
         paddingY: 8,
         textAlign: 'center',
       }}

@@ -9,31 +9,34 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded';
-import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+import PaymentIcon from '@mui/icons-material/Payment';
+import loc from '../../utils/loc.png';
+import pay from '../../utils/pay.png';
+import size from '../../utils/size.png';
 
 const items = [
   {
-    icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
+    icon: <PaymentIcon />,
+    title: 'easy Payment System',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    image: 'https://images.unsplash.com/photo-1698208189346-6b356d242b09?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'integrating with the Chapa Payment system our platform provides Easy payment.',
+    image: pay,
   },
   {
-    icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    icon: <LocalPrintshopIcon />,
+    title: 'Print Sizes',
     description:
-      'This item could provide information about the mobile app version of the product.',
-    image: 'https://images.unsplash.com/photo-1648598884813-7dfd1c2886d9?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
+      'We provide three different print sizes so our customer can have more chooses.',
+    image: size, 
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    icon: <AddLocationIcon />,
+    title: 'Available all over Ethiopia',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    image: 'https://images.unsplash.com/photo-1651359583018-c33a287f2530?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'our products are available all over ethiopia through our branches.',
+    image: loc
   },
 ];
 
@@ -59,9 +62,9 @@ export default function Features() {
               color="text.secondary"
               sx={{ mb: { xs: 2, sm: 4 } }}
             >
-              Here you can provide a brief overview of the key features of the
-              product. For example, you could list the number of features, the types
-              of features, add-ons, or the benefits of the features.
+              The digital art store not only benefits the general population of Ethiopia
+              it is also a work opportunity for many ethiopian artists who are having a 
+              hard time selling there work. here are some of our website features
             </Typography>
           </div>
           <Grid container item gap={1} sx={{ display: { xs: 'auto', sm: 'none' } }}>
@@ -145,7 +148,7 @@ export default function Features() {
                   background: 'none',
                   backgroundColor:
                     selectedItemIndex === index ? 'action.selected' : undefined,
-                  borderColor: (theme) =>
+                  borderColor: () =>
                     selectedItemIndex === index ? 'primary.light' : 'grey.200',
                 }}
               >
@@ -159,12 +162,7 @@ export default function Features() {
                     gap: 2.5,
                   }}
                 >
-                  <Box
-                    sx={{
-                      color: (theme) =>
-                        selectedItemIndex === index ? 'primary.main' : 'grey.300',
-                    }}
-                  >
+                  <Box>
                     {icon}
                   </Box>
                   <div>
@@ -182,26 +180,6 @@ export default function Features() {
                     >
                       {description}
                     </Typography>
-                    <Link
-                      color="primary"
-                      variant="body2"
-                      fontWeight="bold"
-                      sx={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        '& > svg': { transition: '0.2s' },
-                        '&:hover > svg': { transform: 'translateX(2px)' },
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                      }}
-                    >
-                      <span>Learn more</span>
-                      <ChevronRightRoundedIcon
-                        fontSize="small"
-                        sx={{ mt: '1px', ml: '2px' }}
-                      />
-                    </Link>
                   </div>
                 </Box>
               </Card>

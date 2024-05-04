@@ -52,7 +52,7 @@ const AdminMenu = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = '/admin';
+    window.location.href = '/login';
   };
 
 

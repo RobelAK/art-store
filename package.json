@@ -2,5 +2,8 @@
   "dependencies": {
     "nodemailer": "^6.9.12",
     "react-toastify": "^10.0.4"
+  },
+  "devDependencies": {
+    "vite-plugin-rewrite-all": "^1.0.2"
   }
 }

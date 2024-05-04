@@ -12,12 +12,12 @@ import {
   Button,
   Divider,
   CardMedia,
-  Rating,
 } from "@mui/material";
 import Footer from "../../components/users/Footer";
 import {useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import RatingComponent from "./RatingComponent";
 
 
 function Product() {
@@ -28,7 +28,7 @@ function Product() {
   const [userid, setUserId] = useState('')
   const [color, setColor] = useState('green')
   const [selectedButton, setSelectedButton] = useState('small');
-  // const [rating, setRating] = useState(4);
+  const [basePrice, setBasePrice] = useState(0);
   const id = useParams();
   const [message, setMessage] = useState('')
   
@@ -44,44 +44,57 @@ const navigate = useNavigate()
       .post("http://localhost:8081/product", id)
       .then((res) => {
         setArtInfo(res.data.artInfo);
-        setSellerInfo(res.data.sellerinfo)
+        setSellerInfo(res.data.sellerinfo);
+        setBasePrice(res.data.artInfo.price);
       })
       .catch((err) => {
         console.log(err);
       });
   }, [id]);
 
+  // Inside Product component
+
   const handleSizeChange = (size) => {
     setSelectedButton(size);
     setSize(size);
-    setMessage('')
+
+    const sizePrices = {
+      small: 500,
+      medium: 1000,
+      large: 1500,
+    };
+    const sizePrice = sizePrices[size] || 0;
+
+    const updatedPrice = basePrice + sizePrice;
+    setArtInfo((prevArtInfo) => ({
+      ...prevArtInfo,
+      price: updatedPrice,
+    }));
+  };
+  
+  const handleIncrement = () => {
+    if (quantity === 3) setQuantity(3);
+    else setQuantity(prevCount => prevCount + 1);
   };
 
-  const handleIncrement = (e)=>{
-    if(quantity == 3) setQuantity(3)
-    else setQuantity(prevCount=> prevCount + 1)
-    
-  }
-  const handledecrement = (e)=>{
-    if(quantity == 1) setQuantity(1)
-    else setQuantity(prevCount=> prevCount - 1)
-
-  }
+  const handleDecrement = () => {
+    if (quantity === 1) setQuantity(1);
+    else setQuantity(prevCount => prevCount - 1);
+  };
 
   const handleAddToCart = () => {
-    const token=localStorage.getItem('token')
-    if(token){
-      
-    const values = {
-      sellerName: sellerInfo.name,
-      artTitle: artInfo.title,
-      art: artInfo.art,
-      artId: artInfo.id,
-      userId: userid,
-      artPrice: artInfo.price,
-      quantity: quantity,
-      size: size,
-    }
+    const token = localStorage.getItem('token');
+    if (token) {
+      const values = {
+        sellerName: sellerInfo.name,
+        artTitle: artInfo.title,
+        art: artInfo.art,
+        artId: artInfo.id,
+        userId: userid,
+        artPrice: artInfo.price,
+        quantity: quantity,
+        size: size,
+      };
     axios
       .post("http://localhost:8081/addtocart", values)
       .then((res) => {
@@ -103,6 +116,10 @@ const navigate = useNavigate()
       navigate('/login')
     }
   };
+
+  if (!artInfo || !sellerInfo) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -136,7 +153,7 @@ const navigate = useNavigate()
                     sx={{
                       maxWidth: selectedButton == 'small' ? '200px' : selectedButton == 'medium' ? '260px' : '340px',
                       aspectRatio: '4/5',
-                      boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.3)',
+                      boxShadow: '0px 30px 40px rgba(0, 7, 88, 0.8)',
                       borderRadius: '4px',
                       padding: '0.1%',
                       marginTop: '8%',
@@ -233,29 +250,23 @@ const navigate = useNavigate()
                           12x16
                         </Button>
                       </ButtonGroup>
+                      
+                      <Box sx={{mb: 2, display: 'flex',alignItems:'center',justifyContent:'center'}}>
+                        <Button onClick={handleDecrement} variant="outlined"sx={{p:0}}>-</Button>
+                        <Card sx={{width: 100, background: 'transparent'}}>{quantity}</Card>
+                        <Button onClick={handleIncrement} variant="outlined"sx={{p:0}}>+</Button>
+                      </Box>
+                      <Box sx={{alignContent:'center' , mb: 2,}} >
+                        <RatingComponent art_id={artInfo.id}  user_id= {userid}/>
+                      </Box>
                       <Typography
-                        variant="h5"
+                        variant="h6"
                         fontFamily={'sora,sans-serif'}
                         gutterBottom
                       >
                         Price : {artInfo.price} birr
                       </Typography>
-                      <Typography>Quantity</Typography>
 
-                      <Box sx={{display: 'flex',alignItems:'center',justifyContent:'center'}}>
-                        <Button onClick={handledecrement} variant="outlined"sx={{p:0}}>-</Button>
-                        <Card sx={{width: 100, background: 'transparent'}}>{quantity}</Card>
-                        <Button onClick={handleIncrement} variant="outlined"sx={{p:0}}>+</Button>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          mb: 2,
-                        }}
-                      >
-                      </Box>
                       <Button
                         variant="contained"
                         color="primary"
@@ -271,17 +282,7 @@ const navigate = useNavigate()
               </Grid>
             </Grid>
       </Box>
-      <Typography
-        variant="body2"
-        color="GrayText"
-        fontFamily="sora,sans-serif"
-        align="center"
-        gutterBottom
-        marginTop="2%"
-      >
-        MORE FROM THE ARTIST
-      </Typography>
-      {/* <PostedArt/> */}
+
       <Footer/>
     </>
   );

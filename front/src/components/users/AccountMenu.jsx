@@ -22,7 +22,7 @@ const AccountMenu = () => {
       const user = JSON.parse(atob(token.split(".")[1]));
       if (user.role === "seller") {
         setIsSeller(true);
-      }
+      } else setIsSeller(false);
       setAvatar(user.avatar); // Set user's avatar
     }
   }, []);
@@ -40,7 +40,7 @@ const AccountMenu = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.reload();
+    window.location.href = '/Home';
   };
 
   const handleChangeAvatar = async () => {
@@ -109,24 +109,11 @@ const AccountMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {isSeller ? (
-          <Link to="/sellerprofile" style={{ textDecoration: "none" }}>
+      <Link to="/profilepage" style={{ textDecoration: "none" }}>
             <MenuItem onClick={handleChangeAvatar}>
               <Avatar /> Profile
             </MenuItem>
           </Link>
-        ) : (""
-        )}
-
-        {isSeller ? ( ""
-        ) : (
-          <Link to="/profilepage" style={{ textDecoration: "none" }}>
-            <MenuItem onClick={handleChangeAvatar}>
-              <Avatar /> Profile
-            </MenuItem>
-          </Link>
-        )}
-        
         <Divider />
         {isSeller ? (
           ""

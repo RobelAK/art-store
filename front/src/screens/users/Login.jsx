@@ -9,61 +9,49 @@ import { Box, Button, Checkbox, Container, FormControlLabel, Grid, IconButton, T
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 function Login() {
-
   const defaultTheme = createTheme();
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   const handleEmail = (event) => {
-    setEmail(event.target.value)
-  }
-  const handlePassword = (event) => {
-    setPassword(event.target.value)
-  }
-  const values = {
-    email: email,
-    password: password,
-  }
+    setEmail(event.target.value);
+  };
 
-  const navigate = useNavigate()
-  axios.defaults.withCredentials = true
+  const handlePassword = (event) => {
+    setPassword(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:8081/login', values) 
+    const values = {
+      email: email,
+      password: password,
+    };
+
+    axios.post('http://localhost:8081/login', values)
       .then(res => {
-        const token = res.data.token
-        
+        const token = res.data.token;
+
         if (res.data.loginStatus) {
-          localStorage.setItem('token',token)
-          const user = JSON.parse(atob(token.split(".")[1]));
-          
-          
-          toast.success("Login successfull",{onClose: ()=> {
-            if (user.role === 'branch') {
-              navigate('/branch');
-            } else if (user.role === 'admin') {
-              navigate('/dashboard');
-            } else {
+          localStorage.setItem('token', token);
+          toast.success("Login successfull", {
+            onClose: () => {
               navigate('/');
             }
-            window.location.reload();
-          }})
-        }
-        else {
-          toast.error("wrong email or password")
+          });
+        } else {
+          toast.error("Wrong email or password");
         }
       })
       .catch(err => console.log(err));
-  }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -90,7 +78,7 @@ function Login() {
           }}
         >
           <Box>
-            <Link to="/">
+            <Link to="/Home">
               <img src={Logo} alt="Logo" style={{ width: '100%', marginBottom: '5px' }} />
             </Link>
           </Box>
@@ -128,7 +116,7 @@ function Login() {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="Remeber Me"
+                  label="Remember Me"
                 />
               </Grid>
             </Grid>
@@ -140,9 +128,9 @@ function Login() {
           </Box>
         </Box>
       </Container>
-      <ToastContainer autoClose={2000}/>
+      <ToastContainer autoClose={2000} />
     </ThemeProvider>
   );
 }
 
-export default Login
+export default Login;
