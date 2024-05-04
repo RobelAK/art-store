@@ -17,43 +17,33 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
 } from "@mui/material";
 import Footer from "../../components/users/Footer";
 import Navbar from "../../components/users/Navbar";
 import { useNavigate } from "react-router-dom";
 
+
 const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_/]{3,20}$/;
 const PHONE_VALID = /^[0-9]{9}$/;
 
 const CartPage = () => {
-  const navigate = useNavigate();
   
-  const [openOrdereInfo, setOpenOrderInfo] = useState(false);
-  const [location, setLocation] = useState('');
+  const navigate = useNavigate()
+  const [location, setLocation] = useState("Addis Ababa, Akaky Kaliti, Branch");
   const [cartData, setCartData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemsInCart, setItemsInCart] = useState(false);
   const [id, setId] = useState("");
-  const [orderedItems, setOrderedItems] = useState([]);
-
-  const [branch, setBranchs] = useState([]);
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
   const [fname, setFname] = useState("");
-  const [validFname, setValidFname] = useState(false);
+  const [validFname, setValidFname] = useState(false)
+
 
   const [lname, setLname] = useState("");
   const [validLname, setValidLname] = useState(false);
+
 
   const [phoneNo, setPhoneNo] = useState("");
   const [validPhoneNo, setValidPhoneNo] = useState(false);
@@ -74,29 +64,10 @@ const CartPage = () => {
         .catch((err) => {
           console.log(err);
         });
-
-        axios
-        .post("http://localhost:8081/ordereditems", { userId: user.id})
-        .then((res) => {
-          setOrderedItems(res.data)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-    } else {
-      navigate("/login");
+    } 
+    else {
+      navigate('/login')
     }
-    axios.get("http://localhost:8081/fetchBranch").then((res) => {
-      setBranchs(res.data);
-      console.log(res.data);
-    });
-
-
-    
-    
-
-
   }, []);
   useEffect(() => {
     const totalPrice = calculateTotalPrice();
@@ -108,21 +79,22 @@ const CartPage = () => {
     }
   }, [cartData]);
 
-  useEffect(() => {
-    const result = NAME_VALID.test(fname);
-    console.log("FName validation: ", result);
-    setValidFname(result);
-  }, [fname]);
-  useEffect(() => {
-    const result = NAME_VALID.test(lname);
-    console.log("LName validation: ", result);
-    setValidLname(result);
-  }, [lname]);
-  useEffect(() => {
-    const result = PHONE_VALID.test(phoneNo);
-    console.log("Phone validation: ", result);
-    setValidPhoneNo(result);
-  }, [phoneNo]);
+
+  useEffect(()=>{
+    const result = NAME_VALID.test(fname)
+    console.log('FName validation: ',result)
+    setValidFname(result)
+  },[fname])
+  useEffect(()=>{
+    const result = NAME_VALID.test(lname)
+    console.log('LName validation: ',result)
+    setValidLname(result)
+  },[lname])
+  useEffect(()=>{
+    const result = PHONE_VALID.test(phoneNo)
+    console.log('Phone validation: ',result)
+    setValidPhoneNo(result)
+  },[phoneNo])
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -131,9 +103,7 @@ const CartPage = () => {
     });
     return totalPrice;
   };
-  const handleOpenOrderInfo = () => {
-    setOpenOrderInfo(true);
-  };
+
   const handleRemoveItem = (id) => {
     axios
       .post("http://localhost:8081/removecartitem", { id: id })
@@ -161,28 +131,26 @@ const CartPage = () => {
   const handleCheckout = (event) => {
     event.preventDefault();
 
-    if (validFname && validLname && validPhoneNo) {
+    
+    if(validFname && validLname && validPhoneNo){
       axios
         .post("http://localhost:8081/payment/pay", values)
         .then((res) => {
           if (res.data.data.checkout_url) {
             window.location.href = res.data.data.checkout_url;
           }
+          // console.log(res.data.data.checkout_url);
+          // console.log(res.data)
         })
         .catch((err) => console.log(err));
-    } else console.log("not good");
-  };
-  const handleclick =()=>{
-    console.log(orderedItems)
-  }
-  const parseData = (stringifiedData) => {
-    try {
-      return JSON.parse(stringifiedData);
-    } catch (error) {
-      console.error("Error parsing data:", error);
-      return [];
     }
+    else console.log("not good")
+
+
   };
+
+
+  
 
   return (
     <>
@@ -513,11 +481,12 @@ const CartPage = () => {
                               name="phone_number"
                               onChange={(e) => setPhoneNo(e.target.value)}
                               InputProps={{
-                                startAdornment: "+251",
+                                startAdornment: '+251',
                               }}
                               inputProps={{
                                 maxLength: 9,
                               }}
+                              
                               helperText={
                                 !validPhoneNo &&
                                 phoneNo &&
@@ -534,13 +503,23 @@ const CartPage = () => {
                                 onChange={(e) => setLocation(e.target.value)}
                                 fullWidth
                                 required
-                                value={location}
+                                defaultValue="Addis Ababa, Akaky Kaliti, Branch"
                               >
-                                {branch.map((branch) => (
-                                  <MenuItem key={branch.id} value={branch.name}>
-                                    {branch.name}
-                                  </MenuItem>
-                                ))}
+                                <MenuItem value="Addis Ababa, Akaky Kaliti, Branch">
+                                  Addis Ababa, Akaky Kaliti, Branch
+                                </MenuItem>
+                                <MenuItem value="Addis Ababa, Bole, Branch">
+                                  Addis Ababa, Bole, Branch
+                                </MenuItem>
+                                <MenuItem value="Addis Ababa, Lideta, Branch">
+                                  Addis Ababa, Lideta, Branch
+                                </MenuItem>
+                                <MenuItem value="Wolkite, Gubre, Branch">
+                                  Wolkite, Gubre, Branch
+                                </MenuItem>
+                                <MenuItem value="Wolkite, Branch">
+                                  Wolkite, Branch
+                                </MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
@@ -591,44 +570,9 @@ const CartPage = () => {
           variant="middle"
           sx={{ backgroundColor: "black" }}
         />
-        <Button variant="contained" onClick={handleOpenOrderInfo}>
-          Order information
-        </Button>
+
         <Footer />
       </Box>
-      <Dialog open={openOrdereInfo} onClose={() => setOpenOrderInfo(false)}>
-        <DialogTitle>Ordered Items</DialogTitle>
-        <DialogContent>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Container>
-              {orderedItems.map((items, i) => (
-                <Grid container key={i} spacing={2}>
-                  {parseData(items.data).map((item, j) => (
-                    <Card key={j} sx={{ display: 'flex'}}>
-                      <CardMedia
-                        component="img"
-                        sx={{
-                          width: 70,
-                          margin: 1,
-                          aspectRatio: 4 / 6,
-                        }}
-                        src={`http://localhost:8081/images/${item.art}`}
-                        alt="Product Image"
-                      />
-                      <CardContent>
-                        {item.art_title}
-                        <Typography>Size: {item.size}</Typography>
-                        <Typography>Status: {items.print_status}</Typography>
-                        {/* <Typography>Estimated date: 5d</Typography> */}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Grid>
-              ))}
-            </Container>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

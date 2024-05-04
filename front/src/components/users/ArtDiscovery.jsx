@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import {
@@ -21,7 +21,7 @@ import video from "../../utils/rr.mp4";
 
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
   const [averageRating, setAverageRating] = useState(0);
   const navigate = useNavigate(); // Get the navigate function
@@ -29,7 +29,6 @@ const ArtDiscovery = () => {
   useEffect(() => {
     fetchAverageRating();
     fetchArtwork();
-    console.log(selectedCategory)
   }, [selectedCategory]);
 
   const fetchAverageRating = async (art_id) => {
@@ -53,6 +52,7 @@ const ArtDiscovery = () => {
 
       setArt(response.data);
 
+      // Fetch bookmark status only if user is logged in
       const token = localStorage.getItem("token");
       if (token) {
         const user = JSON.parse(atob(token.split(".")[1]));
@@ -81,6 +81,7 @@ const ArtDiscovery = () => {
   const toggleBookmark = async (id) => {
     const token = localStorage.getItem("token");
     if (!token) {
+      // Redirect to login page if user is not logged in
       navigate('/login');
       return;
     }
@@ -120,6 +121,7 @@ const ArtDiscovery = () => {
           <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', zIndex: -2 }}>
             <source src={video} type="video/mp4" />
           </video>
+          {/* Overlay */}
           <Box
             sx={{
               zIndex: -2,
@@ -199,7 +201,7 @@ const ArtDiscovery = () => {
                   },
                 }}
               >
-                <MenuItem value="All">All</MenuItem>
+                <MenuItem>All Categories</MenuItem>
                 <MenuItem value="Abstract">Abstract</MenuItem>
                 <MenuItem value="Animals">Animals</MenuItem>
                 <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>

@@ -14,7 +14,6 @@ export default function PrintedScreen() {
     }}>
         <NavBranch />
         <Printed />
-        something
     </Box>
   );
 }
