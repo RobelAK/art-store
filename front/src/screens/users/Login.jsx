@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link, json } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -86,7 +86,7 @@ function Login() {
             <Grid container rowSpacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  type='text'
+                  type='email'
                   required
                   fullWidth
                   id="email"

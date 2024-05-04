@@ -23,9 +23,6 @@ import toggleArtBookmark from "./routes/ArtBookmark.js";
 import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
 import AddAvatar from "./routes/AddAvatar.js";
-import { Chapa } from "chapa-nodejs";
-import CreateBranch from "./routes/CreateBranch.js";
-import CreateAdmin from "./routes/CreateAdmin.js";
 import Notifications from "./routes/Notifications.js";
 import Rating from "./routes/Rating.js";
 import RatingAverage from "./routes/RatingAverage.js";
@@ -222,26 +219,9 @@ app.post("/product", (req, res) => {
   });
 });
 app.post("/addtocart", (req, res) => {
-  const { artId, userId, artPrice, quantity, size, artTitle, art, sellerName } =
-    req.body;
-  const check =
-    "SELECT * FROM cart WHERE user_id = ? And art_id = ? AND size = ?";
-  const sql =
-    "INSERT INTO cart (`user_id`,`art_id`,`price`,`quantity`,`size`,`art`,`art_title`,`seller_name`) Values (?,?,?,?,?,?,?,?)";
-  db.query(check, [userId, artId, size], (err, result) => {
-    if (err) return res.json("query error");
-    if (result.length == 0) {
-      db.query(
-        sql,
-        [userId, artId, artPrice, quantity, size, art, artTitle, sellerName],
-        (err, result) => {
-          if (err) return res.json(err);
-          return res.json("item added to cart");
-        }
-      );
-    } else return res.json("item already in cart");
-  });
+  AddToCart(db,req,res)
 });
+
 app.post("/cart", (req, res) => {
   const userId = req.body.userId;
   const sql = "SELECT * FROM cart WHERE user_id = ?";
@@ -250,8 +230,7 @@ app.post("/cart", (req, res) => {
     else return res.json(result);
   });
 });
-  AddToCart(db,req,res)
-});
+  
 
 app.post("/cart", (req,res)=>{
   const userId = req.body.userId

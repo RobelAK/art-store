@@ -24,6 +24,7 @@ import Catagory from './screens/users/Catagory';
 import AboutUs from './screens/users/AboutUsPage';
 import PrintedScreen from './screens/Branch/PrintedScreen';
 import NotFound from './components/users/NotFound';
+import PostPayed from './screens/users/PostPayed';
 
 const decodeToken = (token) => {
   try {
@@ -87,10 +88,8 @@ function App() {
         <Route path='/Home' element={<Landingpage />} />
         <Route path='/arts' element={<DiscoverArt />} />
         <Route path='/product/:id' element={<Product />} />
-
-        <Route path='/login' element={!token ?  <Login /> : <Navigate to="/" replace />} />
-        <Route path='/signup' element={!token ?  <Signup /> : <Navigate to="/" replace />} />
-
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
         <Route path='/Checkout' element={<Checkout />} />
         <Route path='/cart' element={<CartPage />} />
         <Route path='/message' element={<ArtSubmissionMessage />} />
@@ -108,6 +107,7 @@ function App() {
         <Route path='/about' element={<AboutUs />} />
         <Route path='/dashboard' element={isAuthorized(['admin']) ? <Dashboard /> : <Navigate to="/NotFound" replace />} />
         <Route path='/sellerprofile' element={isAuthorized(['seller']) ? <SellerProfile /> : <Navigate to="/Notfound" replace />} />
+        <Route path='/postpayed' element={<PostPayed/>}/>
       </Routes>
     </BrowserRouter>
   );
