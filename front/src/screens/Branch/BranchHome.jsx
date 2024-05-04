@@ -69,6 +69,26 @@ export default function BranchHome() {
     }
   };
 
+
+  
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const handleCheckTransaction = (tx_ref) => (event) => {
+    event.stopPropagation();
+    axios
+      .post("http://localhost:8081/branch/verifypayment", {tx_ref})
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <Box sx={{
       backgroundColor:'#d4d6d9',

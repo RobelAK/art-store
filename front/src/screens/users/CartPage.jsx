@@ -139,6 +139,8 @@ const CartPage = () => {
           if (res.data.data.checkout_url) {
             window.location.href = res.data.data.checkout_url;
           }
+          // console.log(res.data.data.checkout_url);
+          // console.log(res.data)
         })
         .catch((err) => console.log(err));
     }
