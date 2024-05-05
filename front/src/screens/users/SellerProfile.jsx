@@ -11,6 +11,7 @@ import {
   Avatar,
   IconButton,
   Dialog,
+  ButtonGroup,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -22,6 +23,7 @@ import Footer from "../../components/users/Footer";
 import PostedArt from "../../components/users/PostedArt";
 import Navbar from "../../components/users/Navbar";
 import { useNavigate , Link } from "react-router-dom";
+import AnalysisDialog from "./AnalysisPage";
 
 function SellerProfile() {
   axios.defaults.withCredentials = true;
@@ -35,6 +37,7 @@ function SellerProfile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [OpenEditProfile, setOpenEditProfile] = useState(false);
   const [newName, setNewName] = useState("");
+  const [openAnalysisDialog, setOpenAnalysisDialog] = useState(false);
 
   const handleOpenEditProfile = () => {
     setOpenEditProfile(true);
@@ -161,17 +164,21 @@ function SellerProfile() {
         <Container
           sx={{ display: "flex", justifyContent: "end", marginTop: -12 }}
         >
+          <ButtonGroup>
           <Button
             variant="contained"
             color="primary"
-            sx={{ marginRight: 2 }}
             onClick={handleOpenEditProfile}
           >
             Edit Profile
           </Button>
-           <Button variant="outlined" color="primary"  component={Link} to="/addart">
+           <Button variant="outlined" color="primary"   component={Link} to="/addart">
             Add Art
+          </Button>
+          <Button variant="outlined" component={Link} to="/analysis" color="primary"  >
+            Analytics 
           </Button> 
+          </ButtonGroup>
         </Container>
         <CardContent sx={{ textAlign: "center" }}>
           <Typography variant="h5" component="div" gutterBottom>
@@ -278,7 +285,8 @@ function SellerProfile() {
         </Box>
       </Grid>
     </Grid>
-  </Container>
+    </Container>
+  
 </Dialog>
 
       <Footer />

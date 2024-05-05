@@ -24,17 +24,16 @@ const ArtDiscovery = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
   const [averageRating, setAverageRating] = useState(0);
+  const [loadCount, setLoadCount] = useState(25); // State to keep track of number of images to load
   const navigate = useNavigate(); // Get the navigate function
 
   useEffect(() => {
     fetchAverageRating();
     fetchArtwork();
-    console.log(selectedCategory)
-  }, [selectedCategory]);
-
-  const fetchAverageRating = async (art_id) => {
+  }, [selectedCategory, loadCount]); 
+  const fetchAverageRating = async (art_id) => { // Change the parameter name to id
     try {
-      const response = await axios.get(`http://localhost:8081/api/rating/average/${art_id}`);
+      const response = await axios.get(`http://localhost:8081/api/rating/average/${art_id}`); // Use id instead of art_id
       setAverageRating(response.data.averageRating);
     } catch (error) {
       console.error('Error fetching average rating:', error);
@@ -44,7 +43,7 @@ const ArtDiscovery = () => {
   const fetchArtwork = async () => {
     try {
       const response = await axios.get('http://localhost:8081/art', {
-        params: { category: selectedCategory }
+        params: { category: selectedCategory, limit: loadCount } // Pass limit parameter to limit number of images fetched
       });
 
       if (!response.data) {
@@ -104,6 +103,11 @@ const ArtDiscovery = () => {
     }
   };
 
+  const handleLoadMore = () => {
+    setLoadCount(prevCount => prevCount + 25); // Increase loadCount by 25 when clicking "Load More"
+    fetchArtwork(); // Fetch more artwork when "Load More" is clicked
+  };
+  
 
   return (
     <div>
@@ -235,7 +239,7 @@ const ArtDiscovery = () => {
                 <Card
                   sx={{
                     backgroundColor: '#f7fdff',
-                    maxWidth: 280,
+                    maxWidth: 315,
                     aspectRatio: "4/6",
                     margin: "5",
                     borderRadius: "3px",
@@ -286,7 +290,7 @@ const ArtDiscovery = () => {
           <div
             style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
           >
-            <Button variant="contained" onClick={fetchArtwork}>
+            <Button variant="contained" onClick={handleLoadMore}>
               Load More
             </Button>
           </div>
