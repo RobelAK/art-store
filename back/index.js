@@ -332,15 +332,10 @@ app.post("/payment/pay", async (req, res) => {
           ],
           (err, result) => {
             if (err) {
+              console.log(err)
               return res.status(500).json({
                 error: "An error occurred while inserting cart data.",
               });
-              console.log(err)
-              return res
-                .status(500)
-                .json({
-                  error: "An error occurred while inserting cart data.",
-                });
             }
             return res.json(data);
           }

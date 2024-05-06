@@ -39,7 +39,7 @@ export default function BranchHome() {
     if(token){
       const user = JSON.parse(atob(token.split(".")[1]));
       axios
-        .post("http://localhost:8081/branch",{branchName: user.email})
+        .post("http://localhost:8081/branch",{branchName: user.name})
         .then((res) => {
           setOrders(res.data);
         })
