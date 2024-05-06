@@ -10,21 +10,12 @@ import {
   TextField,
   Container,
   Box,
-  Paper,
   Divider,
   Link,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
 } from "@mui/material";
 import Footer from "../../components/users/Footer";
 import Navbar from "../../components/users/Navbar";
@@ -36,18 +27,10 @@ const PHONE_VALID = /^[0-9]{9}$/;
 const AnalysisPage = () => {
   const navigate = useNavigate();
 
-  const [openOrdereInfo, setOpenOrderInfo] = useState(false);
-  const [location, setLocation] = useState('');
   const [cartData, setCartData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemsInCart, setItemsInCart] = useState(false);
   const [id, setId] = useState("");
-  const [orderedItems, setOrderedItems] = useState([]);
-
-  const [branch, setBranchs] = useState([]);
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
 
   const [fname, setFname] = useState("");
   const [validFname, setValidFname] = useState(false);
@@ -63,8 +46,6 @@ const AnalysisPage = () => {
     if (token) {
       const user = JSON.parse(atob(token.split(".")[1]));
       setId(user.id);
-      setName(user.name);
-      setEmail(user.email);
 
       axios
         .post("http://localhost:8081/cart", { userId: user.id })
@@ -75,24 +56,9 @@ const AnalysisPage = () => {
           console.log(err);
         });
 
-      axios
-        .post("http://localhost:8081/ordereditems", { userId: user.id })
-        .then((res) => {
-          setOrderedItems(res.data)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
     } else {
       navigate("/login");
     }
-    axios.get("http://localhost:8081/fetchBranch").then((res) => {
-      setBranchs(res.data);
-      console.log(res.data);
-    });
-
-
   }, []);
   useEffect(() => {
     const totalPrice = calculateTotalPrice();
@@ -126,60 +92,6 @@ const AnalysisPage = () => {
       totalPrice += item.quantity * item.price;
     });
     return totalPrice;
-  };
-  const handleOpenOrderInfo = () => {
-    setOpenOrderInfo(true);
-  };
-  const handleRemoveItem = (id) => {
-    axios
-      .post("http://localhost:8081/removecartitem", { id: id })
-      .then((res) => {
-        console.log(res.data);
-        setCartData((prevCartData) =>
-          prevCartData.filter((cart) => cart.id !== id)
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const values = {
-    phoneNo: phoneNo,
-    cartData: cartData,
-    totalPrice: totalPrice,
-    user_Id: id,
-    email: email,
-    location: location,
-    fname: fname,
-    lname: lname,
-  };
-  const handleCheckout = (event) => {
-    event.preventDefault();
-
-    if (validFname && validLname && validPhoneNo) {
-      axios
-        .post("http://localhost:8081/payment/pay", values)
-        .then((res) => {
-          if (res.data.data.checkout_url) {
-            window.location.href = res.data.data.checkout_url;
-          }
-        })
-        .catch((err) => console.log(err));
-    } else console.log("not good");
-  };
-  const handleclick = () => {
-    console.log(orderedItems)
-  }
-
-  
-  const parseData = (stringifiedData) => {
-    try {
-      return JSON.parse(stringifiedData);
-    } catch (error) {
-      console.error("Error parsing data:", error);
-      return [];
-    }
   };
 
   return (
@@ -409,14 +321,13 @@ const AnalysisPage = () => {
                         </Typography>
                       </CardContent>
 
-                      <Box component="form" onSubmit={handleCheckout}>
+                      <Box component="form" >
                         <Grid container rowSpacing={1}>
                           <Grid item xs={12}>
                             <FormControl fullWidth>
                               <InputLabel>Choose a Bank</InputLabel>
                               <Select
                                 label="Bank"
-                                onChange={handleclick}
                                 fullWidth
                                 required
                               >
@@ -530,7 +441,7 @@ const AnalysisPage = () => {
               }}
             >
               <Typography variant="h5" mb={1}>
-                Nothing here
+                You haven't Sold anything yet..
               </Typography>
               <Link variant="h6" underline="none" href="/arts">
                 Back to shopping
@@ -538,12 +449,6 @@ const AnalysisPage = () => {
             </Grid>
           )}
         </Container>
-        <Divider
-          orientation="vertical"
-          flexItem
-          variant="middle"
-          sx={{ backgroundColor: "black" }}
-        />
 
         <Footer />
       </Box>

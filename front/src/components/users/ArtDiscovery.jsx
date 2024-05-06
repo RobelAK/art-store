@@ -23,22 +23,12 @@ const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
-  const [averageRating, setAverageRating] = useState(0);
   const [loadCount, setLoadCount] = useState(25); // State to keep track of number of images to load
   const navigate = useNavigate(); // Get the navigate function
 
   useEffect(() => {
-    fetchAverageRating();
     fetchArtwork();
-  }, [selectedCategory, loadCount]); 
-  const fetchAverageRating = async (art_id) => { // Change the parameter name to id
-    try {
-      const response = await axios.get(`http://localhost:8081/api/rating/average/${art_id}`); // Use id instead of art_id
-      setAverageRating(response.data.averageRating);
-    } catch (error) {
-      console.error('Error fetching average rating:', error);
-    }
-  };
+  }, [selectedCategory, loadCount]);
 
   const fetchArtwork = async () => {
     try {
@@ -50,8 +40,18 @@ const ArtDiscovery = () => {
         throw new Error('Failed to fetch artwork');
       }
 
-      setArt(response.data);
+      // Fetch average ratings for each art piece
+      const artWithRatings = await Promise.all(
+        response.data.map(async (item) => {
+          const ratingResponse = await axios.get(`http://localhost:8081/art/${item.id}/average-rating`);
+          const { averageRating } = ratingResponse.data;
+          return { ...item, averageRating };
+        })
+      );
 
+      setArt(artWithRatings);
+
+      // Fetch bookmark status
       const token = localStorage.getItem("token");
       if (token) {
         const user = JSON.parse(atob(token.split(".")[1]));
@@ -61,7 +61,7 @@ const ArtDiscovery = () => {
         const bookmarkData = bookmarkResponse.data;
 
         const initialBookmarkStatus = {};
-        response.data.forEach(item => {
+        artWithRatings.forEach(item => {
           initialBookmarkStatus[item.id] = bookmarkData.includes(item.id);
         });
 
@@ -107,7 +107,7 @@ const ArtDiscovery = () => {
     setLoadCount(prevCount => prevCount + 25); // Increase loadCount by 25 when clicking "Load More"
     fetchArtwork(); // Fetch more artwork when "Load More" is clicked
   };
-  
+
 
   return (
     <div>
@@ -262,30 +262,33 @@ const ArtDiscovery = () => {
                     />
                   </Link>
                   <CardContent>
-                    <Grid container>
-                      <Grid item xs={10.5} sm={10.5} md={10.5}>
+                    <Grid container justifyContent="space-between">
+                      <Grid item>
                         <Typography variant="body1" fontWeight={"600"} fontFamily={'sora,sans-serif'}>
                           {Art.title}
                         </Typography>
-                        <div style={{marginBottom:'19px'}}>
-                        <Rating
-                          value={averageRating}
-                          name="rating"
-                          size='small'
-                          precision={0.5}
-                        />
+                        <div style={{ marginBottom: '19px' }}>
+                          <Rating
+                            value={Art.averageRating} // Use Art.averageRating instead of averageRating
+                            name="rating"
+                            size='small'
+                            precision={0.5}
+                          />
                         </div>
                       </Grid>
-                      {bookmarkStatus[Art.id] ? (
-                        <BookmarkIcon onClick={() => toggleBookmark(Art.id)} />
-                      ) : (
-                        <BookmarkBorderIcon onClick={() => toggleBookmark(Art.id)} />
-                      )}
+                      <Grid item>
+                        {bookmarkStatus[Art.id] ? (
+                          <BookmarkIcon onClick={() => toggleBookmark(Art.id)} />
+                        ) : (
+                          <BookmarkBorderIcon onClick={() => toggleBookmark(Art.id)} />
+                        )}
+                      </Grid>
                     </Grid>
                   </CardContent>
                 </Card>
               </Grid>
             ))}
+
           </Grid>
           <div
             style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}

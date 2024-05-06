@@ -30,6 +30,7 @@ import { Chapa } from 'chapa-nodejs';
 import AddBranch from "./routes/AddBranch.js";
 import AddAdmin from "./routes/AddAdmin.js";
 import AddToCart from "./routes/AddToCart.js";
+import AverageRating from "./routes/AverageRating.js";
 
 
 
@@ -195,6 +196,11 @@ app.put("/art/approve/:id", (req, res) => {
 app.put("/seller/approve/:id", (req, res) => {
   ApproveSeller(db, req, res);
 });
+
+app.get('/art/:id/average-rating', (req, res) => {
+  AverageRating(db, req, res);
+});
+
 app.delete("/seller/delete/:id", (req, res) => {
   DeleteSeller(db, req, res);
 });

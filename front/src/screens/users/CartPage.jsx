@@ -197,7 +197,7 @@ const CartPage = () => {
           }}
         >
           {itemsInCart ? (
-            <Grid container spacing={1}>
+            <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 {cartData.map((cartItem, i) => (
                   <Card
@@ -293,10 +293,13 @@ const CartPage = () => {
                     </Grid>
                   </Card>
                 ))}
+                <Button fullWidth variant="contained" color="inherit"   sx={{marginTop:'15px', marginbo:'15px'}}  onClick={handleOpenOrderInfo}>
+          Order information
+        </Button>
+        
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Container>
                   <Card
                     sx={{
                       boxShadow: 1,
@@ -559,7 +562,6 @@ const CartPage = () => {
                       </Box>
                     </Box>
                   </Card>
-                </Container>
               </Grid>
             </Grid>
           ) : (
@@ -579,6 +581,9 @@ const CartPage = () => {
               <Link variant="h6" underline="none" href="/arts">
                 Back to shopping
               </Link>
+              <Button variant="contained" sx={{marginTop:'15px'}}  onClick={handleOpenOrderInfo}>
+          Order information
+        </Button>
             </Grid>
           )}
         </Container>
@@ -588,9 +593,6 @@ const CartPage = () => {
           variant="middle"
           sx={{ backgroundColor: "black" }}
         />
-        <Button variant="contained" onClick={handleOpenOrderInfo}>
-          Order information
-        </Button>
         <Footer />
       </Box>
       <Dialog open={openOrdereInfo} onClose={() => setOpenOrderInfo(false)}>

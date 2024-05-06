@@ -166,7 +166,7 @@ function SellerProfile() {
         >
           <ButtonGroup>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             onClick={handleOpenEditProfile}
           >
