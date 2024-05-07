@@ -468,7 +468,8 @@ const CartPage = () => {
                                 fname &&
                                 "Name must start with letter, must be between 3 to 20 characters long and can't contain space"
                               }
-                              error={!validFname && fname}
+                              error={!validFname && !!fname}
+
                             />
                           </Grid>
                           <Grid item xs={12}>
@@ -486,7 +487,7 @@ const CartPage = () => {
                                 lname &&
                                 "Name must start with letter, must be between 3 to 20 characters long and can't contain space"
                               }
-                              error={!validLname && lname}
+                              error={!validLname && !!lname}
                             />
                           </Grid>
                           <Grid item xs={12}>
@@ -523,7 +524,7 @@ const CartPage = () => {
                                 phoneNo &&
                                 "phone_no must contain 9 numbers"
                               }
-                              error={!validPhoneNo && phoneNo}
+                              error={!validPhoneNo && !!phoneNo}
                             />
                           </Grid>
                           <Grid item xs={12}>
