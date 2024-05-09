@@ -30,6 +30,10 @@ import { Chapa } from 'chapa-nodejs';
 import AddBranch from "./routes/AddBranch.js";
 import AddAdmin from "./routes/AddAdmin.js";
 import AddToCart from "./routes/AddToCart.js";
+import request from 'request';
+
+// Your code using the request module here
+
 
 
 
@@ -305,9 +309,8 @@ app.post("/payment/pay", async (req, res) => {
       last_name: lname,
       phone_number: "+251" + phoneNo,
       tx_ref: tx_ref,
-      // callback_url: "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-      // callback_url: "http://localhost:8081/payment/callback",
-      return_url: "http://localhost:5173/postpayed",
+      return_url:''
+      // return_url: "http://localhost:5173/postpayed",
     }),
   };
 
@@ -334,7 +337,7 @@ app.post("/payment/pay", async (req, res) => {
             if (err) {
               console.log(err)
               return res.status(500).json({
-                error: "An error occurred while inserting cart data.",
+                error: "An error occurred while inserting cart data.", 
               });
             }
             return res.json(data);
@@ -344,11 +347,43 @@ app.post("/payment/pay", async (req, res) => {
         return res.json(data);
       }
     })
-    .catch((error) => console.error("Error:", error));
+    .catch((error) => res.json("Error: ",error));
+    // .catch((error) => console.error("Error:", error));
 });
 
+app.post("/payment/paysss", async (req, res) => {
+  // var request = require('request');
+var options = {
+  'method': 'POST',
+  'url': 'https://api.chapa.co/v1/transaction/initialize',
+  'headers': {
+    'Authorization': 'Bearer CHASECK_TEST-IJqQnyTRn7UAJGsBKOM0RJZn3Jr4XIQy',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    "amount": "100",
+    "currency": "ETB",
+    "email": "abebech_bekele@gmail.com",
+    "first_name": "Bilen",
+    "last_name": "Gizachew",
+    "phone_number": "0912345678",
+    "tx_ref": "chewata2323qewtesdggfghjkst-6669",
+    "callback_url": "",
+    "return_url": "",
+    "customization[title]": "Payment for my favourite merchant",
+    "customization[description]": "I love online payments"
+  })
+
+};
+request(options, function (error, response) {
+  if (error) console.log(error);
+  console.log(response);
+});
+
+})
+
 app.get("/branch", (req, res) => {
-  const sql = "SELECT * FROM payment_detail";
+  const sql = "SELECT * FROM payment_detail WHERE approved = '0'";
   db.query(sql, (err, results) => {
     if (err) return res.json(err);
     else {

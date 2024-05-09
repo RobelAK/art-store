@@ -53,11 +53,11 @@ export default function BranchHome() {
       .then((res) => {
         console.log(res.data.data.status);
         updateStatus(userid,res.data.data.status)
-        if(res.data.data.status == "failed/cancelled"){
-          updateIcon(userid,<ErrorIcon color="error"/>)
-        }
         if(res.data.data.status == "success"){
           updateIcon(userid,<CheckCircleRoundedIcon color="success"/>)
+        }
+        if(res.data.data.status == "failed/cancelled"){
+          updateIcon(userid,<ErrorIcon color="error"/>)
         }
         if(res.data.data.status == "pending"){
           updateIcon(userid,<HourglassBottomIcon color="warning"/>)
@@ -65,6 +65,11 @@ export default function BranchHome() {
       })
       .catch((err) => console.log(err));
   };
+  const handleApprove = (userid, tx_ref)=> (event) =>{
+    event.stopPropagation()
+    // if()
+      console.log(status[userid])
+  }
   const handleDelete = (tx_ref) => (event) => {
     event.stopPropagation();
     const isConfirmed = window.confirm("Are you sure you want to delete?");
@@ -116,11 +121,6 @@ export default function BranchHome() {
           <Card key={i} style={{ marginBottom: "20px" }}>
             <CardContent>
               <Accordion>
-
-
-
-
-
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel${item.name}-content`}
@@ -144,6 +144,14 @@ export default function BranchHome() {
                     onClick={handleCheckTransaction(item.user_id,item.tx_ref)}
                   >
                     Check payment
+                  </Button>
+                    </Grid>
+                    <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={handleApprove(item.user_id,item.tx_ref)}
+                  >
+                    Approve
                   </Button>
                     </Grid>
                     <Grid item >
