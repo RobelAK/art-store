@@ -163,12 +163,12 @@ const CartPage = () => {
 
     if (validFname && validLname && validPhoneNo) {
       axios
-        .post("http://localhost:8081/payment/paysss", values)
+        .post("http://localhost:8081/payment/pay", values)
         .then((res) => {
-          // if (res.data.data.checkout_url) {
-          //   window.location.href = res.data.data.checkout_url;
-          // }
-          console.log(res.data)
+          if (res.data.data.checkout_url) {
+            window.location.href = res.data.data.checkout_url;
+          }
+          // console.log(res.data)
         })
         .catch((err) => console.log(err));
     } else console.log("not good");
