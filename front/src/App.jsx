@@ -25,6 +25,7 @@ import AboutUs from './screens/users/AboutUsPage';
 import PrintedScreen from './screens/Branch/PrintedScreen';
 import NotFound from './components/users/NotFound';
 import PostPayed from './screens/users/PostPayed';
+import AnalysisPage from './screens/users/AnalysisPage';
 
 const decodeToken = (token) => {
   try {
@@ -108,6 +109,7 @@ function App() {
         <Route path='/dashboard' element={isAuthorized(['admin']) ? <Dashboard /> : <Navigate to="/NotFound" replace />} />
         <Route path='/sellerprofile' element={isAuthorized(['seller']) ? <SellerProfile /> : <Navigate to="/Notfound" replace />} />
         <Route path='/postpayed' element={<PostPayed/>}/>
+        <Route path='/analysis' element ={<AnalysisPage/>}/>
       </Routes>
     </BrowserRouter>
   );

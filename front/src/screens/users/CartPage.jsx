@@ -198,7 +198,7 @@ const CartPage = () => {
           }}
         >
           {itemsInCart ? (
-            <Grid container spacing={1}>
+            <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 {cartData.map((cartItem, i) => (
                   <Card
@@ -206,15 +206,11 @@ const CartPage = () => {
                     sx={{
                       boxShadow: 1,
                       marginBottom: "5px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "white",
+                      backgroundColor: "#f0f1f2",
                       borderRadius: "5px",
-                      padding: 1,
                     }}
                   >
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1}>
                       <Grid item xs={12} md={8}>
                         <Grid container>
                           <Grid item>
@@ -225,6 +221,7 @@ const CartPage = () => {
                               <CardMedia
                                 component="img"
                                 sx={{
+                                  paddingTop:'15px',
                                   width: 100,
                                   margin: 1,
                                   aspectRatio: 4 / 6,
@@ -256,7 +253,7 @@ const CartPage = () => {
                                 component="div"
                                 fontWeight="bold"
                                 fontFamily="Sora"
-                                mb={2}
+                                mb={1}
                               >
                                 Art by: {cartItem.seller_name}
                               </Typography>
@@ -281,26 +278,29 @@ const CartPage = () => {
                               >
                                 Price: {cartItem.price * cartItem.quantity} birr
                               </Typography>
+                              <Button
+                          variant="text"
+                          size="small"
+                          
+                          sx={{ color: "red", }}
+                          onClick={() => handleRemoveItem(cartItem.id)}
+                        >
+                          Remove From Cart
+                        </Button>
                             </CardContent>
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item sm={12} md={4}>
-                        <Button
-                          variant="text"
-                          sx={{ color: "red", marginTop: "30%" }}
-                          onClick={() => handleRemoveItem(cartItem.id)}
-                        >
-                          Remove Item
-                        </Button>
-                      </Grid>
                     </Grid>
                   </Card>
                 ))}
+                <Button fullWidth variant="contained" color="inherit"   sx={{marginTop:'15px', marginbo:'15px'}}  onClick={handleOpenOrderInfo}>
+          Order information
+        </Button>
+        
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Container>
                   <Card
                     sx={{
                       boxShadow: 1,
@@ -469,7 +469,8 @@ const CartPage = () => {
                                 fname &&
                                 "Name must start with letter, must be between 3 to 20 characters long and can't contain space"
                               }
-                              error={!validFname && fname}
+                              error={!validFname && !!fname}
+
                             />
                           </Grid>
                           <Grid item xs={12}>
@@ -487,7 +488,7 @@ const CartPage = () => {
                                 lname &&
                                 "Name must start with letter, must be between 3 to 20 characters long and can't contain space"
                               }
-                              error={!validLname && lname}
+                              error={!validLname && !!lname}
                             />
                           </Grid>
                           <Grid item xs={12}>
@@ -524,7 +525,7 @@ const CartPage = () => {
                                 phoneNo &&
                                 "phone_no must contain 9 numbers"
                               }
-                              error={!validPhoneNo && phoneNo}
+                              error={!validPhoneNo && !!phoneNo}
                             />
                           </Grid>
                           <Grid item xs={12}>
@@ -563,7 +564,6 @@ const CartPage = () => {
                       </Box>
                     </Box>
                   </Card>
-                </Container>
               </Grid>
             </Grid>
           ) : (
@@ -583,6 +583,9 @@ const CartPage = () => {
               <Link variant="h6" underline="none" href="/arts">
                 Back to shopping
               </Link>
+              <Button variant="contained" sx={{marginTop:'15px'}}  onClick={handleOpenOrderInfo}>
+          Order information
+        </Button>
             </Grid>
           )}
         </Container>
@@ -592,9 +595,6 @@ const CartPage = () => {
           variant="middle"
           sx={{ backgroundColor: "black" }}
         />
-        <Button variant="contained" onClick={handleOpenOrderInfo}>
-          Order information
-        </Button>
         <Footer />
       </Box>
       <Dialog open={openOrdereInfo} onClose={() => setOpenOrderInfo(false)}>
