@@ -31,6 +31,7 @@ import AddBranch from "./routes/AddBranch.js";
 import AddAdmin from "./routes/AddAdmin.js";
 import AddToCart from "./routes/AddToCart.js";
 import AverageRating from "./routes/AverageRating.js";
+import Withdrawal from "./routes/Withdrawal.js";
 
 
 
@@ -181,6 +182,10 @@ app.post("/signupas", (req, res) => {
   SignupAs(db, req, res);
 });
 
+app.post("/withdraw", (req, res) => {
+  Withdrawal(db, req, res);
+  });
+
 app.post("/api/rating", (req, res) => {
   Rating(db, req, res);
 });
@@ -224,6 +229,44 @@ app.post("/product", (req, res) => {
     });
   });
 });
+
+app.get("/user/art/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM artwork WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Artwork not found" });
+    }
+
+    return res.status(200).json(result[0]); // Return only the first result
+  });
+});
+
+app.delete("/user/art/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "UPDATE artwork SET deleted = 1 WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Artwork not found" });
+    }
+
+    return res.status(200).json({ message: "Artwork deleted successfully" });
+  });
+});
+
+
 app.post("/addtocart", (req, res) => {
   AddToCart(db,req,res)
 });
@@ -386,6 +429,8 @@ app.post('/branch',(req, res) => {
   }
   })
 })
+
+
 
 app.post("/branch/verifypayment", async (req, res) => {
   try {
