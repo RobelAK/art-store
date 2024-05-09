@@ -261,7 +261,6 @@ app.delete("/user/delete/:id", (req, res) => {
   });
 });
 
-// Assuming you have set up your Express server
 app.put('/api/notifications/:id', (req, res) => {
   const notificationId = req.params.id;
   db.query('UPDATE notifications SET status = false WHERE id = ?', [notificationId], (err, result) => {
