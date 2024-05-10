@@ -37,10 +37,9 @@ const Branch = () => {
       password: branchPassword
     };
 
-    axios.post('http://localhost:8081/add-branch', branchData)
+    axios.post('http://localhost:8081/addbranch', branchData)
       .then((res) => {
         console.log(res.data);
-        // Refresh the list of branches
         axios.get('http://localhost:8081/admin/branches')
           .then(res => {
             setBranches(res.data);
@@ -49,12 +48,9 @@ const Branch = () => {
       })
       .catch((err) => {
         console.log(err);
-        // Handle error
       });
 
-    // Close the dialog
     setOpenDialog(false);
-    // Clear the input fields
     setBranchName('');
     setBranchEmail('');
     setBranchPassword('');

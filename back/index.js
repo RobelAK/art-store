@@ -23,12 +23,16 @@ import toggleArtBookmark from "./routes/ArtBookmark.js";
 import Bookmarks from "./routes/Bookmarks.js";
 import RemoveBookmark from "./routes/RemoveBookmark.js";
 import AddAvatar from "./routes/AddAvatar.js";
-import CreateBranch from "./routes/CreateBranch.js";
-import CreateAdmin from "./routes/CreateAdmin.js";
 import Notifications from "./routes/Notifications.js";
 import Rating from "./routes/Rating.js";
 import RatingAverage from "./routes/RatingAverage.js";
 import { Chapa } from 'chapa-nodejs';
+import AddBranch from "./routes/AddBranch.js";
+import AddAdmin from "./routes/AddAdmin.js";
+import AddToCart from "./routes/AddToCart.js";
+import AverageRating from "./routes/AverageRating.js";
+import Withdrawal from "./routes/Withdrawal.js";
+
 
 
 const app = express();
@@ -178,6 +182,10 @@ app.post("/signupas", (req, res) => {
   SignupAs(db, req, res);
 });
 
+app.post("/withdraw", (req, res) => {
+  Withdrawal(db, req, res);
+  });
+
 app.post("/api/rating", (req, res) => {
   Rating(db, req, res);
 });
@@ -193,6 +201,11 @@ app.put("/art/approve/:id", (req, res) => {
 app.put("/seller/approve/:id", (req, res) => {
   ApproveSeller(db, req, res);
 });
+
+app.get('/art/:id/average-rating', (req, res) => {
+  AverageRating(db, req, res);
+});
+
 app.delete("/seller/delete/:id", (req, res) => {
   DeleteSeller(db, req, res);
 });
@@ -216,27 +229,48 @@ app.post("/product", (req, res) => {
     });
   });
 });
-app.post("/addtocart", (req, res) => {
-  const { artId, userId, artPrice, quantity, size, artTitle, art, sellerName } =
-    req.body;
-  const check =
-    "SELECT * FROM cart WHERE user_id = ? And art_id = ? AND size = ?";
-  const sql =
-    "INSERT INTO cart (`user_id`,`art_id`,`price`,`quantity`,`size`,`art`,`art_title`,`seller_name`) Values (?,?,?,?,?,?,?,?)";
-  db.query(check, [userId, artId, size], (err, result) => {
-    if (err) return res.json("query error");
-    if (result.length == 0) {
-      db.query(
-        sql,
-        [userId, artId, artPrice, quantity, size, art, artTitle, sellerName],
-        (err, result) => {
-          if (err) return res.json(err);
-          return res.json("item added to cart");
-        }
-      );
-    } else return res.json("item already in cart");
+
+app.get("/user/art/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM artwork WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Artwork not found" });
+    }
+
+    return res.status(200).json(result[0]); // Return only the first result
   });
 });
+
+app.delete("/user/art/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "UPDATE artwork SET deleted = 1 WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Artwork not found" });
+    }
+
+    return res.status(200).json({ message: "Artwork deleted successfully" });
+  });
+});
+
+
+app.post("/addtocart", (req, res) => {
+  AddToCart(db,req,res)
+});
+
 app.post("/cart", (req, res) => {
   const userId = req.body.userId;
   const sql = "SELECT * FROM cart WHERE user_id = ?";
@@ -245,6 +279,7 @@ app.post("/cart", (req, res) => {
     else return res.json(result);
   });
 });
+  
 
 app.post("/cart", (req,res)=>{
   const userId = req.body.userId
@@ -352,15 +387,10 @@ app.post("/payment/pay", async (req, res) => {
           ],
           (err, result) => {
             if (err) {
+              console.log(err)
               return res.status(500).json({
                 error: "An error occurred while inserting cart data.",
               });
-              console.log(err)
-              return res
-                .status(500)
-                .json({
-                  error: "An error occurred while inserting cart data.",
-                });
             }
             return res.json(data);
           }
@@ -405,6 +435,8 @@ app.post('/branch',(req, res) => {
   }
   })
 })
+
+
 
 app.post("/branch/verifypayment", async (req, res) => {
   try {

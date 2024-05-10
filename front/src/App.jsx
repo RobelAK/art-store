@@ -24,6 +24,9 @@ import Catagory from './screens/users/Catagory';
 import AboutUs from './screens/users/AboutUsPage';
 import PrintedScreen from './screens/Branch/PrintedScreen';
 import NotFound from './components/users/NotFound';
+import PostPayed from './screens/users/PostPayed';
+import AnalysisPage from './screens/users/AnalysisPage';
+import SellersArt from './screens/users/SellersArt';
 
 const decodeToken = (token) => {
   try {
@@ -78,6 +81,7 @@ function App() {
       return <Landingpage/>;
     }
   }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -105,6 +109,9 @@ function App() {
         <Route path='/about' element={<AboutUs />} />
         <Route path='/dashboard' element={isAuthorized(['admin']) ? <Dashboard /> : <Navigate to="/NotFound" replace />} />
         <Route path='/sellerprofile' element={isAuthorized(['seller']) ? <SellerProfile /> : <Navigate to="/Notfound" replace />} />
+        <Route path='/postpayed' element={<PostPayed/>}/>
+        <Route path='/analysis' element ={<AnalysisPage/>}/>
+        <Route path='/SellerArt/:id' element = {<SellersArt/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -29,6 +29,7 @@ const AvilableArts = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  
 
   const handleHiding = async (id) => {
     try {

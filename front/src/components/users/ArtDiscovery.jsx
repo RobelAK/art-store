@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import {
@@ -21,38 +21,37 @@ import video from "../../utils/rr.mp4";
 
 const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
-  const [averageRating, setAverageRating] = useState(0);
+  const [loadCount, setLoadCount] = useState(25); // State to keep track of number of images to load
   const navigate = useNavigate(); // Get the navigate function
 
   useEffect(() => {
-    fetchAverageRating();
     fetchArtwork();
-  }, [selectedCategory]);
-
-  const fetchAverageRating = async (art_id) => {
-    try {
-      const response = await axios.get(`http://localhost:8081/api/rating/average/${art_id}`);
-      setAverageRating(response.data.averageRating);
-    } catch (error) {
-      console.error('Error fetching average rating:', error);
-    }
-  };
+  }, [selectedCategory, loadCount]);
 
   const fetchArtwork = async () => {
     try {
       const response = await axios.get('http://localhost:8081/art', {
-        params: { category: selectedCategory }
+        params: { category: selectedCategory, limit: loadCount } // Pass limit parameter to limit number of images fetched
       });
 
       if (!response.data) {
         throw new Error('Failed to fetch artwork');
       }
 
-      setArt(response.data);
+      // Fetch average ratings for each art piece
+      const artWithRatings = await Promise.all(
+        response.data.map(async (item) => {
+          const ratingResponse = await axios.get(`http://localhost:8081/art/${item.id}/average-rating`);
+          const { averageRating } = ratingResponse.data;
+          return { ...item, averageRating };
+        })
+      );
 
-      // Fetch bookmark status only if user is logged in
+      setArt(artWithRatings);
+
+      // Fetch bookmark status
       const token = localStorage.getItem("token");
       if (token) {
         const user = JSON.parse(atob(token.split(".")[1]));
@@ -62,7 +61,7 @@ const ArtDiscovery = () => {
         const bookmarkData = bookmarkResponse.data;
 
         const initialBookmarkStatus = {};
-        response.data.forEach(item => {
+        artWithRatings.forEach(item => {
           initialBookmarkStatus[item.id] = bookmarkData.includes(item.id);
         });
 
@@ -81,7 +80,6 @@ const ArtDiscovery = () => {
   const toggleBookmark = async (id) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      // Redirect to login page if user is not logged in
       navigate('/login');
       return;
     }
@@ -105,6 +103,11 @@ const ArtDiscovery = () => {
     }
   };
 
+  const handleLoadMore = () => {
+    setLoadCount(prevCount => prevCount + 25); // Increase loadCount by 25 when clicking "Load More"
+    fetchArtwork(); // Fetch more artwork when "Load More" is clicked
+  };
+
 
   return (
     <div>
@@ -121,7 +124,6 @@ const ArtDiscovery = () => {
           <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', zIndex: -2 }}>
             <source src={video} type="video/mp4" />
           </video>
-          {/* Overlay */}
           <Box
             sx={{
               zIndex: -2,
@@ -201,7 +203,7 @@ const ArtDiscovery = () => {
                   },
                 }}
               >
-                <MenuItem>All Categories</MenuItem>
+                <MenuItem value="All">All</MenuItem>
                 <MenuItem value="Abstract">Abstract</MenuItem>
                 <MenuItem value="Animals">Animals</MenuItem>
                 <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>
@@ -237,7 +239,7 @@ const ArtDiscovery = () => {
                 <Card
                   sx={{
                     backgroundColor: '#f7fdff',
-                    maxWidth: 280,
+                    maxWidth: 315,
                     aspectRatio: "4/6",
                     margin: "5",
                     borderRadius: "3px",
@@ -260,35 +262,38 @@ const ArtDiscovery = () => {
                     />
                   </Link>
                   <CardContent>
-                    <Grid container>
-                      <Grid item xs={10.5} sm={10.5} md={10.5}>
+                    <Grid container justifyContent="space-between">
+                      <Grid item>
                         <Typography variant="body1" fontWeight={"600"} fontFamily={'sora,sans-serif'}>
                           {Art.title}
                         </Typography>
-                        <div style={{marginBottom:'19px'}}>
-                        <Rating
-                          value={averageRating}
-                          name="rating"
-                          size='small'
-                          precision={0.5}
-                        />
+                        <div style={{ marginBottom: '19px' }}>
+                          <Rating
+                            value={Art.averageRating} // Use Art.averageRating instead of averageRating
+                            name="rating"
+                            size='small'
+                            precision={0.5}
+                          />
                         </div>
                       </Grid>
-                      {bookmarkStatus[Art.id] ? (
-                        <BookmarkIcon onClick={() => toggleBookmark(Art.id)} />
-                      ) : (
-                        <BookmarkBorderIcon onClick={() => toggleBookmark(Art.id)} />
-                      )}
+                      <Grid item>
+                        {bookmarkStatus[Art.id] ? (
+                          <BookmarkIcon onClick={() => toggleBookmark(Art.id)} />
+                        ) : (
+                          <BookmarkBorderIcon onClick={() => toggleBookmark(Art.id)} />
+                        )}
+                      </Grid>
                     </Grid>
                   </CardContent>
                 </Card>
               </Grid>
             ))}
+
           </Grid>
           <div
             style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
           >
-            <Button variant="contained" onClick={fetchArtwork}>
+            <Button variant="contained" onClick={handleLoadMore}>
               Load More
             </Button>
           </div>

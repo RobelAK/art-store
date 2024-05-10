@@ -5,8 +5,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useNavigate } from 'react-router-dom';
 
 const BranchMenu = () => {
+  const navigate = useNavigate()
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -19,11 +22,11 @@ const BranchMenu = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = '/login';
+    navigate('/')
+    window.location.reload()
   };
 
   const handleProfile = () => {
-    // Implement your profile logic here
     console.log("Profile clicked");
     handleMenuClose();
   };
@@ -43,10 +46,6 @@ const BranchMenu = () => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleProfile}>
-          <AccountCircleIcon />
-          Profile
-        </MenuItem>
         <MenuItem onClick={handleLogout}>
           <LogoutIcon />
           Logout
