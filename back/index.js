@@ -32,6 +32,7 @@ import AddAdmin from "./routes/AddAdmin.js";
 import AddToCart from "./routes/AddToCart.js";
 import AverageRating from "./routes/AverageRating.js";
 import Withdrawal from "./routes/Withdrawal.js";
+import delete_art from "./routes/delete_art.js";
 
 
 
@@ -216,6 +217,10 @@ app.delete("/art/decline/:id", (req, res) => {
   declineArt(db, req, res);
 });
 
+app.delete("/art/delete/:id", (req, res) => {
+  delete_art(db, req, res);
+});
+
 app.post("/product", (req, res) => {
   const id = req.body.id;
   const sql = "SELECT * FROM artwork WHERE id =?";
@@ -265,6 +270,7 @@ app.delete("/user/art/:id", (req, res) => {
     return res.status(200).json({ message: "Artwork deleted successfully" });
   });
 });
+
 
 
 app.post("/addtocart", (req, res) => {

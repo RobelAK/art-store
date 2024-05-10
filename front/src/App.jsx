@@ -27,6 +27,7 @@ import NotFound from './components/users/NotFound';
 import PostPayed from './screens/users/PostPayed';
 import AnalysisPage from './screens/users/AnalysisPage';
 import ApprovedScreen from './screens/Branch/ApprovedScreen';
+import SellersArt from './screens/users/SellersArt';
 
 const decodeToken = (token) => {
   try {
@@ -56,20 +57,6 @@ function App() {
   const RenderSignas = () => {
     if (isAuthorized(['buyer'])) {
       return <SignupAs />;
-    } else {
-      return <Navigate to="/NotFound" replace />;
-    }
-  };
-  const RenderApproved = () => {
-    if (isAuthorized(['branch'])) {
-      return <ApprovedScreen />;
-    } else {
-      return <Navigate to="/NotFound" replace />;
-    }
-  };
-  const RenderPrintedArt = () => {
-    if (isAuthorized(['branch'])) {
-      return <PrintedScreen />;
     } else {
       return <Navigate to="/NotFound" replace />;
     }
@@ -118,13 +105,15 @@ function App() {
         <Route path='/ResetPassword' element={<ResetPassword />} />
         <Route path='/ReceiveEmail' element={<ReceiveEmail />} />
         <Route path='/WaitingArt' element={isAuthorized(['admin']) ? <WaitingArt /> : <Navigate to="/NotFound" replace />} />
-        <Route path='/Printed' element={<RenderPrintedArt />} />
-        <Route path='/Approved' element={<RenderApproved />} />
+        <Route path='/WaitingPrint' element={isAuthorized(['branch']) ? <BranchHome /> : <Navigate to="/NotFound" replace />} />
+        <Route path='/Printed' element={isAuthorized(['branch']) ? <PrintedScreen /> : <Navigate to="/NotFound" replace />} />
+        <Route path='/Approved' element={isAuthorized(['branch']) ? <ApprovedScreen /> : <Navigate to="/NotFound" replace />} />
         <Route path='/about' element={<AboutUs />} />
         <Route path='/dashboard' element={isAuthorized(['admin']) ? <Dashboard /> : <Navigate to="/NotFound" replace />} />
         <Route path='/sellerprofile' element={isAuthorized(['seller']) ? <SellerProfile /> : <Navigate to="/Notfound" replace />} />
         <Route path='/postpayed' element={<PostPayed/>}/>
         <Route path='/analysis' element ={<AnalysisPage/>}/>
+        <Route path='/SellerArt/:id' element ={<SellersArt/>}/>
       </Routes>
     </BrowserRouter>
   );
