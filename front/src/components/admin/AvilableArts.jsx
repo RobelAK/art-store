@@ -16,26 +16,18 @@ const AvilableArts = () => {
   const [open, setOpen] = useState(false); 
   const [selectedImage, setSelectedImage] = useState(null); 
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:8081/art");
-      setArt(response.data);
-    } catch (error) {
-      console.error('Error fetching artwork:', error);
-    }
-  };
-  fetchData();
-
   useEffect(() => {
-    fetchData();
+    axios.get("http://localhost:8081/art")
+    .then((res)=>{
+      setArt(res.data)
+      console.log(res.data)
+    })
   }, []);
-  
 
   const handleHiding = async (id) => {
     try {
       await axios.put(`http://localhost:8081/art/hide/${id}`);
       console.log('Artwork Hidden successfully');
-      fetchData();
     } catch (error) {
       console.error('Error hiding artwork:', error);
     }
@@ -46,7 +38,6 @@ const AvilableArts = () => {
       console.log('Declining artwork with ID:', id);
       await axios.delete(`http://localhost:8081/art/decline/${id}`);
       console.log('Artwork declined successfully');
-      fetchData();
     } catch (error) {
       console.error('Error declining artwork:', error);
     }

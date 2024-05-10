@@ -163,7 +163,7 @@ const WaitingUsers = () => {
               <p>
                 <Button
                   variant="outlined"
-                  onClick={() => window.open(selectedUser.portfolio_link, "_blank")}
+                  onClick={() => window.open(selectedUser.portfolio_link)}
                 >
                   open portfolio
                 </Button>
