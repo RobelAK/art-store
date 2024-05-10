@@ -21,7 +21,7 @@ export default async function signup(db, req, res) {
       hasNumber &&
       hasSpecialChar
     );
-  };
+  }; 
 
   if (password == passwordConfirm) {
     db.query(check, [email], (err, result) => {

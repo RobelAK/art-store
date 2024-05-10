@@ -61,6 +61,20 @@ function App() {
       return <Navigate to="/NotFound" replace />;
     }
   };
+  const RenderApproved = () => {
+    if (isAuthorized(['branch'])) {
+      return <ApprovedScreen />;
+    } else {
+      return <Navigate to="/NotFound" replace />;
+    }
+  };
+  const RenderPrintedArt = () => {
+    if (isAuthorized(['branch'])) {
+      return <PrintedScreen />;
+    } else {
+      return <Navigate to="/NotFound" replace />;
+    }
+  };
 
 
   const RenderAddart = () => {
@@ -105,9 +119,8 @@ function App() {
         <Route path='/ResetPassword' element={<ResetPassword />} />
         <Route path='/ReceiveEmail' element={<ReceiveEmail />} />
         <Route path='/WaitingArt' element={isAuthorized(['admin']) ? <WaitingArt /> : <Navigate to="/NotFound" replace />} />
-        <Route path='/WaitingPrint' element={isAuthorized(['branch']) ? <BranchHome /> : <Navigate to="/NotFound" replace />} />
-        <Route path='/Printed' element={isAuthorized(['branch']) ? <PrintedScreen /> : <Navigate to="/NotFound" replace />} />
-        <Route path='/Approved' element={isAuthorized(['branch']) ? <ApprovedScreen /> : <Navigate to="/NotFound" replace />} />
+        <Route path='/Printed' element={<RenderPrintedArt />} />
+        <Route path='/Approved' element={<RenderApproved />} />
         <Route path='/about' element={<AboutUs />} />
         <Route path='/dashboard' element={isAuthorized(['admin']) ? <Dashboard /> : <Navigate to="/NotFound" replace />} />
         <Route path='/sellerprofile' element={isAuthorized(['seller']) ? <SellerProfile /> : <Navigate to="/Notfound" replace />} />

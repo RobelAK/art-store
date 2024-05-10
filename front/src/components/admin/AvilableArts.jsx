@@ -48,7 +48,6 @@ const AvilableArts = () => {
       console.log('Declining artwork with ID:', id);
       await axios.delete(`http://localhost:8081/art/delete/${id}`);
       console.log('Artwork declined successfully');
-      fetchData();
     } catch (error) {
       console.error('Error declining artwork:', error);
     }
