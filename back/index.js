@@ -304,7 +304,6 @@ app.delete("/user/delete/:id", (req, res) => {
   });
 });
 
-// Assuming you have set up your Express server
 app.put('/api/notifications/:id', (req, res) => {
   const notificationId = req.params.id;
   db.query('UPDATE notifications SET status = false WHERE id = ?', [notificationId], (err, result) => {
@@ -395,14 +394,33 @@ app.post("/payment/pay", async (req, res) => {
     })
     .catch((error) => console.error("Error:", error));
 });
+app.post('/branch',(req, res) => {
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? and approved ='0'"
+  db.query(sql,[branchName], (err,results)=>{
+    if(err) return res.json(err)
+    else{
+      return res.json(results)
+  }
+  })
+})
+app.post('/branch/approve',(req, res) => {
+  const {paymentId,branchName} = req.body
+  const sql = "UPDATE payment_detail SET approved = '1' WHERE id = ?"
+  
+  db.query(sql, [paymentId],(err,result)=>{
+    if(err) return res.json(err)
+    return res.json(result)
+  })
+})
 
-app.get("/branch", (req, res) => {
-  const sql = "SELECT * FROM payment_detail";
-  db.query(sql, (err, results) => {
+app.post("/branch/approved", (req, res) => {
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? and approved ='1'"
+  db.query(sql,[branchName], (err, results) => {
     if (err) return res.json(err);
     else {
-      const somethingincart = results;
-      return res.json(somethingincart);
+      return res.json(results);
     }
   });
 });
@@ -418,17 +436,7 @@ app.post('/postpayment',(req,res)=>{
 
 
 
-app.post('/branch',(req, res) => {
-  const branchName = req.body.branchName
-  const sql = "SELECT * FROM payment_detail WHERE location = ?"
-  db.query(sql,[branchName], (err,results)=>{
-    if(err) return res.json(err)
-    else{
-      const somethingincart = results
-      return res.json(somethingincart)
-  }
-  })
-})
+
 
 
 
