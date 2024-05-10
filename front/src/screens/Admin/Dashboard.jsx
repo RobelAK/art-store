@@ -25,6 +25,7 @@ import WaitingUsers from '../../components/admin/WaitingUsers';
 import Seller from '../../components/admin/Seller';
 import Branch from '../../components/admin/Branch';
 import Admins from '../../components/admin/Admins';
+import WithdrawRequest from '../../components/admin/WithdrawRequest';
 
 const drawerWidth = 240;
 
@@ -143,7 +144,7 @@ const PersistentDrawerLeft = () => {
         </List>
         <Divider />
         <List>
-          {['Pending Art', 'Pending Sellers', 'Spam'].map((text, index) => (
+          {['Pending Art', 'Pending Sellers', 'Waiting Withdraws'].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
@@ -168,6 +169,7 @@ const PersistentDrawerLeft = () => {
         {selectedComponent === 'Pending Art' ? <WaitingArt /> : []}
         {selectedComponent === 'Artworks' ? <AvilableArts /> : []}
         {selectedComponent === 'Pending Sellers' ? <WaitingUsers /> : []}
+        {selectedComponent === 'Waiting Withdraws' ? <WithdrawRequest /> : []}
         
 
       </Main>

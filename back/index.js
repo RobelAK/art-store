@@ -33,6 +33,9 @@ import AddToCart from "./routes/AddToCart.js";
 import AverageRating from "./routes/AverageRating.js";
 import Withdrawal from "./routes/Withdrawal.js";
 import delete_art from "./routes/delete_art.js";
+import WithdrawRequest from "./routes/WithdrawRequest.js";
+import ApprovePayment from "./routes/ApprovePayment.js";
+import AddedSales from "./routes/AddedSales.js";
 
 
 
@@ -169,6 +172,10 @@ app.get("/api/notifications", (req, res) => {
   Notifications(db, req, res);
 });
 
+app.get("/Withdraw/request", (req, res) => {
+  WithdrawRequest(db, req, res);
+});
+
 app.get("/art/waiting", upload, async (req, res) => {
   WaitingArt(db, req, res);
 });
@@ -201,6 +208,10 @@ app.put("/art/approve/:id", (req, res) => {
 });
 app.put("/seller/approve/:id", (req, res) => {
   ApproveSeller(db, req, res);
+});
+
+app.put("/payed/user/:id", (req, res) => {
+  ApprovePayment(db, req, res);
 });
 
 app.get('/art/:id/average-rating', (req, res) => {
@@ -286,9 +297,21 @@ app.post("/cart", (req, res) => {
   });
 });
 
+app.post("/sold", (req, res) => {
+  const userId = req.body.userId;
+  const sql = "SELECT * FROM artwork WHERE user_id = ? and sales != 0";
+  db.query(sql, [userId], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
+});
+
+// app.post("/seles", (req, res) => {
+//   AddedSales (db, req, res);
+// });
 app.post("/seles", (req, res) => {
   const {art_id} = req.body;
-  const sql = "UPDATE artwork SET sales = sales + 1 WHERE id = ?";
+  const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
   db.query(sql, [art_id], (err, result) => {
     if (err) return res.json(err);
     else return res.json(result);

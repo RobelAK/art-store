@@ -42,9 +42,9 @@ export default function ApprovedScreen() {
       return [];
     }
   };
-  const handlePrint = (imageName ,art_id) => {
+  const handlePrint = (imageName ,art_id ,user_id) => {
     axios
-        .post("http://localhost:8081/seles" ,{art_id})
+        .post("http://localhost:8081/seles" ,{art_id , user_id})
         .then((res) => {
           console.log(res.data);
         })
@@ -165,7 +165,7 @@ export default function ApprovedScreen() {
                               </Typography>
                               <Button
                                 variant="contained"
-                                onClick={() => handlePrint(art.art , art.art_id)}
+                                onClick={() => handlePrint(art.art , art.art_id ,art.user_id)}
                               >
                                 Print
                               </Button>
