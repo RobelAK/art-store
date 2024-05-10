@@ -16,7 +16,6 @@ const UserManagement = () => {
       .then(res => {
         setUsers(res.data);
         setOriginalUsers(res.data);
-        // console.log(res.data)
       })
       .catch(err => console.log(err));
   }, []);
