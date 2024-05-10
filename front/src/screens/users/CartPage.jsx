@@ -91,12 +91,6 @@ const CartPage = () => {
       setBranchs(res.data);
       console.log(res.data);
     });
-
-
-    
-    
-
-
   }, []);
   useEffect(() => {
     const totalPrice = calculateTotalPrice();

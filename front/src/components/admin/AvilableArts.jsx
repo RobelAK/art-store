@@ -23,16 +23,17 @@ const AvilableArts = () => {
       console.log(res.data)
     })
   }, []);
+  
 
-  // const handleHiding = async (id) => {
-  //   try {
-  //     await axios.put(`http://localhost:8081/art/hide/${id}`);
-  //     console.log('Artwork Hidden successfully');
-  //     fetchData();
-  //   } catch (error) {
-  //     console.error('Error hiding artwork:', error);
-  //   }
-  // };
+  const handleHiding = async (id) => {
+    try {
+      await axios.put(`http://localhost:8081/art/hide/${id}`);
+      console.log('Artwork Hidden successfully');
+      fetchData();
+    } catch (error) {
+      console.error('Error hiding artwork:', error);
+    }
+  };
   
   const handleDecline = async (id) => {
     try {
