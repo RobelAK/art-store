@@ -285,6 +285,15 @@ app.post("/cart", (req, res) => {
     else return res.json(result);
   });
 });
+
+app.post("/seles", (req, res) => {
+  const {art_id} = req.body;
+  const sql = "UPDATE artwork SET sales = sales + 1 WHERE id = ?";
+  db.query(sql, [art_id], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
+});
   
 
 app.post("/cart", (req,res)=>{
@@ -413,6 +422,7 @@ app.post('/branch',(req, res) => {
 app.post('/branch/approve',(req, res) => {
   const {paymentId,branchName} = req.body
   const sql = "UPDATE payment_detail SET approved = '1' WHERE id = ?"
+  const AddCount = " "
   
   db.query(sql, [paymentId],(err,result)=>{
     if(err) return res.json(err)

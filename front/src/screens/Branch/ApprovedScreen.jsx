@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ApprovedScreen() {
   const [approvedorders, setApprovedOrders] = useState([]);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -41,7 +42,15 @@ export default function ApprovedScreen() {
       return [];
     }
   };
-  const handlePrint = (imageName) => {
+  const handlePrint = (imageName ,art_id) => {
+    axios
+        .post("http://localhost:8081/seles" ,{art_id})
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+
+
     const url = `http://localhost:8081/images/${imageName}`;
 
     const img = new Image();
@@ -156,7 +165,7 @@ export default function ApprovedScreen() {
                               </Typography>
                               <Button
                                 variant="contained"
-                                onClick={() => handlePrint(art.art)}
+                                onClick={() => handlePrint(art.art , art.art_id)}
                               >
                                 Print
                               </Button>
