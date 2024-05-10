@@ -24,22 +24,20 @@ const AvilableArts = () => {
     })
   }, []);
 
-  // const handleHiding = async (id) => {
-  //   try {
-  //     await axios.put(`http://localhost:8081/art/hide/${id}`);
-  //     console.log('Artwork Hidden successfully');
-  //     fetchData();
-  //   } catch (error) {
-  //     console.error('Error hiding artwork:', error);
-  //   }
-  // };
+  const handleHiding = async (id) => {
+    try {
+      await axios.put(`http://localhost:8081/art/hide/${id}`);
+      console.log('Artwork Hidden successfully');
+    } catch (error) {
+      console.error('Error hiding artwork:', error);
+    }
+  };
   
   const handleDecline = async (id) => {
     try {
       console.log('Declining artwork with ID:', id);
       await axios.delete(`http://localhost:8081/art/decline/${id}`);
       console.log('Artwork declined successfully');
-      fetchData();
     } catch (error) {
       console.error('Error declining artwork:', error);
     }
