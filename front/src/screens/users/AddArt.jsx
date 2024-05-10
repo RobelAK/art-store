@@ -11,7 +11,6 @@ function AddArt() {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [art, setArt] = useState(null);
-  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
   const handleUpload = async (event) => {
@@ -30,27 +29,22 @@ function AddArt() {
         return;
       }
 
-      // Decode the token to extract user id
       const user = JSON.parse(atob(token.split(".")[1]));
       const userId = user.id;
       const artist = user.name;
-
-      // Append userId to form data
       formData.append('user_id', userId);
       formData.append('artist', artist);
-      console.log("Form Data User ID:", formData.get('user_id'));
+      axios
+          .post("http://localhost:8081/art/upload", formData)
+          .then((res) => {
+            if (res.data.status === "Success") {
+                navigate('/message');
+              }
+          })
+          .catch((err) => console.log(err));
 
-      const response = await axios.post('http://localhost:8081/art/upload', formData);
-
-      if (response.data.status === "Success") {
-        setMsg("");
-        navigate('/message');
-      } else {
-        setMsg(response.data.message || "Unknown error occurred");
-      }
     } catch (error) {
       console.error("Error uploading artwork:", error);
-      setMsg("Network error occurred. Please try again.");
     }
   };
 
@@ -166,7 +160,6 @@ function AddArt() {
             <Button variant="outlined" style={{ margin: '15px' }} component={Link} to="/" color="primary">
               Cancel
             </Button>
-            <Typography variant="body1" style={{ textAlign: 'center', marginTop: '20px' }}>{msg}</Typography>
           </Grid>
         </Grid>
       </Container>

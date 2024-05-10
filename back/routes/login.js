@@ -5,7 +5,7 @@ export default function login(db, req, res) {
   
   
   const { email, password } = req.body
-  const sql = "SELECT * From users Where email = ?";
+  const sql = "SELECT id, name, email, role, password FROM users WHERE email = ?";
   db.query(sql, [email], async (err, result) => {
     if (err) return res.json({ loginStatus: false, Error: "Query error" })
     if (result.length > 0) {
@@ -21,7 +21,7 @@ export default function login(db, req, res) {
         const token = jwt.sign(
           { id, name, email, role},
           "jwt_secret_key",
-          { expiresIn: "1d" }
+          { expiresIn: "60m" }
         ); 
         return res.json({ loginStatus: true, token })
       }

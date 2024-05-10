@@ -23,6 +23,8 @@ import AdminMenu from '../../components/admin/AdminMenu';
 import AvilableArts from '../../components/admin/AvilableArts';
 import WaitingUsers from '../../components/admin/WaitingUsers';
 import Seller from '../../components/admin/Seller';
+import Branch from '../../components/admin/Branch';
+import Admins from '../../components/admin/Admins';
 
 const drawerWidth = 240;
 
@@ -124,7 +126,7 @@ const PersistentDrawerLeft = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Overview', 'Users', 'Sellers', 'Branches', 'Artworks'].map((text, index) => (
+          {['Overview','Admins', 'Users', 'Sellers', 'Branches', 'Artworks'].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
@@ -132,7 +134,8 @@ const PersistentDrawerLeft = () => {
               onClick={() => handleListItemClick(text)}
             >
               <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemIcon>{<InboxIcon/>}</ListItemIcon>
+                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
@@ -158,8 +161,10 @@ const PersistentDrawerLeft = () => {
       <Main open={open}>
         <DrawerHeader />
         {selectedComponent === 'Overview' ? <Overview /> : []}
+        {selectedComponent === 'Admins' ? <Admins /> : []}
         {selectedComponent === 'Users' ? <UserManagement /> : []}
         {selectedComponent === 'Sellers' ? <Seller/> : []}
+        {selectedComponent === 'Branches' ? <Branch/> : []}
         {selectedComponent === 'Pending Art' ? <WaitingArt /> : []}
         {selectedComponent === 'Artworks' ? <AvilableArts /> : []}
         {selectedComponent === 'Pending Sellers' ? <WaitingUsers /> : []}

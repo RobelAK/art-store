@@ -16,7 +16,6 @@ const UserManagement = () => {
       .then(res => {
         setUsers(res.data);
         setOriginalUsers(res.data);
-        // console.log(res.data)
       })
       .catch(err => console.log(err));
   }, []);
@@ -28,7 +27,6 @@ const UserManagement = () => {
         .then((res) => {
           setUsers(users.filter((user) => user.id !== id));
           console.log(res.data);
-          // window.location.reload()
         })
         .catch((err) => console.log(err));
     }
@@ -84,6 +82,7 @@ const UserManagement = () => {
           <MenuItem value="all">All Roles</MenuItem>
           <MenuItem value="buyer">buyer</MenuItem>
           <MenuItem value="seller">seller</MenuItem>
+          <MenuItem value="admin">admin</MenuItem>
         </Select>
       </Container>
 

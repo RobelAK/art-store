@@ -60,7 +60,7 @@ const SearchBar = () => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <Link to="#" onClick={handleSearch}>
+              <Link to="#" onClick={handleSearch} style={{ textDecoration: 'none' }}>
                 <SearchIcon
                   sx={{
                     borderRadius: '50%', // Rounded border
@@ -122,15 +122,15 @@ const SearchBar = () => {
                     textDecoration: 'none', // Remove default link decoration
                     color: 'inherit', // Inherit color from parent
                   }}
+                  component={Link} // Use Link component here
+                  to={`/product/${artwork.id}`}
                 >
-                  <Link to={`/product/${artwork.id}`} style={{ textDecoration: 'none', color: 'inherit' }}> {/* Add Link to redirect to product page */}
-                    <img
-                      src={`http://localhost:8081/images/${artwork.art}`}
-                      alt={artwork.title}
-                      style={{ aspectRatio: "4/5", padding: '4px', height: '150px', width: 'auto' }}
-                    />
-                    <div style={{ marginTop: '10px', textAlign: 'center' }}>{artwork.title}</div>
-                  </Link>
+                  <img
+                    src={`http://localhost:8081/images/${artwork.art}`}
+                    alt={artwork.title}
+                    style={{ aspectRatio: "4/5", padding: '4px', height: '150px', width: 'auto' }}
+                  />
+                  <div style={{ marginTop: '10px', textAlign: 'center' }}>{artwork.title}</div>
                 </MenuItem>
               ))}
             </MenuList>

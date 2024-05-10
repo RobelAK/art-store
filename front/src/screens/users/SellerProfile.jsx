@@ -11,6 +11,7 @@ import {
   Avatar,
   IconButton,
   Dialog,
+  ButtonGroup,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -22,6 +23,7 @@ import Footer from "../../components/users/Footer";
 import PostedArt from "../../components/users/PostedArt";
 import Navbar from "../../components/users/Navbar";
 import { useNavigate , Link } from "react-router-dom";
+import AnalysisDialog from "./AnalysisPage";
 
 function SellerProfile() {
   axios.defaults.withCredentials = true;
@@ -35,6 +37,7 @@ function SellerProfile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [OpenEditProfile, setOpenEditProfile] = useState(false);
   const [newName, setNewName] = useState("");
+  const [openAnalysisDialog, setOpenAnalysisDialog] = useState(false);
 
   const handleOpenEditProfile = () => {
     setOpenEditProfile(true);
@@ -144,11 +147,6 @@ function SellerProfile() {
             backgroundSize: "cover",
           }}
         >
-          <IconButton
-            sx={{ position: "absolute", top: 0, right: 0, color: "white" }}
-          >
-            <EditIcon />
-          </IconButton>
         </Box>
         <Avatar
           // src="url(https://source.unsplash.com/random/300x400?Avatar)"
@@ -166,17 +164,21 @@ function SellerProfile() {
         <Container
           sx={{ display: "flex", justifyContent: "end", marginTop: -12 }}
         >
+          <ButtonGroup>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
-            sx={{ marginRight: 2 }}
             onClick={handleOpenEditProfile}
           >
             Edit Profile
           </Button>
-           <Button variant="outlined" color="primary"  component={Link} to="/addart">
+           <Button variant="outlined" color="primary"   component={Link} to="/addart">
             Add Art
+          </Button>
+          <Button variant="outlined" component={Link} to="/analysis" color="primary"  >
+            Analytics 
           </Button> 
+          </ButtonGroup>
         </Container>
         <CardContent sx={{ textAlign: "center" }}>
           <Typography variant="h5" component="div" gutterBottom>
@@ -186,91 +188,107 @@ function SellerProfile() {
       </Card>
       <PostedArt/>
 
-
       <Dialog open={OpenEditProfile} onClose={() => setOpenEditProfile(false)}>
-        <Container sx={{ padding: 2 }}>
-          <Grid sx={{display: 'flex', justifyContent: 'center'}}>
-            <Typography>Edit Profile</Typography>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Box component="form" onSubmit={handleChangePassword}>
-                <Grid container rowSpacing={2}>
-                  <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography>Edit Password</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      required
-                      type="text"
-                      name="currentPassword"
-                      label="Current password"
-                      onChange={handleCurrentPassword}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      required
-                      type="text"
-                      name="newPassword"
-                      label="New password"
-                      onChange={handleNewPassword}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      required
-                      type="text"
-                      name="newPasswrodConfirm"
-                      label="Confirm password"
-                      onChange={handleNewPasswordConfirm}
-                    />
-                  </Grid>
-                </Grid>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 1 }}
-                >
-                  Confirm
-                </Button>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Box component="form" onSubmit={handleChangeName}>
-                <Grid container rowSpacing={2}>
-                  <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography>Edit Name</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      required
-                      type="text"
-                      name="newname"
-                      label="New name"
-                      onChange={handleNewname}
-                    />
-                  </Grid>
+  <Container sx={{ padding: 2 }}>
+    <Grid container justifyContent="center" alignItems="center" spacing={2}>
+      <Grid item xs={12}>
+        <Typography variant="h6" gutterBottom>Edit Profile</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <IconButton sx={{ position: "absolute", top: 0, right: 0, color: "black" }}>
+          <EditIcon />
+        </IconButton>
+      </Grid>
+      <Grid item xs={12}>
+        <Avatar
+          alt="Profile Image"
+          sx={{
+            width: 70,
+            height: 70,
+            margin: "auto",
+          }}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Button type="submit" size="small" variant="contained" sx={{ mb: 1, width: "100%" }}>
+          Apply
+        </Button>
+      </Grid>
+    </Grid>
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={6}>
+        <Box component="form" onSubmit={handleChangePassword}>
+          <Typography variant="h6" size="small" gutterBottom>Edit Password</Typography>
+          <TextField
+            fullWidth
+            required
+            size="small"
+            sx={{marginBottom:'2px'}}
+            type="password"
+            name="currentPassword"
+            label="Current password"
+            onChange={handleCurrentPassword}
+          />
+          <TextField
+            fullWidth
+            required
+            sx={{marginBottom:'2px'}}
+            size="small"
+            type="password"
+            name="newPassword"
+            label="New password"
+            onChange={handleNewPassword}
+          />
+          <TextField
+            fullWidth
+            size="small"
+            required
+            sx={{marginBottom:'2px'}}
+            type="password"
+            name="newPasswordConfirm"
+            label="Confirm password"
+            onChange={handleNewPasswordConfirm}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            size="small"
+            variant="contained"
+            sx={{ mt: 1 }}
+          >
+            Confirm
+          </Button>
+        </Box>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <Box component="form" onSubmit={handleChangeName}>
+          <Typography variant="h6" gutterBottom>Edit Name</Typography>
+          <TextField
+            fullWidth
+            size="small"
+            required
+            sx={{marginBottom:'2px'}}
+            type="text"
+            name="newName"
+            label="New name"
+            onChange={handleNewname}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            size="small"
+            variant="contained"
+            sx={{ mt: 1 }}
+          >
+            Confirm
+          </Button>
+        </Box>
+      </Grid>
+    </Grid>
+    </Container>
+  
+</Dialog>
 
-                </Grid>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 1 }}
-                >
-                  Confirm
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Dialog>
       <Footer />
     </>
   );

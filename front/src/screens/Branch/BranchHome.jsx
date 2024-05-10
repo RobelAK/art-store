@@ -1,142 +1,262 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Container, Card, CardContent, Grid } from '@mui/material';
-
-const Navbar = styled(AppBar)(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  boxShadow: 'none',
-  background: 'linear-gradient(to right, #2980B9, #6DD5FA)',
-  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-}));
-
-const NavbarTitle = styled(Typography)(({ theme }) => ({
-  flexGrow: 1,
-  [theme.breakpoints.up('sm')]: {
-    display: 'block',
-  },
-}));
-
-const NavLinks = styled('div')({
-  marginRight: '20px',
-  '& a': {
-    textDecoration: 'none',
-    color: 'white',
-    marginRight: '20px',
-    transition: 'color 0.3s ease',
-    '&:hover': {
-      color: '#F9A825',
-    },
-  },
-});
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Box, CardMedia } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { Container, Card, CardContent, Grid } from "@mui/material";
+import NavBranch from "../../components/Branch/NavBranch";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
+import ErrorIcon from "@mui/icons-material/Error";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function BranchHome() {
+  const [orders, setOrders] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [icon, setIcon] = useState([]);
+  const [branchName, setBranchName] = useState([]);
 
+  const updateStatus = (index, value) => {
+    const newStatus = [...status];
+    newStatus[index] = value;
+    setStatus(newStatus);
+  };
+  const updateIcon = (index, value) => {
+    const newIcon = [...icon];
+    newIcon[index] = value;
+    setIcon(newIcon);
+  };
 
-  const [userData,setUserData] = useState([])
   useEffect(() => {
-    
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      setBranchName(user.name);
+      axios
+        .post("http://localhost:8081/branch", { branchName: user.name })
+        .then((res) => {
+          setOrders(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
+  const handleCheckTransaction = (userid, tx_ref) => (event) => {
+    event.stopPropagation();
     axios
-      .get("http://localhost:8081/branch")
+      .post("http://localhost:8081/branch/verifypayment", { tx_ref })
       .then((res) => {
-        setUserData(res.data)
+        console.log(res.data.data.status);
+        updateStatus(userid, res.data.data.status);
+        if (res.data.data.status == "success") {
+          updateIcon(userid, <CheckCircleRoundedIcon color="success" />);
+        }
+        if (res.data.data.status == "failed/cancelled") {
+          updateIcon(userid, <ErrorIcon color="error" />);
+        }
+        if (res.data.data.status == "pending") {
+          updateIcon(userid, <HourglassBottomIcon color="warning" />);
+        }
       })
       .catch((err) => console.log(err));
-  }, []);
-  const handleClick = (e)=>{
-    console.log(parsed)
-  }
+  };
+  const handleApprove = (paymentId, user_id,tx_ref) => (event) => {
+    event.stopPropagation();
+    if (!status[user_id]) {
+      console.log("payment not confirmed");
+      toast.warning("payment not confirmed", {
+        autoClose: 2000,
+        closeOnClick: true,
+      });
+    } else {
+      if (status[user_id] == "success") {
+        axios
+          .post("http://localhost:8081/branch/approve", {
+            paymentId,
+            branchName,
+          })
+          .then((res) => {
+            console.log("order approved");
+            toast.info("order approved", {
+              onClose: () => {
+                setOrders(orders.filter((order) => order.tx_ref !== tx_ref));
+              },
+              autoClose: 2000,
+              closeOnClick: true,
+            });
+          });
+      } else{
+        console.log("User not payed");
+        toast.warning("User not payed", {
+          autoClose: 2000,
+          closeOnClick: true,
+        });
+      }
+    }
+  };
+  const handleDelete = (tx_ref) => (event) => {
+    event.stopPropagation();
+    const isConfirmed = window.confirm("Are you sure you want to delete?");
+    if (isConfirmed) {
+      axios
+        .post("http://localhost:8081/branch/delete", { tx_ref })
+        .then((res) => {
+          console.log(res.data);
+          setOrders(orders.filter((order) => order.tx_ref !== tx_ref));
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   const parseData = (stringifiedData) => {
     try {
+      
       return JSON.parse(stringifiedData);
     } catch (error) {
-      console.error('Error parsing data:', error);
+      console.error("Error parsing data:", error);
       return [];
     }
   };
 
-
-  
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  const handleCheckTransaction = (tx_ref) => (event) => {
-    event.stopPropagation();
-    axios
-      .post("http://localhost:8081/branch/verifypayment", {tx_ref})
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((err) => console.log(err));
-  };
   return (
-    <Box sx={{
-      backgroundColor:'#d4d6d9',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-    }}>
-    
-    
-    <Container>
-      <Container sx={{ height: '100px',  }}></Container>
-      <Typography variant="h5" color={'GrayText'} component="div" gutterBottom fontFamily="sora,sans-serif" textAlign="center">
-        Waiting Prints
-      </Typography>
-      
-      {userData.map((item, i)=>(
-        <Card key={i} style={{ marginBottom: '20px' }}>
-          <CardContent>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${item.name}-content`}
-                id={`panel${item.tx_ref}-header`}
-              >
-                <Typography variant="h6" marginRight='25px' >{item.fname+" "+item.lname}</Typography>
-                <Typography variant="h6">{item.tx_ref}</Typography>
-                <Button variant='contained' onClick={handleCheckTransaction(item.tx_ref)}>this</Button>
-              </AccordionSummary>
-              <AccordionDetails>
-                <div>
-                  {parseData(item.data).map((art, index) => (
-                    <Card key={index} style={{ marginBottom: '10px' }}>
-                      <CardContent>
-                        <Typography sx={{marginRight:'5px'}} variant="subtitle1">Title: {art.art}</Typography>
-                        <Typography sx={{marginRight:'5px'}} variant="subtitle1">Size: {art.size}</Typography>
-                        <Typography sx={{marginRight:'5px'}} variant="subtitle1">Quantity: {art.quantity}</Typography>
-                      </CardContent>
+    <Box
+      sx={{
+        backgroundColor: "#d4d6d9",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <NavBranch />
+      <Container>
+        <Container sx={{ height: "100px" }}></Container>
+        <Typography
+          variant="h5"
+          color={"GrayText"}
+          component="div"
+          gutterBottom
+          fontFamily="sora,sans-serif"
+          textAlign="center"
+        >
+          Waiting Orders
+        </Typography>
+
+        {orders.map((item, i) => (
+          <Card key={i} style={{ marginBottom: "20px" }}>
+            <CardContent>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${item.name}-content`}
+                  id={`panel${item.tx_ref}-header`}
+                >
+                  <Grid container spacing={[5, 0]}>
+                    <Grid item xs>
+                      <Typography variant="h6" marginRight="25px">
+                        {item.fname + " " + item.lname}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography>{status[item.user_id]}</Typography>
+                    </Grid>
+                    <Grid item xs>
+                      <Typography>{icon[item.user_id]}</Typography>
+                    </Grid>
+                    <Grid item xs>
+                      <Button
+                        variant="contained"
+                        onClick={handleCheckTransaction(
+                          item.user_id,
+                          item.tx_ref
+                        )}
+                      >
+                        Check payment
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        onClick={handleApprove(item.id, item.user_id,item.tx_ref)}
+                      >
+                        Approve
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button onClick={handleDelete(item.tx_ref)}>
+                        <DeleteIcon />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </AccordionSummary>
+
+                <AccordionDetails>
+                  <div>
+                    <Card style={{ marginBottom: "10px", padding: "20px" }}>
+                      <Typography>First Name: {item.fname}</Typography>
+                      <Typography>Last Name: {item.lname}</Typography>
+                      <Typography>Email: {item.email}</Typography>
+                      <Typography>Phone_NO: +251 {item.phone_no}</Typography>
+                      <Typography>Transaction number:{item.tx_ref}</Typography>
                     </Card>
-                  ))}
-                </div>
-              </AccordionDetails>
-            </Accordion>
-          </CardContent>
-        </Card>
-      ))}
-    </Container>
+                    {parseData(item.data).map((art, index) => (
+                      <Card key={index} style={{ marginBottom: "10px" }}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <CardMedia
+                              component="img"
+                              alt="Artwork Preview"
+                              height="auto"
+                              src={`http://localhost:8081/images/${art.art}`}
+                              sx={{
+                                maxWidth: "150px",
+                                aspectRatio: "4/5",
+                                boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.3)",
+                                borderRadius: "4px",
+                                padding: "0.1%",
+                                transition: "max-width 0.3s ease-in-out",
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={6}>
+                            <CardContent>
+                              <Typography
+                                sx={{ marginRight: "5px" }}
+                                variant="subtitle1"
+                              >
+                                Title: {art.art_title}
+                              </Typography>
+                              <Typography
+                                sx={{ marginRight: "5px" }}
+                                variant="subtitle1"
+                              >
+                                Size: {art.size}
+                              </Typography>
+                              <Typography
+                                sx={{ marginRight: "5px" }}
+                                variant="subtitle1"
+                              >
+                                Quantity: {art.quantity}
+                              </Typography>
+                            </CardContent>
+                          </Grid>
+                        </Grid>
+                      </Card>
+                    ))}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            </CardContent>
+          </Card>
+        ))}
+        <ToastContainer/>
+        <ToastContainer />
+      </Container>
     </Box>
   );
 }
-

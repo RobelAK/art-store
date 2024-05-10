@@ -31,6 +31,7 @@ const AvilableArts = () => {
   }, []);
 
   const handleHiding = async (id) => {
+    if (window.confirm('Are you sure you want to Suspend this art?')) {
     try {
       await axios.put(`http://localhost:8081/art/hide/${id}`);
       console.log('Artwork Hidden successfully');
@@ -38,17 +39,19 @@ const AvilableArts = () => {
     } catch (error) {
       console.error('Error hiding artwork:', error);
     }
+  }
   };
   
   const handleDecline = async (id) => {
+    if (window.confirm('Are you sure you want to delete this art?')) {
     try {
       console.log('Declining artwork with ID:', id);
-      await axios.delete(`http://localhost:8081/art/decline/${id}`);
+      await axios.delete(`http://localhost:8081/art/delete/${id}`);
       console.log('Artwork declined successfully');
-      fetchData();
     } catch (error) {
       console.error('Error declining artwork:', error);
     }
+  }
   };
 
   const handleOpenDialog = (art) => {
@@ -102,10 +105,20 @@ const AvilableArts = () => {
       </Grid>
 
       <Dialog open={open} onClose={handleCloseDialog}>
-        <DialogTitle>Image Description</DialogTitle>
+        <DialogTitle>About the Art</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {/* Render description or additional information here */}
+            {selectedImage && (
+              <>
+                <img src={`http://localhost:8081/images/${selectedImage.art}`} alt={selectedImage.title} style={{ maxWidth: '100%' }} />
+                <p style={{fontFamily:'sora', fontSize:'26px' , fontWeight:'bold', color:'black'}}>Art Title : {selectedImage.title}</p>
+                <p style={{fontFamily:'sora', fontSize:'23px' ,marginTop:'-25px', fontWeight:'light', color:'gray'}}>Artists Name : {selectedImage.artist}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'black'}}>Art Description : {selectedImage.description}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'gray'}}>Art Price : {selectedImage.price}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'gray'}}>Art Category : {selectedImage.category}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'gray'}}>Artists id : {selectedImage.user_id}</p>
+              </>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
