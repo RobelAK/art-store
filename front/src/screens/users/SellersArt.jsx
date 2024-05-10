@@ -78,7 +78,7 @@ const SellersArt = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Card>
+            <Card sx={{alignContent:'center' , display:'flex' , flexDirection:'column'} }>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Art Activity
@@ -88,10 +88,11 @@ const SellersArt = () => {
                 </Typography>
                 {/* You can display more activity related to art here */}
               </CardContent>
-            </Card>
-            <Button variant="contained" color="primary" style={{ margin: '16px' }} onClick={handleDeleteArt}>
+              <Button variant="text" fullWidth color="primary" style={{ padding: '13px' ,color:'red' , margin:'10px' }} onClick={handleDeleteArt}>
               Delete Art Permanently
             </Button>
+            </Card>
+            
           </Grid>
         </Grid>
       </div>
