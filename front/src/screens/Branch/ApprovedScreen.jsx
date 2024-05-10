@@ -10,6 +10,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Container, Card, CardContent, Grid } from "@mui/material";
 import NavBranch from "../../components/Branch/NavBranch";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ApprovedScreen() {
   const [approvedorders, setApprovedOrders] = useState([]);
@@ -74,6 +76,13 @@ export default function ApprovedScreen() {
         .post("http://localhost:8081/print/complete" , {orderId: orderID})
         .then((res) => {
           console.log(res.data);
+          toast.info(res.data, {
+            onClose: () => {
+              setApprovedOrders(approvedorders.filter((approvedorder) => approvedorder.id !== orderID));
+            },
+            autoClose: 2000,
+            closeOnClick: true,
+          });
         })
         .catch((err) => console.log(err));
   }
@@ -187,6 +196,7 @@ export default function ApprovedScreen() {
             </CardContent>
           </Card>
         ))}
+        <ToastContainer></ToastContainer>
       </Container>
     </Box>
   );
