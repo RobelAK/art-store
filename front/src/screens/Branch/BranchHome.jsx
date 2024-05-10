@@ -97,50 +97,7 @@ export default function BranchHome() {
       backgroundPosition: 'center',
       minHeight: '100vh',
     }}>
-        
-    <Navbar position="fixed">
-      <Toolbar>
-        <NavbarTitle variant="h6" color="inherit" component="div">
-          My Branch
-        </NavbarTitle>
-        <NavLinks>
-          <Link to="/branch">Waiting</Link>
-          <Link to="/present">Printed</Link>
-          <Link to="/delivered">Delivered</Link>
-        </NavLinks>
-        <div>
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenuOpen}
-            color="inherit"
-          >
-            <Avatar alt="Profile Picture" src="/static/images/avatar/1.jpg" />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-          </Menu>
-        </div>
-      </Toolbar>
-    </Navbar>
+    
     
     <Container>
       <Container sx={{ height: '100px',  }}></Container>
