@@ -27,6 +27,7 @@ import NotFound from './components/users/NotFound';
 import PostPayed from './screens/users/PostPayed';
 import AnalysisPage from './screens/users/AnalysisPage';
 import ApprovedScreen from './screens/Branch/ApprovedScreen';
+import SellersArt from './screens/users/SellersArt';
 
 const decodeToken = (token) => {
   try {
@@ -125,6 +126,7 @@ function App() {
         <Route path='/sellerprofile' element={isAuthorized(['seller']) ? <SellerProfile /> : <Navigate to="/Notfound" replace />} />
         <Route path='/postpayed' element={<PostPayed/>}/>
         <Route path='/analysis' element ={<AnalysisPage/>}/>
+        <Route path='/SellerArt/:id' element ={<SellersArt/>}/>
       </Routes>
     </BrowserRouter>
   );

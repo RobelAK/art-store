@@ -1,7 +1,7 @@
 export default function displayArt(db, req, res) {
   const category = req.query.category;
 
-  let sql = 'SELECT * FROM artwork WHERE status=true';
+  let sql = 'SELECT * FROM artwork WHERE status=true AND deleted = "false"';
   const params = [];
   if(category){
     if(category == 'All'){

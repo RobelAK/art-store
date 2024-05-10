@@ -31,6 +31,8 @@ import AddBranch from "./routes/AddBranch.js";
 import AddAdmin from "./routes/AddAdmin.js";
 import AddToCart from "./routes/AddToCart.js";
 import AverageRating from "./routes/AverageRating.js";
+import Withdrawal from "./routes/Withdrawal.js";
+import delete_art from "./routes/delete_art.js";
 
 
 
@@ -181,6 +183,10 @@ app.post("/signupas", (req, res) => {
   SignupAs(db, req, res);
 });
 
+app.post("/withdraw", (req, res) => {
+  Withdrawal(db, req, res);
+  });
+
 app.post("/api/rating", (req, res) => {
   Rating(db, req, res);
 });
@@ -211,6 +217,10 @@ app.delete("/art/decline/:id", (req, res) => {
   declineArt(db, req, res);
 });
 
+app.delete("/art/delete/:id", (req, res) => {
+  delete_art(db, req, res);
+});
+
 app.post("/product", (req, res) => {
   const id = req.body.id;
   const sql = "SELECT * FROM artwork WHERE id =?";
@@ -224,6 +234,45 @@ app.post("/product", (req, res) => {
     });
   });
 });
+
+app.get("/user/art/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM artwork WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Artwork not found" });
+    }
+
+    return res.status(200).json(result[0]); // Return only the first result
+  });
+});
+
+app.delete("/user/art/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "UPDATE artwork SET deleted = 1 WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Artwork not found" });
+    }
+
+    return res.status(200).json({ message: "Artwork deleted successfully" });
+  });
+});
+
+
+
 app.post("/addtocart", (req, res) => {
   AddToCart(db,req,res)
 });
@@ -232,6 +281,15 @@ app.post("/cart", (req, res) => {
   const userId = req.body.userId;
   const sql = "SELECT * FROM cart WHERE user_id = ?";
   db.query(sql, [userId], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
+});
+
+app.post("/seles", (req, res) => {
+  const {art_id} = req.body;
+  const sql = "UPDATE artwork SET sales = sales + 1 WHERE id = ?";
+  db.query(sql, [art_id], (err, result) => {
     if (err) return res.json(err);
     else return res.json(result);
   });
@@ -364,6 +422,7 @@ app.post('/branch',(req, res) => {
 app.post('/branch/approve',(req, res) => {
   const {paymentId,branchName} = req.body
   const sql = "UPDATE payment_detail SET approved = '1' WHERE id = ?"
+  const AddCount = " "
   
   db.query(sql, [paymentId],(err,result)=>{
     if(err) return res.json(err)
@@ -389,6 +448,8 @@ app.post('/postpayment',(req,res)=>{
     else return res.json("Payment successful")
   })
 })
+
+
 
 
 

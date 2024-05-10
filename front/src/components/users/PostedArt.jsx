@@ -4,6 +4,7 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { Container } from '@mui/material';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const PostedArt = () => {
   const [artImages, setArtImages] = useState([]);
@@ -18,7 +19,6 @@ const PostedArt = () => {
           }
         });
         setArtImages(response.data);
-        console.log( "response :",response.data)
       } catch (error) {
         console.error('Error fetching posted artworks:', error);
       }
@@ -32,11 +32,12 @@ const PostedArt = () => {
         {artImages.map((artwork) => (
           <Grid item xs={6} sm={4} md={2} key={artwork.id}>
             <Card>
+              <Link to={`/SellerArt/${artwork.id}`} underline='none'> {/* Pass artwork ID as URL parameter */}
                 <CardMedia
                   component="img"
                   alt={`Artwork ${artwork.id}`}
                   height="auto"
-                  src={`http://localhost:8081/images/${artwork.art}`} // Assuming 'art' is the property containing the image URL
+                  src={`http://localhost:8081/images/${artwork.art}`} 
                   sx={{
                     height: '40%',
                     width: '100%',
@@ -47,6 +48,7 @@ const PostedArt = () => {
                     },
                   }}
                 />
+              </Link>
             </Card>
           </Grid>
         ))}

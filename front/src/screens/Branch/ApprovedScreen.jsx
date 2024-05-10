@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, CardMedia } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -9,9 +10,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Container, Card, CardContent, Grid } from "@mui/material";
 import NavBranch from "../../components/Branch/NavBranch";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
+import ErrorIcon from "@mui/icons-material/Error";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ApprovedScreen() {
   const [approvedorders, setApprovedOrders] = useState([]);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,7 +42,14 @@ export default function ApprovedScreen() {
       return [];
     }
   };
-  const handlePrint = (imageName) => {
+  const handlePrint = (imageName ,art_id) => {
+    axios
+        .post("http://localhost:8081/seles" ,{art_id})
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+
 
     const url = `http://localhost:8081/images/${imageName}`;
 
@@ -98,9 +111,7 @@ export default function ApprovedScreen() {
                         {item.fname + " " + item.lname}
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Button variant="contained">Printed</Button>
-                    </Grid>
+                    <Grid item xs></Grid>
                   </Grid>
                 </AccordionSummary>
 
@@ -154,7 +165,7 @@ export default function ApprovedScreen() {
                               </Typography>
                               <Button
                                 variant="contained"
-                                onClick={() => handlePrint(art.art)}
+                                onClick={() => handlePrint(art.art , art.art_id)}
                               >
                                 Print
                               </Button>

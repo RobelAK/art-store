@@ -116,6 +116,7 @@ export default function BranchHome() {
 
   const parseData = (stringifiedData) => {
     try {
+      
       return JSON.parse(stringifiedData);
     } catch (error) {
       console.error("Error parsing data:", error);

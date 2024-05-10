@@ -10,7 +10,7 @@ export default function PostedArt(db, req, res) {
   const user = JSON.parse(atob(tokenValue.split(".")[1]));
   const userId = user.id;
   
-  const sql = 'SELECT * FROM artwork WHERE user_id = ?';
+  const sql = 'SELECT * FROM artwork WHERE user_id = ? AND deleted = "false"';
   db.query(sql, [userId], (err, result) => {
     if (err) {
       console.error('Error retrieving artworks:', err);
