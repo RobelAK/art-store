@@ -144,7 +144,7 @@ export default function BranchHome() {
           fontFamily="sora,sans-serif"
           textAlign="center"
         >
-          Waiting Prints
+          Waiting Orders
         </Typography>
 
         {orders.map((item, i) => (
