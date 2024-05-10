@@ -43,6 +43,7 @@ const CartPage = () => {
   const [itemsInCart, setItemsInCart] = useState(false);
   const [id, setId] = useState("");
   const [orderedItems, setOrderedItems] = useState([]);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const [branch, setBranchs] = useState([]);
 
@@ -154,7 +155,7 @@ const CartPage = () => {
   };
   const handleCheckout = (event) => {
     event.preventDefault();
-
+    setButtonDisabled(true)
     if (validFname && validLname && validPhoneNo) {
       axios
         .post("http://localhost:8081/payment/pay", values)
@@ -162,14 +163,13 @@ const CartPage = () => {
           if (res.data.data.checkout_url) {
             window.location.href = res.data.data.checkout_url;
           }
-          // console.log(res.data)
         })
         .catch((err) => console.log(err));
     } else console.log("not good");
+    setTimeout(() => {
+      setButtonDisabled(false);
+    }, 5000);
   };
-  const handleclick =()=>{
-    console.log(orderedItems)
-  }
   const parseData = (stringifiedData) => {
     try {
       return JSON.parse(stringifiedData);
@@ -545,6 +545,7 @@ const CartPage = () => {
                               fullWidth
                               type="submit"
                               variant="contained"
+                              disabled={buttonDisabled}
                               sx={{
                                 marginTop: "10px",
                                 bgcolor: "darkblue",
