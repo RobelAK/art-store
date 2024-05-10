@@ -16,29 +16,23 @@ const AvilableArts = () => {
   const [open, setOpen] = useState(false); 
   const [selectedImage, setSelectedImage] = useState(null); 
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:8081/art");
-      setArt(response.data);
-    } catch (error) {
-      console.error('Error fetching artwork:', error);
-    }
-  };
-  fetchData();
-
   useEffect(() => {
-    fetchData();
+    axios.get("http://localhost:8081/art")
+    .then((res)=>{
+      setArt(res.data)
+      console.log(res.data)
+    })
   }, []);
 
-  const handleHiding = async (id) => {
-    try {
-      await axios.put(`http://localhost:8081/art/hide/${id}`);
-      console.log('Artwork Hidden successfully');
-      fetchData();
-    } catch (error) {
-      console.error('Error hiding artwork:', error);
-    }
-  };
+  // const handleHiding = async (id) => {
+  //   try {
+  //     await axios.put(`http://localhost:8081/art/hide/${id}`);
+  //     console.log('Artwork Hidden successfully');
+  //     fetchData();
+  //   } catch (error) {
+  //     console.error('Error hiding artwork:', error);
+  //   }
+  // };
   
   const handleDecline = async (id) => {
     try {
@@ -102,10 +96,20 @@ const AvilableArts = () => {
       </Grid>
 
       <Dialog open={open} onClose={handleCloseDialog}>
-        <DialogTitle>Image Description</DialogTitle>
+        <DialogTitle>About the Art</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {/* Render description or additional information here */}
+            {selectedImage && (
+              <>
+                <img src={`http://localhost:8081/images/${selectedImage.art}`} alt={selectedImage.title} style={{ maxWidth: '100%' }} />
+                <p style={{fontFamily:'sora', fontSize:'26px' , fontWeight:'bold', color:'black'}}>Art Title : {selectedImage.title}</p>
+                <p style={{fontFamily:'sora', fontSize:'23px' ,marginTop:'-25px', fontWeight:'light', color:'gray'}}>Artists Name : {selectedImage.artist}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'black'}}>Art Description : {selectedImage.description}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'gray'}}>Art Price : {selectedImage.price}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'gray'}}>Art Category : {selectedImage.category}</p>
+                <p style={{fontFamily:'sora', fontSize:'16px' , fontWeight:'light', color:'gray'}}>Artists id : {selectedImage.user_id}</p>
+              </>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

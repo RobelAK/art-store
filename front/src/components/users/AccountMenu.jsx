@@ -10,16 +10,20 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const AccountMenu = () => {
   const [isSeller, setIsSeller] = useState(false);
+  const [avatar, setAvatar] = useState(""); // State to store user's avatar
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const user = JSON.parse(atob(token.split(".")[1]));
-      if (user.role == "seller") {
+      if (user.role === "seller") {
         setIsSeller(true);
-      }
+      } else setIsSeller(false);
+      setAvatar(user.avatar); // Set user's avatar
     }
   }, []);
 
@@ -33,9 +37,21 @@ const AccountMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.reload();
+    window.location.href = '/Home';
+  };
+
+  const handleChangeAvatar = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/userinfo");
+      console.log("Avatar updated:", response.data);
+      // Update the avatar state or perform any other necessary actions based on the response
+    } catch (error) {
+      console.error("Error updating avatar:", error);
+      // Handle error
+    }
   };
 
   return (
@@ -50,7 +66,11 @@ const AccountMenu = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+            <Avatar
+              src={`http://localhost:8081/images/${avatar}`} // Set user's avatar as src
+              alt="Profile Image"
+              sx={{ width: 32, height: 32 }}
+            />
           </IconButton>
         </Tooltip>
       </Box>
@@ -89,21 +109,11 @@ const AccountMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {isSeller ? (
-          <Link to="/sellerprofile" style={{ textDecoration: "none" }}>
-          <MenuItem onClick={handleClose}>
-            <Avatar /> Profile
-          </MenuItem>
-        </Link>
-        ) : (
-          <Link to="/profilepage" style={{ textDecoration: "none" }}>
-          <MenuItem onClick={handleClose}>
-            <Avatar /> Profile
-          </MenuItem>
-        </Link>
-          
-        )}
-        
+      <Link to="/profilepage" style={{ textDecoration: "none" }}>
+            <MenuItem onClick={handleChangeAvatar}>
+              <Avatar /> Profile
+            </MenuItem>
+          </Link>
         <Divider />
         {isSeller ? (
           ""

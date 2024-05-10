@@ -3,25 +3,45 @@ import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-const Navbar = styled(AppBar)(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-}));
-
-const NavbarTitle = styled(Typography)(({ theme }) => ({
-  flexGrow: 1,
-  [theme.breakpoints.up('sm')]: {
-    display: 'block',
-  },
-}));
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import LogoutIcon from '@mui/icons-material/Logout';
+import MenuItem from "@mui/material/MenuItem";
 
 export default function NavBranch() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  
+  const navigate = useNavigate()
+  const [anchorEl, setAnchorEl] = useState(null);
+  
+  const Navbar = styled(AppBar)(({ theme }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    boxShadow: "none",
+    borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+  }));
+
+  const NavbarTitle = styled(Typography)(({ theme }) => ({
+    flexGrow: 1,
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
+    },
+  }));
+
+  const NavLinks = styled("div")({
+    marginRight: "20px",
+    "& a": {
+      textDecoration: "none",
+      color: "white",
+      marginRight: "20px",
+      transition: "color 0.3s ease",
+      "&:hover": {
+        color: "#F9A825",
+      },
+    },
+  });
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -31,69 +51,49 @@ export default function NavBranch() {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate('/');
+    window.location.reload();
+  };
+
   return (
-    <Navbar position="fixed" sx={{
-      boxShadow: 2,
-      bgcolor: "#7db8f0",
-      mt: 2,
-      flexShrink: 0,
-      backdropFilter: "blur(24px)",
-    }}>
-      <Toolbar style={{
-        marginRight: '20px', bgcolor:
-          "#7db8f0",
-        backdropFilter: "blur(24px)",
-        maxHeight: 40,
-      }}>
-        <NavbarTitle variant="h6" color="black" component="div">
+    <Navbar position="fixed">
+      <Toolbar>
+        <NavbarTitle variant="h6" color="inherit" component="div">
           My Branch
         </NavbarTitle>
-        <div style={{ marginRight: '20px' }}>
-          <Link to="/waiting" style={{ textDecoration: 'none', color: 'Black' }}>
-            <Typography variant="button" sx={{ marginRight: 2 }}>
-              Waiting
-            </Typography>
-          </Link>
-          <Link to="/present" style={{ textDecoration: 'none', color: 'Black' }}>
-            <Typography variant="button" sx={{ marginRight: 2 }}>
-              Printed
-            </Typography>
-          </Link>
-          <Link to="/delivered" style={{ textDecoration: 'none', color: 'Black' }}>
-            <Typography variant="button" sx={{ marginRight: 2 }}>
-              Delivered
-            </Typography>
-          </Link>
-        </div>
-        <div style={{ marginRight: '30px' }}>
+        <NavLinks>
+          <Link to="/branch">Waiting</Link>
+          <Link to="/Printed">Printed</Link>
+          <Link to="/delivered">Delivered</Link>
+        </NavLinks>
+        <div>
           <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
+            aria-controls="avatar-menu"
             aria-haspopup="true"
             onClick={handleMenuOpen}
-            color="inherit"
           >
-            <Avatar alt="Profile Picture" src="/static/images/avatar/1.jpg" />
+            <Avatar />
           </IconButton>
           <Menu
-            id="menu-appbar"
+            id="avatar-menu"
             anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
             anchorOrigin={{
-              vertical: 'top',
+              vertical: 'bottom',
               horizontal: 'right',
             }}
-            keepMounted
             transformOrigin={{
               vertical: 'top',
               horizontal: 'right',
             }}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
           >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleLogout}>
+              <LogoutIcon />
+              Logout
+            </MenuItem>
           </Menu>
         </div>
       </Toolbar>
