@@ -73,12 +73,12 @@ app.post("/signup", async (req, res) => {
   signup(db, req, res);
 });
 
-app.post("/addbranch", async (req, res) => {
-  AddBranch(db,req,res)
+app.post("/add-branch", async (req, res) => {
+  CreateBranch(db, req, res);
 });
 
-app.post("/addadmin", async (req, res) => {
-  AddAdmin(db, req, res);
+app.post("/add-admin", async (req, res) => {
+  CreateAdmin(db, req, res);
 });
 
 app.post("/login", async (req, res) => {
@@ -329,6 +329,9 @@ app.post("/payment/pay", async (req, res) => {
     prefix: "TX",
     size: 20,
   });
+
+  const currentDateAndTime = new Date();
+
   const {
     cartData,
     totalPrice,
@@ -354,9 +357,12 @@ app.post("/payment/pay", async (req, res) => {
       last_name: lname,
       phone_number: "+251" + phoneNo,
       tx_ref: tx_ref,
-      // callback_url: "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-      // callback_url: "http://localhost:8081/payment/callback",
-      return_url: "http://localhost:5173/postpayed",
+      // "callback_url": "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+      return_url: "http://localhost:5173/payed",
+      customization: {
+        title: "Payment",
+        description: "I love online payments",
+      },
     }),
   };
 
@@ -365,7 +371,7 @@ app.post("/payment/pay", async (req, res) => {
     .then((data) => {
       if (data.status == "success") {
         const sql =
-          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`print_status`) VALUES (?,?,?,?,?,?,?,?,?)";
+          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`datetime`) VALUES (?,?,?,?,?,?,?,?,?)";
         db.query(
           sql,
           [
@@ -377,7 +383,7 @@ app.post("/payment/pay", async (req, res) => {
             location,
             cartDataJson,
             tx_ref,
-            "waiting",
+            currentDateAndTime,
           ],
           (err, result) => {
             if (err) {

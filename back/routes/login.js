@@ -21,7 +21,7 @@ export default function login(db, req, res) {
         const token = jwt.sign(
           { id, name, email, role},
           "jwt_secret_key",
-          { expiresIn: "60m" }
+          { expiresIn: "1d" }
         ); 
         return res.json({ loginStatus: true, token })
       }

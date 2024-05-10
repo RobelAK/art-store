@@ -1,32 +1,16 @@
 // Overview.js
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import UserManagement from './UserManagement';
 import { Container } from '@mui/material';
-import axios from 'axios';
 
 const Overview = () => {
-  const [userCount, setUserCount] = useState(0)
-  const [artCount, setArtCount] = useState(0)
-  const [branchCount, setBranchCount] = useState(0)
-  const [adminCount, setAdminCount] = useState(0)
-  const [sellerCount, setSellerCount] = useState(0)
-  const [buyerCount, setBuyerCount] = useState(0)
-  useEffect(() => {
-    axios.get('http://localhost:8081/overview')
-      .then(res => {
-        setUserCount(res.data.userCount)
-        setArtCount(res.data.artCount)
-        setBranchCount(res.data.branchCount)
-        setAdminCount(res.data.adminCount)
-        setSellerCount(res.data.sellerCount)
-        setBuyerCount(res.data.buyerCount)
-        console.log(res.data)
-      })
-      .catch(err => console.log(err));
-  }, []);
+  // Dummy data (replace with data from your database later)
+  const totalUsers = 100;
+  const pendingRequests = 5;
+  const activeBranches = 3;
 
   return (
     <>
@@ -36,37 +20,19 @@ const Overview = () => {
         <Grid item xs={4}>
           <div style={{ textAlign: 'center', padding: '15px', background: '#2196f3', color: 'white' }}>
             <Typography variant="h6">Total Users</Typography>
-            <Typography variant="h4">{userCount}</Typography>
+            <Typography variant="h4">{totalUsers}</Typography>
           </div>
         </Grid>
         <Grid item xs={4}>
           <div style={{ textAlign: 'center', padding: '15px', background: '#4caf50', color: 'white' }}>
-            <Typography variant="h6">Total Arts</Typography>
-            <Typography variant="h4">{artCount}</Typography>
+            <Typography variant="h6">Pending Requests</Typography>
+            <Typography variant="h4">{pendingRequests}</Typography>
           </div>
         </Grid>
         <Grid item xs={4}>
           <div style={{ textAlign: 'center', padding: '15px', background: '#ff9800', color: 'white' }}>
-            <Typography variant="h6">Branches</Typography>
-            <Typography variant="h4">{branchCount}</Typography>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div style={{ textAlign: 'center', padding: '15px', background: '#2196f3', color: 'white' }}>
-            <Typography variant="h6">Admins</Typography>
-            <Typography variant="h4">{adminCount}</Typography>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div style={{ textAlign: 'center', padding: '15px', background: '#4caf50', color: 'white' }}>
-            <Typography variant="h6">Sellers</Typography>
-            <Typography variant="h4">{sellerCount}</Typography>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div style={{ textAlign: 'center', padding: '15px', background: '#ff9800', color: 'white' }}>
-            <Typography variant="h6">Buyers</Typography>
-            <Typography variant="h4">{buyerCount}</Typography>
+            <Typography variant="h6">Active Branches</Typography>
+            <Typography variant="h4">{activeBranches}</Typography>
           </div>
         </Grid>
       </Grid>

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-export default async function AddAdmin(db, req, res) {
+export default async function CreateAdmin(db, req, res) {
   const { email, name, password } = req.body;
   
   const hashedPassword = await bcrypt.hash(password, 10);
