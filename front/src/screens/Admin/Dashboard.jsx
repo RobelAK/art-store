@@ -37,6 +37,8 @@ import Admins from '../../components/admin/Admins';
 import WithdrawRequest from '../../components/admin/WithdrawRequest';
 import WithdrawalList from '../../components/admin/WithdrawalList';
 import SalesList from '../../components/admin/SalesList';
+import CategoryIcon from '@mui/icons-material/Category';
+import ArtCategory from '../../components/admin/ArtCategory';
 
 const drawerWidth = 240;
 
@@ -138,7 +140,7 @@ const PersistentDrawerLeft = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Overview','Admins', 'Users', 'Sellers', 'Branches', 'Artworks' ,'withdrawals', 'Sales'].map((text, index) => (
+          {['Overview','Admins', 'Users', 'Sellers', 'Branches', 'Artworks' ,'Art Categories','withdrawals', 'Sales'].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
@@ -152,8 +154,9 @@ const PersistentDrawerLeft = () => {
                 {index === 3 && <ListItemIcon><StorefrontIcon /></ListItemIcon>}
                 {index === 4 && <ListItemIcon><HomeWorkIcon /></ListItemIcon>}
                 {index === 5 && <ListItemIcon><PaletteIcon /></ListItemIcon>}
-                {index === 6 && <ListItemIcon><AccountBalanceIcon /></ListItemIcon>}
-                {index === 7 && <ListItemIcon><MonetizationOnIcon /></ListItemIcon>}
+                {index === 6 && <ListItemIcon><CategoryIcon /></ListItemIcon>}
+                {index === 7 && <ListItemIcon><AccountBalanceIcon /></ListItemIcon>}
+                {index === 8 && <ListItemIcon><MonetizationOnIcon /></ListItemIcon>}
                
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -190,6 +193,7 @@ const PersistentDrawerLeft = () => {
         {selectedComponent === 'withdrawals' ? <WithdrawalList /> : []}
         {selectedComponent === 'Sales' ? <SalesList /> : []}
         {selectedComponent === 'Artworks' ? <AvilableArts /> : []}
+        {selectedComponent === 'Art Categories' ? <ArtCategory /> : []}
         {selectedComponent === 'Pending Sellers' ? <WaitingUsers /> : []}
         {selectedComponent === 'Waiting Withdraws' ? <WithdrawRequest /> : []}
       </Main>

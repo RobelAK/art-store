@@ -23,9 +23,19 @@ const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
+  const [categoryList, setCategoryList] = useState([]);
   const [loadCount, setLoadCount] = useState(25); 
   const navigate = useNavigate();
-
+  useEffect(()=>{
+    axios
+      .get("http://localhost:8081/categories")
+      .then((res) => {
+        setCategoryList(res.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[])
   useEffect(() => {
     fetchArtwork();
   }, [selectedCategory, loadCount]);
@@ -101,8 +111,8 @@ const ArtDiscovery = () => {
   };
 
   const handleLoadMore = () => {
-    setLoadCount(prevCount => prevCount + 25); // Increase loadCount by 25 when clicking "Load More"
-    fetchArtwork(); // Fetch more artwork when "Load More" is clicked
+    setLoadCount(prevCount => prevCount + 25);
+    fetchArtwork();
   };
 
 
@@ -201,25 +211,11 @@ const ArtDiscovery = () => {
                 }}
               >
                 <MenuItem value="All">All</MenuItem>
-                <MenuItem value="Abstract">Abstract</MenuItem>
-                <MenuItem value="Animals">Animals</MenuItem>
-                <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>
-                <MenuItem value="Character Design">Character Design</MenuItem>
-                <MenuItem value="Concept Art">Concept Art</MenuItem>
-                <MenuItem value="Cyberpunk">Cyberpunk</MenuItem>
-                <MenuItem value="Fantasy">Fantasy</MenuItem>
-                <MenuItem value="Fan Art">Fan Art</MenuItem>
-                <MenuItem value="Graffiti">Graffiti</MenuItem>
-                <MenuItem value="Horror">Horror</MenuItem>
-                <MenuItem value="Landscape">Landscape</MenuItem>
-                <MenuItem value="Minimalism">Minimalism</MenuItem>
-                <MenuItem value="Nature">Nature</MenuItem>
-                <MenuItem value="Pixel Art">Pixel Art</MenuItem>
-                <MenuItem value="Pop Art">Pop Art</MenuItem>
-                <MenuItem value="Portrait">Portrait</MenuItem>
-                <MenuItem value="Sci-Fi">Sci-Fi</MenuItem>
-                <MenuItem value="Steampunk">Steampunk</MenuItem>
-                <MenuItem value="Surreal">Surreal</MenuItem>
+                {categoryList.map((x) => (
+                  <MenuItem key={x.id} value={x.name}>
+                    {x.name}
+                  </MenuItem>
+                ))}
               </Select>
             </Box>
 
@@ -266,7 +262,7 @@ const ArtDiscovery = () => {
                         </Typography>
                         <div style={{ marginBottom: '19px' }}>
                           <Rating
-                            value={Art.averageRating} // Use Art.averageRating instead of averageRating
+                            value={Art.averageRating}
                             name="rating"
                             size='small'
                             precision={0.5}

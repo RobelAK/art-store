@@ -1,20 +1,43 @@
-import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, Select, MenuItem, FormControl, InputLabel, InputAdornment } from '@mui/material';
-import { PhotoCamera } from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Footer from '../../components/users/Footer';
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  InputAdornment,
+} from "@mui/material";
+import { PhotoCamera } from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Footer from "../../components/users/Footer";
 
 function AddArt() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
   const [art, setArt] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:8081/categories")
+      .then((res) => {
+        console.log(res.data);
+        setCategoryList(res.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   const handleUpload = async (event) => {
-    
     event.preventDefault();
     try {
       const formData = new FormData();
@@ -22,27 +45,26 @@ function AddArt() {
       formData.append("description", description);
       formData.append("category", category);
       formData.append("price", price);
-      formData.append('art', art);
-      const token = localStorage.getItem('token');
+      formData.append("art", art);
+      const token = localStorage.getItem("token");
       if (!token) {
-        console.error('Token is not available');
+        console.error("Token is not available");
         return;
       }
 
       const user = JSON.parse(atob(token.split(".")[1]));
       const userId = user.id;
       const artist = user.name;
-      formData.append('user_id', userId);
-      formData.append('artist', artist);
+      formData.append("user_id", userId);
+      formData.append("artist", artist);
       axios
-          .post("http://localhost:8081/art/upload", formData)
-          .then((res) => {
-            if (res.data.status === "Success") {
-                navigate('/message');
-              }
-          })
-          .catch((err) => console.log(err));
-
+        .post("http://localhost:8081/art/upload", formData)
+        .then((res) => {
+          if (res.data.status === "Success") {
+            navigate("/message");
+          }
+        })
+        .catch((err) => console.log(err));
     } catch (error) {
       console.error("Error uploading artwork:", error);
     }
@@ -55,16 +77,25 @@ function AddArt() {
 
   return (
     <>
-      <Container sx={{ height: '50px', maxWidth: '325px', bgcolor: '#fffff' }} />
-      <Container style={{ alignContent: "center", display: 'flow' }} maxWidth="md">
-        <Typography variant="h4" sx={{ fontFamily: 'sora,sans-serif' }} gutterBottom>
+      <Container
+        sx={{ height: "50px", maxWidth: "325px", bgcolor: "#fffff" }}
+      />
+      <Container
+        style={{ alignContent: "center", display: "flow" }}
+        maxWidth="md"
+      >
+        <Typography
+          variant="h4"
+          sx={{ fontFamily: "sora,sans-serif" }}
+          gutterBottom
+        >
           Add New Art
         </Typography>
         <Grid container spacing={3} component="form" onSubmit={handleUpload}>
           <Grid item xs={12}>
             <input
               accept="image/*"
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               id="image-upload"
               type="file"
               onChange={handleFileChange}
@@ -81,7 +112,11 @@ function AddArt() {
             </label>
             {art && (
               <div>
-                <img src={URL.createObjectURL(art)} alt="Uploaded Art" style={{ maxWidth: '100%', marginTop: 10 }} />
+                <img
+                  src={URL.createObjectURL(art)}
+                  alt="Uploaded Art"
+                  style={{ maxWidth: "100%", marginTop: 10 }}
+                />
               </div>
             )}
           </Grid>
@@ -117,53 +152,53 @@ function AddArt() {
                 fullWidth
                 required
               >
-                <MenuItem value="Abstract">Abstract</MenuItem>
-                <MenuItem value="Animals">Animals</MenuItem>
-                <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>
-                <MenuItem value="Character Design">Character Design</MenuItem>
-                <MenuItem value="Concept Art">Concept Art</MenuItem>
-                <MenuItem value="Cyberpunk">Cyberpunk</MenuItem>
-                <MenuItem value="Fantasy">Fantasy</MenuItem>
-                <MenuItem value="Fan Art">Fan Art</MenuItem>
-                <MenuItem value="Graffiti">Graffiti</MenuItem>
-                <MenuItem value="Horror">Horror</MenuItem>
-                <MenuItem value="Landscapes">Landscapes</MenuItem>
-                <MenuItem value="Minimalism">Minimalism</MenuItem>
-                <MenuItem value="Nature">Nature</MenuItem>
-                <MenuItem value="Pixel Art">Pixel Art</MenuItem>
-                <MenuItem value="Pop Art">Pop Art</MenuItem>
-                <MenuItem value="Portraits">Portraits</MenuItem>
-                <MenuItem value="Sci-Fi">Sci-Fi</MenuItem>
-                <MenuItem value="Steampunk">Steampunk</MenuItem>
-                <MenuItem value="Surreal">Surreal</MenuItem>
+                {categoryList.map((x) => (
+                  <MenuItem key={x.id} value={x.name}>
+                    {x.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12}>
             <TextField
               label="Price (birr)"
-              type="number"
+              type="tel"
               name="price"
               value={price}
               fullWidth
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => setPrice(e.target.value.trim())}
               InputProps={{
-                startAdornment: <InputAdornment position="start">birr</InputAdornment>,
+                startAdornment: (
+                  <InputAdornment position="start">birr</InputAdornment>
+                ),
+              }}
+              inputProps={{
+                maxLength: 3,
               }}
               required
             />
           </Grid>
-          <Grid item xs={6} >
-            <Button variant="contained" color="primary" type='submit' >
+
+          <Grid item xs={6}>
+            <Button variant="contained" color="primary" type="submit">
               Add Art
             </Button>
-            <Button variant="outlined" style={{ margin: '15px' }} component={Link} to="/" color="primary">
+            <Button
+              variant="outlined"
+              style={{ margin: "15px" }}
+              component={Link}
+              to="/"
+              color="primary"
+            >
               Cancel
             </Button>
           </Grid>
         </Grid>
       </Container>
-      <Container sx={{ height: '20px', maxWidth: '325px', bgcolor: '#fffff' }} />
+      <Container
+        sx={{ height: "20px", maxWidth: "325px", bgcolor: "#fffff" }}
+      />
       <Footer />
     </>
   );

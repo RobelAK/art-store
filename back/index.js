@@ -605,6 +605,39 @@ app.get("/price", (req, res) => {
 });
 
 
+app.get("/categories", (req, res) => {
+  const sql = "SELECT * FROM category"
+  db.query(sql, (err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+});
+
+
+
+app.delete("/category/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const deleteCategory = "DELETE FROM category WHERE id = ?";
+  db.query(deleteCategory, id, (error, results) => {
+    if (error) {
+      res.json({ error: "Internal server error" });
+    } else {
+      res.json({ Message: "User deleted succefully" });
+    }
+  });
+});
+
+app.post("/addCategory", (req,res) =>{
+  const {categoryName} = req.body
+  const sql = "INSERT INTO category (`name`) VALUES (?)"
+  db.query(sql,[categoryName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
 
 app.get("/overview", (req, res) => {
   const usersQuery = "SELECT COUNT(*) AS userCount FROM users";
