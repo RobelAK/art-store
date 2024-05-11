@@ -36,6 +36,8 @@ import delete_art from "./routes/delete_art.js";
 import WithdrawRequest from "./routes/WithdrawRequest.js";
 import ApprovePayment from "./routes/ApprovePayment.js";
 import AddedSales from "./routes/AddedSales.js";
+import WithdrawalList from "./routes/WithdrawalList.js";
+import SalesList from "./routes/SalesList.js";
 
 
 
@@ -174,6 +176,13 @@ app.get("/api/notifications", (req, res) => {
 
 app.get("/Withdraw/request", (req, res) => {
   WithdrawRequest(db, req, res);
+});
+
+app.get("/Withdraw/all", (req, res) => {
+  WithdrawalList(db, req, res);
+});
+app.get("/sales/list", (req, res) => {
+  SalesList(db, req, res);
 });
 
 app.get("/art/waiting", upload, async (req, res) => {

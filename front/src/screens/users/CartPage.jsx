@@ -205,9 +205,9 @@ const CartPage = () => {
                     }}
                   >
                     <Grid container spacing={1}>
-                      <Grid item xs={12} md={8}>
+                      <Grid item xs={12} md={12}>
                         <Grid container>
-                          <Grid item>
+                          <Grid item md={3}>
                             <Link
                               to={`/product/${cartItem.art_id}`}
                               style={{ textDecoration: "none" }}
