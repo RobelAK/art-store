@@ -491,6 +491,25 @@ app.post("/print/complete", (req,res) =>{
   })
 })
 
+app.post("/branch/deliver", (req,res) =>{
+  const tx_ref = req.body.tx_ref
+  const sql = "UPDATE payment_detail SET print_status = 'delivered' WHERE tx_ref = ?"
+  db.query(sql,[tx_ref],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Art added to delivered")
+  })
+})
+app.post("/branch/delivered", (req,res) =>{
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? AND print_status = 'delivered'"
+  db.query(sql,[branchName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
 
 app.post('/postpayment',(req,res)=>{ 
   const {userId} = req.body

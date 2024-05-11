@@ -13,37 +13,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function PrintedScreen() {
-  const [orders, setOrders] = useState([]);
-
-
+export default function Delivered() {
+  const [deliveredOrderes, setDeliveredOrders] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const user = JSON.parse(atob(token.split(".")[1]));
       axios
-        .post("http://localhost:8081/branch/printed", { branchName: user.name })
+        .post("http://localhost:8081/branch/delivered", { branchName: user.name })
         .then((res) => {
-          setOrders(res.data);
+          setDeliveredOrders(res.data);
+          console.log(res.data)
         })
         .catch((err) => console.log(err));
     }
   }, []);
-  const handleDelevered = (tx_ref) => (event) => {
-    event.stopPropagation();
-    const isConfirmed = window.confirm("Are you sure?");
-    if (isConfirmed) {
-      axios
-        .post("http://localhost:8081/branch/deliver", { tx_ref })
-        .then((res) => {
-          console.log(res.data);
-          setOrders(orders.filter((order) => order.tx_ref !== tx_ref));
-        })
-        .catch((err) => console.log(err));
-    }
-  };
-
   const parseData = (stringifiedData) => {
     try {
       
@@ -74,10 +59,10 @@ export default function PrintedScreen() {
           fontFamily="sora,sans-serif"
           textAlign="center"
         >
-          Printed Orders
+          Delivered Orders
         </Typography>
 
-        {orders.map((item, i) => (
+        {deliveredOrderes.map((item, i) => (
           <Card key={i} style={{ marginBottom: "20px" }}>
             <CardContent>
               <Accordion>
@@ -93,9 +78,6 @@ export default function PrintedScreen() {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Button variant="contained" onClick={handleDelevered(item.tx_ref)}>
-                        Delivered
-                      </Button>
                     </Grid>
                   </Grid>
                 </AccordionSummary>
@@ -165,4 +147,5 @@ export default function PrintedScreen() {
     </Box>
   );
 }
+
 
