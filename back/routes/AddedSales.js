@@ -1,5 +1,5 @@
 export default function AddedSales(db, req, res) {
-  const {artId ,userId} = req.body;
+  const {art_id ,user_id} = req.body;
   const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
   const sqlInsert = 'INSERT INTO notifications (user_id, message) VALUES (?, ?)';
 
@@ -10,14 +10,14 @@ export default function AddedSales(db, req, res) {
     }
 
     // Update withdraw status
-    db.query(sql, [artId], function(err, result) {
+    db.query(sql, [art_id], function(err, result) {
       if (err) {
         db.rollback(function() {
           console.error('Error updating withdraw:', err);
           return res.status(500).json({ error: 'Internal server error' });
         });
       }
-      db.query(sqlInsert, [userId, "Your art has been sold"], function(err, result) {
+      db.query(sqlInsert, [user_id, "Your art has been sold"], function(err, result) {
         if (err) {
           db.rollback(function() {
             console.error('Error inserting notification:', err);
@@ -32,7 +32,7 @@ export default function AddedSales(db, req, res) {
               return res.status(500).json({ error: 'Internal server error' });
             });
           }
-          res.json({ message: 'Withdraw approved successfully' });
+          res.json({ message: 'sales added successfully' });
         });
       });
     });

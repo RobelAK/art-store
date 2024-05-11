@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import UserManagement from './UserManagement';
 import { Container } from '@mui/material';
 import axios from 'axios';
+import WaitingArt from './WaitingArt';
 
 const Overview = () => {
   const [userCount, setUserCount] = useState(0)
@@ -69,11 +69,26 @@ const Overview = () => {
             <Typography variant="h4">{buyerCount}</Typography>
           </div>
         </Grid>
+        <Grid item xs={4}>
+          <div style={{ textAlign: 'center', padding: '15px', background: '#2196f3', color: 'white' }}>
+            <Typography variant="h6">seles</Typography>
+            <Typography variant="h4">5 items</Typography>
+          </div>
+        </Grid>
+        <Grid item xs={4}>
+          <div style={{ textAlign: 'center', padding: '15px', background: '#4caf50', color: 'white' }}>
+            <Typography variant="h6">Transaction</Typography>
+            <Typography variant="h4">{buyerCount}</Typography>
+          </div>
+        </Grid>
+        <Grid item xs={4}>
+          <div style={{ textAlign: 'center', padding: '15px', background: '#ff9800', color: 'white' }}>
+            <Typography variant="h6">Total Revenue</Typography>
+            <Typography variant="h4">10,545 birr</Typography>
+          </div>
+        </Grid>
+        
       </Grid>
-    </Paper>
-    <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#f5f5f5' }}>
-      <UserManagement/>
-
     </Paper>
     </Container>
     </>

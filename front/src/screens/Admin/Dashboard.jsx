@@ -127,7 +127,7 @@ const PersistentDrawerLeft = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Overview','Admins', 'Users', 'Sellers', 'Branches', 'Artworks'].map((text, index) => (
+          {['Overview','Admins', 'Users', 'Sellers', 'Branches', 'Artworks' ,'withdrawals', 'Sales'].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
