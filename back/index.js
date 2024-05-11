@@ -402,7 +402,7 @@ app.post("/payment/pay", async (req, res) => {
     .then((data) => {
       if (data.status == "success") {
         const sql =
-          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`,`print_status`) VALUES (?,?,?,?,?,?,?,?,?)";
+          "INSERT INTO payment_detail (`user_id`,`fname`,`lname`,`phone_no`,`email`,`location`,`data`,`tx_ref`) VALUES (?,?,?,?,?,?,?,?)";
         db.query(
           sql,
           [
@@ -414,7 +414,6 @@ app.post("/payment/pay", async (req, res) => {
             location,
             cartDataJson,
             tx_ref,
-            "waiting",
           ],
           (err, result) => {
             if (err) {
@@ -434,7 +433,7 @@ app.post("/payment/pay", async (req, res) => {
 });
 app.post('/branch',(req, res) => {
   const branchName = req.body.branchName
-  const sql = "SELECT * FROM payment_detail WHERE location = ? and approved ='0'"
+  const sql = "SELECT * FROM payment_detail WHERE location = ? and print_status ='waiting'"
   db.query(sql,[branchName], (err,results)=>{
     if(err) return res.json(err)
     else{
@@ -444,7 +443,7 @@ app.post('/branch',(req, res) => {
 })
 app.post('/branch/approve',(req, res) => {
   const {paymentId,branchName} = req.body
-  const sql = "UPDATE payment_detail SET approved = '1' WHERE id = ?"
+  const sql = "UPDATE payment_detail SET print_status = 'approved' WHERE id = ?"
   const AddCount = " "
   
   db.query(sql, [paymentId],(err,result)=>{
@@ -455,7 +454,7 @@ app.post('/branch/approve',(req, res) => {
 
 app.post("/branch/approved", (req, res) => {
   const branchName = req.body.branchName
-  const sql = "SELECT * FROM payment_detail WHERE location = ? and approved ='1'"
+  const sql = "SELECT * FROM payment_detail WHERE location = ? and print_status = 'approved'"
   db.query(sql,[branchName], (err, results) => {
     if (err) return res.json(err);
     else {
@@ -463,6 +462,27 @@ app.post("/branch/approved", (req, res) => {
     }
   });
 });
+app.post("/branch/printed", (req, res) => {
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? and print_status = 'printed'"
+  db.query(sql,[branchName], (err, results) => {
+    if (err) return res.json(err);
+    else {
+      return res.json(results);
+    }
+  });
+});
+
+app.post("/print/complete", (req,res) =>{
+  const orderId = req.body.orderId
+  const sql = "UPDATE payment_detail SET print_status = 'printed' WHERE id = ?"
+  db.query(sql,[orderId],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Art added to printed")
+  })
+})
+
+
 app.post('/postpayment',(req,res)=>{ 
   const {userId} = req.body
   const sql = 'DELETE FROM cart WHERE user_id = ?'

@@ -71,14 +71,8 @@ export default function BranchHome() {
     if (!status[user_id]) {
       console.log("payment not confirmed");
       toast.warning("payment not confirmed", {
-        position: "top-right",
         autoClose: 2000,
-        hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
       });
     } else {
       if (status[user_id] == "success") {
@@ -92,12 +86,16 @@ export default function BranchHome() {
             toast.info("order approved", {
               onClose: () => {
                 setOrders(orders.filter((order) => order.tx_ref !== tx_ref));
-              }
+              },
+              autoClose: 2000,
+              closeOnClick: true,
             });
           });
       } else{
         console.log("User not payed");
         toast.warning("User not payed", {
+          autoClose: 2000,
+          closeOnClick: true,
         });
       }
     }
@@ -146,7 +144,7 @@ export default function BranchHome() {
           fontFamily="sora,sans-serif"
           textAlign="center"
         >
-          Waiting Prints
+          Waiting Orders
         </Typography>
 
         {orders.map((item, i) => (

@@ -10,10 +10,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Container, Card, CardContent, Grid } from "@mui/material";
 import NavBranch from "../../components/Branch/NavBranch";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
-import ErrorIcon from "@mui/icons-material/Error";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ApprovedScreen() {
   const [approvedorders, setApprovedOrders] = useState([]);
@@ -72,6 +70,22 @@ export default function ApprovedScreen() {
       win.print();
     }, 1000);
   };
+  const handleComplete = (orderID) => (event) => {
+    event.stopPropagation();
+    axios
+        .post("http://localhost:8081/print/complete" , {orderId: orderID})
+        .then((res) => {
+          console.log(res.data);
+          toast.info(res.data, {
+            onClose: () => {
+              setApprovedOrders(approvedorders.filter((approvedorder) => approvedorder.id !== orderID));
+            },
+            autoClose: 2000,
+            closeOnClick: true,
+          });
+        })
+        .catch((err) => console.log(err));
+  }
 
   return (
     <Box
@@ -93,7 +107,7 @@ export default function ApprovedScreen() {
           fontFamily="sora,sans-serif"
           textAlign="center"
         >
-          Approved Arts
+          Approved Orders
         </Typography>
 
         {approvedorders.map((item, i) => (
@@ -111,7 +125,9 @@ export default function ApprovedScreen() {
                         {item.fname + " " + item.lname}
                       </Typography>
                     </Grid>
-                    <Grid item xs></Grid>
+                    <Grid item>
+                      <Button variant="contained" onClick={handleComplete(item.id)}>Complete</Button>
+                    </Grid>
                   </Grid>
                 </AccordionSummary>
 
@@ -180,6 +196,7 @@ export default function ApprovedScreen() {
             </CardContent>
           </Card>
         ))}
+        <ToastContainer></ToastContainer>
       </Container>
     </Box>
   );
