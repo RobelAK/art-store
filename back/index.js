@@ -596,6 +596,16 @@ app.get("/admin/admins", (req, res) => {
     return res.json(data);
   });
 });
+app.get("/price", (req, res) => {
+  const sql = "SELECT * FROM print_price"
+  db.query(sql, (err,data)=>{
+    if(err) return res.json(err)
+    else return res.json(data)
+  })
+});
+
+
+
 app.get("/overview", (req, res) => {
   const usersQuery = "SELECT COUNT(*) AS userCount FROM users";
   const adminsQuery = "SELECT COUNT(*) AS adminCount FROM users WHERE role = 'admin'"

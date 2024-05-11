@@ -23,8 +23,8 @@ const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
-  const [loadCount, setLoadCount] = useState(25); // State to keep track of number of images to load
-  const navigate = useNavigate(); // Get the navigate function
+  const [loadCount, setLoadCount] = useState(25); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchArtwork();
@@ -33,14 +33,12 @@ const ArtDiscovery = () => {
   const fetchArtwork = async () => {
     try {
       const response = await axios.get('http://localhost:8081/art', {
-        params: { category: selectedCategory, limit: loadCount } // Pass limit parameter to limit number of images fetched
+        params: { category: selectedCategory, limit: loadCount }
       });
 
       if (!response.data) {
         throw new Error('Failed to fetch artwork');
       }
-
-      // Fetch average ratings for each art piece
       const artWithRatings = await Promise.all(
         response.data.map(async (item) => {
           const ratingResponse = await axios.get(`http://localhost:8081/art/${item.id}/average-rating`);
@@ -51,7 +49,6 @@ const ArtDiscovery = () => {
 
       setArt(artWithRatings);
 
-      // Fetch bookmark status
       const token = localStorage.getItem("token");
       if (token) {
         const user = JSON.parse(atob(token.split(".")[1]));
