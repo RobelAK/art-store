@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, CardMedia } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -10,110 +9,26 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Container, Card, CardContent, Grid } from "@mui/material";
 import NavBranch from "../../components/Branch/NavBranch";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
-import ErrorIcon from "@mui/icons-material/Error";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function BranchHome() {
-  const [orders, setOrders] = useState([]);
-  const [status, setStatus] = useState([]);
-  const [icon, setIcon] = useState([]);
-  const [branchName, setBranchName] = useState([]);
-
-  const updateStatus = (index, value) => {
-    const newStatus = [...status];
-    newStatus[index] = value;
-    setStatus(newStatus);
-  };
-  const updateIcon = (index, value) => {
-    const newIcon = [...icon];
-    newIcon[index] = value;
-    setIcon(newIcon);
-  };
+export default function Delivered() {
+  const [deliveredOrderes, setDeliveredOrders] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const user = JSON.parse(atob(token.split(".")[1]));
-      setBranchName(user.name);
       axios
-        .post("http://localhost:8081/branch", { branchName: user.name })
+        .post("http://localhost:8081/branch/delivered", { branchName: user.name })
         .then((res) => {
-          setOrders(res.data);
+          setDeliveredOrders(res.data);
+          console.log(res.data)
         })
         .catch((err) => console.log(err));
     }
   }, []);
-  const handleCheckTransaction = (userid, tx_ref) => (event) => {
-    event.stopPropagation();
-    axios
-      .post("http://localhost:8081/branch/verifypayment", { tx_ref })
-      .then((res) => {
-        console.log(res.data.data.status);
-        updateStatus(userid, res.data.data.status);
-        if (res.data.data.status == "success") {
-          updateIcon(userid, <CheckCircleRoundedIcon color="success" />);
-        }
-        if (res.data.data.status == "failed/cancelled") {
-          updateIcon(userid, <ErrorIcon color="error" />);
-        }
-        if (res.data.data.status == "pending") {
-          updateIcon(userid, <HourglassBottomIcon color="warning" />);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-  const handleApprove = (paymentId, user_id,tx_ref) => (event) => {
-    event.stopPropagation();
-    if (!status[user_id]) {
-      console.log("payment not confirmed");
-      toast.warning("payment not confirmed", {
-        autoClose: 2000,
-        closeOnClick: true,
-      });
-    } else {
-      if (status[user_id] == "success") {
-        axios
-          .post("http://localhost:8081/branch/approve", {
-            paymentId,
-            branchName,
-          })
-          .then((res) => {
-            console.log("order approved");
-            toast.info("order approved", {
-              onClose: () => {
-                setOrders(orders.filter((order) => order.tx_ref !== tx_ref));
-              },
-              autoClose: 2000,
-              closeOnClick: true,
-            });
-          });
-      } else{
-        console.log("User not payed");
-        toast.warning("User not payed", {
-          autoClose: 2000,
-          closeOnClick: true,
-        });
-      }
-    }
-  };
-  const handleDelete = (tx_ref) => (event) => {
-    event.stopPropagation();
-    const isConfirmed = window.confirm("Are you sure you want to delete?");
-    if (isConfirmed) {
-      axios
-        .post("http://localhost:8081/branch/delete", { tx_ref })
-        .then((res) => {
-          console.log(res.data);
-          setOrders(orders.filter((order) => order.tx_ref !== tx_ref));
-        })
-        .catch((err) => console.log(err));
-    }
-  };
-
   const parseData = (stringifiedData) => {
     try {
       
@@ -144,10 +59,10 @@ export default function BranchHome() {
           fontFamily="sora,sans-serif"
           textAlign="center"
         >
-          Waiting Orders
+          Delivered Orders
         </Typography>
 
-        {orders.map((item, i) => (
+        {deliveredOrderes.map((item, i) => (
           <Card key={i} style={{ marginBottom: "20px" }}>
             <CardContent>
               <Accordion>
@@ -163,34 +78,6 @@ export default function BranchHome() {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography>{status[item.user_id]}</Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography>{icon[item.user_id]}</Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Button
-                        variant="contained"
-                        onClick={handleCheckTransaction(
-                          item.user_id,
-                          item.tx_ref
-                        )}
-                      >
-                        Check payment
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        onClick={handleApprove(item.id, item.user_id,item.tx_ref)}
-                      >
-                        Approve
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button onClick={handleDelete(item.tx_ref)}>
-                        <DeleteIcon />
-                      </Button>
                     </Grid>
                   </Grid>
                 </AccordionSummary>
@@ -260,3 +147,5 @@ export default function BranchHome() {
     </Box>
   );
 }
+
+

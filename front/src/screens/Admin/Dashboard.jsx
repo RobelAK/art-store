@@ -14,8 +14,17 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import PersonIcon from '@mui/icons-material/Person';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import PaletteIcon from '@mui/icons-material/Palette';
+import HourglassFullIcon from '@mui/icons-material/HourglassFull';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import Overview from '../../components/admin/Overview';
 import UserManagement from '../../components/admin/UserManagement';
 import WaitingArt from '../../components/admin/WaitingArt';
@@ -24,6 +33,10 @@ import AvilableArts from '../../components/admin/AvilableArts';
 import WaitingUsers from '../../components/admin/WaitingUsers';
 import Seller from '../../components/admin/Seller';
 import Branch from '../../components/admin/Branch';
+import Admins from '../../components/admin/Admins';
+import WithdrawRequest from '../../components/admin/WithdrawRequest';
+import WithdrawalList from '../../components/admin/WithdrawalList';
+import SalesList from '../../components/admin/SalesList';
 
 const drawerWidth = 240;
 
@@ -125,7 +138,7 @@ const PersistentDrawerLeft = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Overview', 'Users', 'Sellers', 'Branches', 'Artworks'].map((text, index) => (
+          {['Overview','Admins', 'Users', 'Sellers', 'Branches', 'Artworks' ,'withdrawals', 'Sales'].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
@@ -133,7 +146,15 @@ const PersistentDrawerLeft = () => {
               onClick={() => handleListItemClick(text)}
             >
               <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                {index === 0 && <ListItemIcon><AccountTreeIcon /></ListItemIcon>}
+                {index === 1 && <ListItemIcon><AdminPanelSettingsIcon /></ListItemIcon>}
+                {index === 2 && <ListItemIcon><PersonIcon /></ListItemIcon>}
+                {index === 3 && <ListItemIcon><StorefrontIcon /></ListItemIcon>}
+                {index === 4 && <ListItemIcon><HomeWorkIcon /></ListItemIcon>}
+                {index === 5 && <ListItemIcon><PaletteIcon /></ListItemIcon>}
+                {index === 6 && <ListItemIcon><AccountBalanceIcon /></ListItemIcon>}
+                {index === 7 && <ListItemIcon><MonetizationOnIcon /></ListItemIcon>}
+               
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
@@ -141,7 +162,7 @@ const PersistentDrawerLeft = () => {
         </List>
         <Divider />
         <List>
-          {['Pending Art', 'Pending Sellers', 'Spam'].map((text, index) => (
+          {['Pending Art', 'Pending Sellers', 'Waiting Withdraws'].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
@@ -149,7 +170,9 @@ const PersistentDrawerLeft = () => {
               onClick={() => handleListItemClick(text)}
             >
               <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                {index === 0 && <ListItemIcon><HourglassFullIcon /></ListItemIcon>}
+                {index === 1 && <ListItemIcon><HourglassTopIcon /></ListItemIcon>}
+                {index === 2 && <ListItemIcon><HourglassBottomIcon /></ListItemIcon>}
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
@@ -159,14 +182,16 @@ const PersistentDrawerLeft = () => {
       <Main open={open}>
         <DrawerHeader />
         {selectedComponent === 'Overview' ? <Overview /> : []}
+        {selectedComponent === 'Admins' ? <Admins /> : []}
         {selectedComponent === 'Users' ? <UserManagement /> : []}
         {selectedComponent === 'Sellers' ? <Seller/> : []}
         {selectedComponent === 'Branches' ? <Branch/> : []}
         {selectedComponent === 'Pending Art' ? <WaitingArt /> : []}
+        {selectedComponent === 'withdrawals' ? <WithdrawalList /> : []}
+        {selectedComponent === 'Sales' ? <SalesList /> : []}
         {selectedComponent === 'Artworks' ? <AvilableArts /> : []}
         {selectedComponent === 'Pending Sellers' ? <WaitingUsers /> : []}
-        
-
+        {selectedComponent === 'Waiting Withdraws' ? <WithdrawRequest /> : []}
       </Main>
     </Box>
   );

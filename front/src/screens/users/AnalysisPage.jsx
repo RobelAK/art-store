@@ -41,7 +41,7 @@ const AnalysisPage = () => {
       setId(user.id);
 
       axios
-        .post("http://localhost:8081/cart", { userId: user.id })
+        .post("http://localhost:8081/sold", { userId: user.id })
         .then((res) => {
           setCartData(res.data);
         })
@@ -67,7 +67,7 @@ const AnalysisPage = () => {
   const calculateTotalPrice = () => {
     let totalPrice = 0;
     cartData.forEach((item) => {
-      totalPrice += item.quantity * item.price;
+      totalPrice += item.sales * item.price;
     });
     return totalPrice;
   };
@@ -122,9 +122,9 @@ const AnalysisPage = () => {
                       }}
                     >
                       <Grid container spacing={2}>
-                        <Grid item xs={12} md={8}>
+                        <Grid item xs={12} md={12}>
                           <Grid container>
-                            <Grid item>
+                            <Grid item  md={3}>
                               <Link
                                 to={`/product/${cartItem.art_id}`}
                                 style={{ textDecoration: "none" }}
@@ -147,32 +147,22 @@ const AnalysisPage = () => {
                               variant="middle"
                               sx={{ backgroundColor: "black" }}
                             />
-                            <Grid item>
+                            <Grid item >
                               <CardContent sx={{ flex: 1 }}>
                                 <Typography
                                   variant="h6"
                                   component="div"
                                   fontWeight="light"
                                   fontFamily="Sora"
-                                  textAlign="center"
                                 >
-                                  Title: {cartItem.art_title}
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  component="div"
-                                  fontWeight="bold"
-                                  fontFamily="Sora"
-                                  mb={2}
-                                >
-                                  Sold For : {cartItem.seller_name}
+                                  Title: {cartItem.title}
                                 </Typography>
                                 <Typography
                                   variant="body2"
                                   component="div"
                                   fontFamily="Sora"
                                 >
-                                  Size: {cartItem.size}
+                                  sales count: {cartItem.sales}
                                 </Typography>
                                 <Typography
                                   variant="body2"

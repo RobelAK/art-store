@@ -50,6 +50,7 @@ const Withdrawal = ({ totalPrice }) => {
       .post("http://localhost:8081/withdraw", value)
       .then((res) => {
         console.log(res.data.Message);
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error updating user: ", error);
@@ -152,7 +153,7 @@ const Withdrawal = ({ totalPrice }) => {
                       fontFamily="Sora, sans-serif"
                       textAlign="center"
                     >
-                      10,000 ETB
+                      5,000 ETB
                     </Typography>
                   </Grid>
                 </Grid>
@@ -187,7 +188,7 @@ const Withdrawal = ({ totalPrice }) => {
             </Typography>
           </CardContent>
 
-          <Box component="form" onSubmit={handleWithdraw} >
+          <Box component="form" onSubmit={handleWithdraw}  >
             <Grid container rowSpacing={1}>
               <Grid item xs={12}>
                 <FormControl fullWidth>
@@ -283,6 +284,7 @@ const Withdrawal = ({ totalPrice }) => {
               </Grid>
               <Grid item xs={12}>
                 <Button
+                disabled = {totalPrice < 5000}
                   fullWidth
                   type="submit"
                   variant="contained"

@@ -27,7 +27,6 @@ const UserManagement = () => {
         .then((res) => {
           setUsers(users.filter((user) => user.id !== id));
           console.log(res.data);
-          // window.location.reload()
         })
         .catch((err) => console.log(err));
     }

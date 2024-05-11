@@ -23,6 +23,9 @@ const Notifications = () => {
       }
     };
     fetchNotifications();
+    const intervalId = setInterval(fetchNotifications, 3000);
+    return () => clearInterval(intervalId);
+
   }, []);
 
   const handleSeenClick = async (notificationId) => {
