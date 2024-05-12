@@ -113,7 +113,7 @@ const Admins = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Branch Location"
+            label="Admin Email"
             variant="filled"
             value={adminEmail}
             onChange={(e) => setAdminEmail(e.target.value)}

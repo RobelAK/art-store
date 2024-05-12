@@ -7,20 +7,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
 import Logout from '@mui/icons-material/Logout';
-import { Dialog, DialogContent, TextField, Button, Typography } from '@mui/material';
-import axios from 'axios'; // Add this line
+import { Dialog, DialogContent, Typography } from '@mui/material';
 
 const AdminMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
-  const [openAddAdminDialog, setOpenAddAdminDialog] = useState(false);
-  const [adminName, setAdminName] = useState('');
-  const [adminEmail, setAdminEmail] = useState('');
-  const [adminPassword, setAdminPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const open = Boolean(anchorEl);
 
@@ -41,45 +33,9 @@ const AdminMenu = () => {
     setOpenProfileDialog(false);
   };
 
-  const handleAddAdminDialogOpen = () => {
-    setOpenAddAdminDialog(true);
-    handleClose();
-  };
-
-  const handleAddAdminDialogClose = () => {
-    setOpenAddAdminDialog(false);
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = '/login';
-  };
-
-
-  // Function to handle adding a new admin
-  const handleAddAdmin = async () => {
-    try {
-      const response = await axios.post('http://localhost:8081/add-admin', {
-        name: adminName,
-        email: adminEmail,
-        password: adminPassword
-      });
-      // Check if the admin was added successfully
-      if (response.data.signup) {
-        // Display success message
-        setSuccessMessage(response.data.Message);
-        // Clear form fields
-        setAdminName('');
-        setAdminEmail('');
-        setAdminPassword('');
-      } else {
-        // Display error message
-        setErrorMessage(response.data.Message);
-      }
-    } catch (error) {
-      // Handle error
-      console.error('Error adding admin:', error);
-    }
   };
 
   return (
@@ -140,14 +96,6 @@ const AdminMenu = () => {
           <Avatar /> Profile
         </MenuItem>
         <Divider />
-        {/* Add Admin MenuItem */}
-        <MenuItem onClick={handleAddAdminDialogOpen}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add new Admin
-        </MenuItem>
-        {/* Logout MenuItem */}
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -170,60 +118,6 @@ const AdminMenu = () => {
           <Typography fontFamily='sora' fontWeight='light' variant="subtitle1" gutterBottom>
             Email: john@example.com {/* Replace with actual email */}
           </Typography>
-        </DialogContent>
-      </Dialog>
-
-
-      <Dialog open={openAddAdminDialog} onClose={handleAddAdminDialogClose}>
-        <DialogContent>
-          <Typography variant="h6" gutterBottom>
-            Add New Admin
-          </Typography>
-          <TextField
-            variant="filled"
-            label="Name"
-            fullWidth
-            margin="normal"
-            value={adminName}
-            onChange={(e) => setAdminName(e.target.value)}
-          />
-          <TextField
-            variant="filled"
-            label="Email"
-            fullWidth
-            margin="normal"
-            value={adminEmail}
-            onChange={(e) => setAdminEmail(e.target.value)}
-          />
-          <TextField
-            variant="filled"
-            label="Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-          />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-            <Button variant="outlined" onClick={handleAddAdminDialogClose} sx={{ mr: 1 }}>
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleAddAdmin}>
-              Add
-            </Button>
-          </Box>
-          {/* Success message */}
-          {successMessage && (
-            <Typography variant="body2" color="success" gutterBottom>
-              {successMessage}
-            </Typography>
-          )}
-          {/* Error message */}
-          {errorMessage && (
-            <Typography variant="body2" color="error" gutterBottom>
-              {errorMessage}
-            </Typography>
-          )}
         </DialogContent>
       </Dialog>
     </React.Fragment>
