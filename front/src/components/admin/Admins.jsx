@@ -108,7 +108,7 @@ const Admins = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Email"
+            label="Admin Email"
             variant="filled"
             value={adminEmail}
             onChange={(e) => setAdminEmail(e.target.value)}
