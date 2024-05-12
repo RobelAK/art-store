@@ -273,6 +273,7 @@ app.get("/user/art/:id", (req, res) => {
   });
 });
 
+
 app.delete("/user/art/:id", (req, res) => {
   const { id } = req.params;
   const sql = "UPDATE artwork SET deleted = 1 WHERE id = ?";
