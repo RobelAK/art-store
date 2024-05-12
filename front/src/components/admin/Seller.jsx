@@ -28,7 +28,6 @@ const Seller = () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       axios.delete('http://localhost:8081/seller/Delete/' + id)
         .then(res => {
-          // Remove the deleted user from the local state
           setUsers(users.filter(user => user.id !== id));
         })
         .catch(err => console.error('Error deleting user:', err));
