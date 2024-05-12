@@ -315,17 +315,17 @@ app.post("/sold", (req, res) => {
   });
 });
 
-// app.post("/seles", (req, res) => {
-//   AddedSales (db, req, res);
-// });
 app.post("/seles", (req, res) => {
-  const {art_id} = req.body;
-  const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
-  db.query(sql, [art_id], (err, result) => {
-    if (err) return res.json(err);
-    else return res.json(result);
-  });
+  AddedSales (db, req, res);
 });
+// app.post("/seles", (req, res) => {
+//   const {art_id} = req.body;
+//   const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
+//   db.query(sql, [art_id], (err, result) => {
+//     if (err) return res.json(err);
+//     else return res.json(result);
+//   });
+// });
   
 
 app.post("/cart", (req,res)=>{
