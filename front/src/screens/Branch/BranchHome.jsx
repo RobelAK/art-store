@@ -102,7 +102,7 @@ export default function BranchHome() {
   };
   const handleDelete = (tx_ref) => (event) => {
     event.stopPropagation();
-    const isConfirmed = window.confirm("Are you sure you want to delete?");
+    const isConfirmed = window.confirm("Are you sure you want to delete this order?");
     if (isConfirmed) {
       axios
         .post("http://localhost:8081/branch/delete", { tx_ref })

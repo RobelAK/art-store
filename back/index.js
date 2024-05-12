@@ -576,7 +576,7 @@ app.get('/fetchBranch', async (req, res) => {
 app.post('/ordereditems', async (req,res) =>{
   try{
     const id = req.body.userId
-    const sql = "SELECT * FROM payment_detail WHERE user_id = ?"
+    const sql = "SELECT * FROM payment_detail WHERE user_id = ? AND print_status != 'delivered'"
     db.query(sql,[id], (err,result)=>{
       if(err) return res.json(err)
       else{
