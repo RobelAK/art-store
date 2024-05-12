@@ -57,7 +57,7 @@ const WaitingUsers = () => {
   };
 
   const handleApprove = async (id) => {
-    if (window.confirm('Are you sure you want to Approve this user?')) {
+    if (window.confirm("Are you sure you want to Approve this user?")) {
       try {
         await axios.put(`http://localhost:8081/seller/approve/${id}`);
         // Refresh data after approval
@@ -69,7 +69,7 @@ const WaitingUsers = () => {
   };
 
   const handleDecline = async (id) => {
-    if (window.confirm('Are you sure you want to decline this user?')) {
+    if (window.confirm("Are you sure you want to decline this user?")) {
       try {
         await axios.delete(`http://localhost:8081/seller/decline/${id}`);
         // Refresh data after decline
@@ -148,7 +148,8 @@ const WaitingUsers = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              )))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
