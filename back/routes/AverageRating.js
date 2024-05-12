@@ -1,7 +1,6 @@
 const AverageRating = async (db, req, res) => {
   try {
     const { id } = req.params;
-    console.log("art id :", id);
     
     // Query the database to calculate average rating
     const sql = 'SELECT AVG(rating) AS averageRating FROM rating WHERE art_id = ?';
@@ -12,7 +11,6 @@ const AverageRating = async (db, req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
       }
       const averageRating = result[0]?.averageRating || 0;
-      console.log('Average rating:', averageRating);
       res.status(200).json({ averageRating });
     });
   } catch (error) {
