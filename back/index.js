@@ -636,6 +636,27 @@ app.post("/addCategory", (req,res) =>{
   })
 })
 
+app.get("/printPrices",(req,res) => {
+  // return res.json('something')
+  const sql = "SELECT * FROM print_price"
+  db.query(sql,(err,result)=>{
+    if(err) return res.json(err)
+    else{
+      return res.json(result)
+    }
+  })
+})
+app.post("/changePrintPrice",(req,res) => {
+  const {size,newPrice} = req.body
+  const sql = "UPDATE print_price SET price = ? WHERE size = ?"
+  db.query(sql,[newPrice,size],(err,result)=>{
+    if(err) return res.json(err)
+    else{
+      return res.json(size+" size print price changed successful!")
+    }
+  })
+})
+
 
 
 
