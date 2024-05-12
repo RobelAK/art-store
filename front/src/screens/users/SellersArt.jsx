@@ -67,24 +67,22 @@ const SellersArt = () => {
                 image={`http://localhost:8081/images/${artInfo.art}`} // Assuming 'art' is the property containing the image URL
                 title="Art"
               />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {artInfo.title}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {artInfo.description}
-                </Typography>
-              </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Card sx={{alignContent:'center' , display:'flex' , flexDirection:'column'} }>
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
+              <Typography gutterBottom variant="h5" fontFamily={'sora'} component="h2">
+                  {artInfo.title}
+                </Typography>
+                <Typography gutterBottom  variant="body2" color="textSecondary" fontFamily={'sora'} component="p">
+                  {artInfo.description}
+                </Typography>
+                <Typography gutterBottom variant="h5" fontFamily={'sora'} component="h2">
                   Art Activity
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  Total number of items sold: {artInfo.itemsSold}
+                <Typography variant="body2" fontFamily={'sora'} color="textSecondary" component="p">
+                  Total number of items sold: {artInfo.total_sales}
                 </Typography>
                 {/* You can display more activity related to art here */}
               </CardContent>

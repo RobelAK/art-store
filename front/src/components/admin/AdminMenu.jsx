@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Logout from '@mui/icons-material/Logout';
 import { Dialog, DialogContent, TextField, Button, Typography } from '@mui/material';
-import axios from 'axios'; // Add this line
+import axios from 'axios';
 
 const AdminMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,7 +56,6 @@ const AdminMenu = () => {
   };
 
 
-  // Function to handle adding a new admin
   const handleAddAdmin = async () => {
     try {
       const response = await axios.post('http://localhost:8081/add-admin', {
@@ -64,27 +63,21 @@ const AdminMenu = () => {
         email: adminEmail,
         password: adminPassword
       });
-      // Check if the admin was added successfully
       if (response.data.signup) {
-        // Display success message
         setSuccessMessage(response.data.Message);
-        // Clear form fields
         setAdminName('');
         setAdminEmail('');
         setAdminPassword('');
       } else {
-        // Display error message
         setErrorMessage(response.data.Message);
       }
     } catch (error) {
-      // Handle error
       console.error('Error adding admin:', error);
     }
   };
 
   return (
     <React.Fragment>
-      {/* Menu Button */}
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -99,7 +92,6 @@ const AdminMenu = () => {
           </IconButton>
         </Tooltip>
       </Box>
-      {/* Account Menu */}
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -135,19 +127,16 @@ const AdminMenu = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {/* Profile MenuItem */}
         <MenuItem onClick={handleProfileDialogOpen}>
           <Avatar /> Profile
         </MenuItem>
         <Divider />
-        {/* Add Admin MenuItem */}
         <MenuItem onClick={handleAddAdminDialogOpen}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add new Admin
         </MenuItem>
-        {/* Logout MenuItem */}
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -156,19 +145,17 @@ const AdminMenu = () => {
         </MenuItem>
       </Menu>
 
-      {/* Profile Dialog */}
       <Dialog open={openProfileDialog} onClose={handleProfileDialogClose}>
         <DialogContent>
           <Typography variant="h6" gutterBottom>
             Admin Info
           </Typography>
-          {/* Add your profile details here */}
-          <Avatar /> {/* Replace with actual avatar */}
+          <Avatar />
           <Typography fontFamily='sora' fontWeight='bold' variant="subtitle1" gutterBottom>
-            Name: John Doe {/* Replace with actual name */}
+            Name: John Doe
           </Typography>
           <Typography fontFamily='sora' fontWeight='light' variant="subtitle1" gutterBottom>
-            Email: john@example.com {/* Replace with actual email */}
+            Email: john@example.com 
           </Typography>
         </DialogContent>
       </Dialog>
@@ -212,13 +199,11 @@ const AdminMenu = () => {
               Add
             </Button>
           </Box>
-          {/* Success message */}
           {successMessage && (
             <Typography variant="body2" color="success" gutterBottom>
               {successMessage}
             </Typography>
           )}
-          {/* Error message */}
           {errorMessage && (
             <Typography variant="body2" color="error" gutterBottom>
               {errorMessage}

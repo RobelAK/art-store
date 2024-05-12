@@ -72,7 +72,6 @@ const Branch = () => {
         <Table>
           <TableHead>
             <TableRow >
-              <TableCell style={{fontWeight:'bold'}}>ID</TableCell>
               <TableCell style={{fontWeight:'bold'}}>Name</TableCell>
               <TableCell style={{fontWeight:'bold'}}>Location</TableCell>
               <TableCell style={{fontWeight:'bold'}}>Action</TableCell>
@@ -81,7 +80,6 @@ const Branch = () => {
           <TableBody>
             {branches.map((branch) => (
               <TableRow key={branch.id}>
-                <TableCell>{branch.id}</TableCell>
                 <TableCell>{branch.name}</TableCell>
                 <TableCell>{branch.email}</TableCell>
                 <TableCell>
@@ -94,7 +92,6 @@ const Branch = () => {
       </TableContainer>
       </Container>
 
-      {/* Add Branch Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Add New Branch</DialogTitle>
         <DialogContent>

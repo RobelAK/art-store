@@ -19,11 +19,11 @@ const Admins = () => {
   }, []);
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this Branch?')) {
+    if (window.confirm('Are you sure you want to delete this Admin?')) {
       axios
         .delete(`http://localhost:8081/user/delete/${id}`)
         .then((res) => {
-          setAdmins(branches.filter((branch) => branch.id !== id));
+          setAdmins(admins.filter((admin) => admin.id !== id));
           console.log(res.data);
         })
         .catch((err) => console.log(err));
@@ -31,17 +31,16 @@ const Admins = () => {
   };
 
   const handleAddAdmin = () => {
-    const branchData = {
+    const adminData = {
       name: adminName,
       email: adminEmail,
       password: adminPassword
     };
 
-    axios.post('http://localhost:8081/addadmin', branchData)
+    axios.post('http://localhost:8081/addadmin', adminData)
       .then((res) => {
         console.log(res.data);
-        // Refresh the list of branches
-        axios.get('http://localhost:8081/admin/branches')
+        axios.get('http://localhost:8081/admin/admins')
           .then(res => {
             setAdmins(res.data);
           })
@@ -49,12 +48,9 @@ const Admins = () => {
       })
       .catch((err) => {
         console.log(err);
-        // Handle error
       });
 
-    // Close the dialog
     setOpenDialog(false);
-    // Clear the input fields
     setAdminName('');
     setAdminPassword('');
     setAdminEmail('');
@@ -65,25 +61,25 @@ const Admins = () => {
       <Container>
         <Card sx={{margin:'10px', justifyContent:'center',}}>
           <CardContent>
-            <Typography gutterBottom fontFamily='sora'> Click here to Create a new Branch</Typography>
+            <Typography gutterBottom fontFamily='sora'> Click here to Create a new Admin</Typography>
             <Button variant='outlined' fullWidth onClick={() => setOpenDialog(true)}>
               Add Admin
             </Button>
           </CardContent>
         </Card>
-        <Typography marginTop='20px' align='center' gutterBottom fontFamily='sora' fontWeight='bold'> List of available Branches</Typography>
+        <Typography marginTop='20px' align='center' gutterBottom fontFamily='sora' fontWeight='bold'> List of Admins</Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow >
-              <TableCell style={{fontWeight:'bold'}}>ID</TableCell>
+              <TableCell style={{fontWeight:'bold'}}>No</TableCell>
               <TableCell style={{fontWeight:'bold'}}>Name</TableCell>
-              <TableCell style={{fontWeight:'bold'}}>Location</TableCell>
+              <TableCell style={{fontWeight:'bold'}}>Email</TableCell>
               <TableCell style={{fontWeight:'bold'}}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {admins.map((admin) => (
+            {admins.map((admin,x) => (
               <TableRow key={admin.id}>
                 <TableCell>{admin.id}</TableCell>
                 <TableCell>{admin.name}</TableCell>
@@ -98,9 +94,8 @@ const Admins = () => {
       </TableContainer>
       </Container>
 
-      {/* Add Branch Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Add New Branch</DialogTitle>
+        <DialogTitle>Add New Admin</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
@@ -113,7 +108,7 @@ const Admins = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Branch Location"
+            label="Email"
             variant="filled"
             value={adminEmail}
             onChange={(e) => setAdminEmail(e.target.value)}

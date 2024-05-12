@@ -40,9 +40,9 @@ export default function ApprovedScreen() {
       return [];
     }
   };
-  const handlePrint = (imageName ,art_id) => {
+  const handlePrint = (imageName ,art_id ,user_id) => {
     axios
-        .post("http://localhost:8081/seles" ,{art_id})
+        .post("http://localhost:8081/seles" ,{art_id , user_id})
         .then((res) => {
           console.log(res.data);
         })
@@ -72,19 +72,22 @@ export default function ApprovedScreen() {
   };
   const handleComplete = (orderID) => (event) => {
     event.stopPropagation();
-    axios
-        .post("http://localhost:8081/print/complete" , {orderId: orderID})
-        .then((res) => {
-          console.log(res.data);
-          toast.info(res.data, {
-            onClose: () => {
-              setApprovedOrders(approvedorders.filter((approvedorder) => approvedorder.id !== orderID));
-            },
-            autoClose: 2000,
-            closeOnClick: true,
-          });
-        })
-        .catch((err) => console.log(err));
+    const isPrinted = window.confirm("Is this order printed?")
+    if(isPrinted){
+      axios
+          .post("http://localhost:8081/print/complete" , {orderId: orderID})
+          .then((res) => {
+            console.log(res.data);
+            toast.info(res.data, {
+              onClose: () => {
+                setApprovedOrders(approvedorders.filter((approvedorder) => approvedorder.id !== orderID));
+              },
+              autoClose: 2000,
+              closeOnClick: true,
+            });
+          })
+          .catch((err) => console.log(err));
+    }
   }
 
   return (
@@ -181,7 +184,7 @@ export default function ApprovedScreen() {
                               </Typography>
                               <Button
                                 variant="contained"
-                                onClick={() => handlePrint(art.art , art.art_id)}
+                                onClick={() => handlePrint(art.art , art.art_id ,art.user_id)}
                               >
                                 Print
                               </Button>

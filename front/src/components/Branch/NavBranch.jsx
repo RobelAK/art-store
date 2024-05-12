@@ -4,7 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
@@ -14,9 +14,18 @@ import MenuItem from "@mui/material/MenuItem";
 
 export default function NavBranch() {
   
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
-  
+  const [userName, setUserName] = useState(""); // State to store the user name
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = JSON.parse(atob(token.split(".")[1])); // Decode and parse the token
+      setUserName(user.name); // Extract and set the user name
+    }
+  }, []);
+
   const Navbar = styled(AppBar)(({ theme }) => ({
     zIndex: theme.zIndex.drawer + 1,
     boxShadow: "none",
@@ -61,13 +70,13 @@ export default function NavBranch() {
     <Navbar position="fixed">
       <Toolbar>
         <NavbarTitle variant="h6" color="inherit" component="div">
-          My Branch
+          {userName ? userName : "Branch"} {/* Render user name if available, otherwise render "Branch" */}
         </NavbarTitle>
         <NavLinks>
           <Link to="/">Waiting</Link>
           <Link to="/approved">Approved</Link>
           <Link to="/Printed">Printed</Link>
-          {/* <Link to="/delivered">Delivered</Link> */}
+          <Link to="/delivered">Delivered</Link>
         </NavLinks>
         <div>
           <IconButton

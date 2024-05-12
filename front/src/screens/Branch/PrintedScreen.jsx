@@ -30,12 +30,12 @@ export default function PrintedScreen() {
         .catch((err) => console.log(err));
     }
   }, []);
-  const handleDelete = (tx_ref) => (event) => {
+  const handleDelevered = (tx_ref) => (event) => {
     event.stopPropagation();
-    const isConfirmed = window.confirm("Are you sure you want to delete?");
+    const isConfirmed = window.confirm("Are you sure?");
     if (isConfirmed) {
       axios
-        .post("http://localhost:8081/branch/delete", { tx_ref })
+        .post("http://localhost:8081/branch/deliver", { tx_ref })
         .then((res) => {
           console.log(res.data);
           setOrders(orders.filter((order) => order.tx_ref !== tx_ref));
@@ -93,8 +93,8 @@ export default function PrintedScreen() {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Button onClick={handleDelete(item.tx_ref)}>
-                        <DeleteIcon />
+                      <Button variant="contained" onClick={handleDelevered(item.tx_ref)}>
+                        Delivered
                       </Button>
                     </Grid>
                   </Grid>

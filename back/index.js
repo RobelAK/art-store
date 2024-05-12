@@ -33,6 +33,11 @@ import AddToCart from "./routes/AddToCart.js";
 import AverageRating from "./routes/AverageRating.js";
 import Withdrawal from "./routes/Withdrawal.js";
 import delete_art from "./routes/delete_art.js";
+import WithdrawRequest from "./routes/WithdrawRequest.js";
+import ApprovePayment from "./routes/ApprovePayment.js";
+import AddedSales from "./routes/AddedSales.js";
+import WithdrawalList from "./routes/WithdrawalList.js";
+import SalesList from "./routes/SalesList.js";
 
 
 
@@ -169,6 +174,17 @@ app.get("/api/notifications", (req, res) => {
   Notifications(db, req, res);
 });
 
+app.get("/Withdraw/request", (req, res) => {
+  WithdrawRequest(db, req, res);
+});
+
+app.get("/Withdraw/all", (req, res) => {
+  WithdrawalList(db, req, res);
+});
+app.get("/sales/list", (req, res) => {
+  SalesList(db, req, res);
+});
+
 app.get("/art/waiting", upload, async (req, res) => {
   WaitingArt(db, req, res);
 });
@@ -201,6 +217,10 @@ app.put("/art/approve/:id", (req, res) => {
 });
 app.put("/seller/approve/:id", (req, res) => {
   ApproveSeller(db, req, res);
+});
+
+app.put("/payed/user/:id", (req, res) => {
+  ApprovePayment(db, req, res);
 });
 
 app.get('/art/:id/average-rating', (req, res) => {
@@ -286,9 +306,21 @@ app.post("/cart", (req, res) => {
   });
 });
 
+app.post("/sold", (req, res) => {
+  const userId = req.body.userId;
+  const sql = "SELECT * FROM artwork WHERE user_id = ? and sales != 0";
+  db.query(sql, [userId], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
+});
+
+// app.post("/seles", (req, res) => {
+//   AddedSales (db, req, res);
+// });
 app.post("/seles", (req, res) => {
   const {art_id} = req.body;
-  const sql = "UPDATE artwork SET sales = sales + 1 WHERE id = ?";
+  const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
   db.query(sql, [art_id], (err, result) => {
     if (err) return res.json(err);
     else return res.json(result);
@@ -459,6 +491,25 @@ app.post("/print/complete", (req,res) =>{
   })
 })
 
+app.post("/branch/deliver", (req,res) =>{
+  const tx_ref = req.body.tx_ref
+  const sql = "UPDATE payment_detail SET print_status = 'delivered' WHERE tx_ref = ?"
+  db.query(sql,[tx_ref],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Art added to delivered")
+  })
+})
+app.post("/branch/delivered", (req,res) =>{
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? AND print_status = 'delivered'"
+  db.query(sql,[branchName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
 
 app.post('/postpayment',(req,res)=>{ 
   const {userId} = req.body
@@ -525,7 +576,7 @@ app.get('/fetchBranch', async (req, res) => {
 app.post('/ordereditems', async (req,res) =>{
   try{
     const id = req.body.userId
-    const sql = "SELECT * FROM payment_detail WHERE user_id = ?"
+    const sql = "SELECT * FROM payment_detail WHERE user_id = ? AND print_status != 'delivered'"
     db.query(sql,[id], (err,result)=>{
       if(err) return res.json(err)
       else{
@@ -545,6 +596,49 @@ app.get("/admin/admins", (req, res) => {
     return res.json(data);
   });
 });
+app.get("/price", (req, res) => {
+  const sql = "SELECT * FROM print_price"
+  db.query(sql, (err,data)=>{
+    if(err) return res.json(err)
+    else return res.json(data)
+  })
+});
+
+
+app.get("/categories", (req, res) => {
+  const sql = "SELECT * FROM category"
+  db.query(sql, (err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+});
+
+
+
+app.delete("/category/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const deleteCategory = "DELETE FROM category WHERE id = ?";
+  db.query(deleteCategory, id, (error, results) => {
+    if (error) {
+      res.json({ error: "Internal server error" });
+    } else {
+      res.json({ Message: "User deleted succefully" });
+    }
+  });
+});
+
+app.post("/addCategory", (req,res) =>{
+  const {categoryName} = req.body
+  const sql = "INSERT INTO category (`name`) VALUES (?)"
+  db.query(sql,[categoryName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
+
 app.get("/overview", (req, res) => {
   const usersQuery = "SELECT COUNT(*) AS userCount FROM users";
   const adminsQuery = "SELECT COUNT(*) AS adminCount FROM users WHERE role = 'admin'"
