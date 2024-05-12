@@ -30,7 +30,7 @@ import Footer from "../../components/users/Footer";
 import Navbar from "../../components/users/Navbar";
 import { useNavigate } from "react-router-dom";
 
-const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_/]{3,20}$/;
+const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_/]{2,20}$/;
 const PHONE_VALID = /^[0-9]{9}$/;
 
 const CartPage = () => {
@@ -168,7 +168,7 @@ const CartPage = () => {
     } else console.log("not good");
     setTimeout(() => {
       setButtonDisabled(false);
-    }, 5000);
+    }, 10000);
   };
   const parseData = (stringifiedData) => {
     try {

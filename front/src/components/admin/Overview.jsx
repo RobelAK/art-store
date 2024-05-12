@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Container } from '@mui/material';
 import axios from 'axios';
-import PriceChange from './PriceChange';
 
 const Overview = () => {
   const [userCount, setUserCount] = useState(0)
@@ -76,7 +75,6 @@ const Overview = () => {
               </div>
             </Grid>
           </Grid>
-          <PriceChange/>
         </Paper>
       </Container>
     </div>

@@ -163,7 +163,7 @@ function AddArt() {
           <Grid item xs={12}>
             <TextField
               label="Price (birr)"
-              type="tel"
+              type="number"
               name="price"
               value={price}
               fullWidth
@@ -172,9 +172,6 @@ function AddArt() {
                 startAdornment: (
                   <InputAdornment position="start">birr</InputAdornment>
                 ),
-              }}
-              inputProps={{
-                maxLength: 3,
               }}
               required
             />

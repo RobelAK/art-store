@@ -2,7 +2,6 @@ const AverageRating = async (db, req, res) => {
   try {
     const { id } = req.params;
     
-    // Query the database to calculate average rating
     const sql = 'SELECT AVG(rating) AS averageRating FROM rating WHERE art_id = ?';
     
     db.query(sql, [id], (err, result) => {

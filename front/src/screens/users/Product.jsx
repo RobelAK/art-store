@@ -52,10 +52,10 @@ function Product() {
         axios
           .get("http://localhost:8081/price")
           .then((result) => {
-            setPriceSmall(result.data[0].Price);
-            setPriceMedium(result.data[1].Price);
-            setPriceLarge(result.data[2].Price);
-            setPrice(res.data.artInfo.price+result.data[0].Price)
+            setPriceSmall(result.data[0].price);
+            setPriceMedium(result.data[1].price);
+            setPriceLarge(result.data[2].price);
+            setPrice(res.data.artInfo.price+result.data[0].price)
           })
           .catch((err) => {
             console.log(err);
@@ -109,11 +109,10 @@ function Product() {
           setMessage(res.data);
           setTimeout(() => {
             setMessage("");
-          }, 2000);
+          }, 4000);
           if (res.data == "Item already in cart") {
             setColor("#f07971");
           } else setColor("#1976d2");
-          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);

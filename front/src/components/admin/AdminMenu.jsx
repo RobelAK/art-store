@@ -8,7 +8,8 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
-import { Dialog, DialogContent, Typography } from '@mui/material';
+import { Dialog, DialogContent, TextField, Button, Typography } from '@mui/material';
+import axios from 'axios';
 
 const AdminMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -38,9 +39,29 @@ const AdminMenu = () => {
     window.location.href = '/login';
   };
 
+
+  const handleAddAdmin = async () => {
+    try {
+      const response = await axios.post('http://localhost:8081/add-admin', {
+        name: adminName,
+        email: adminEmail,
+        password: adminPassword
+      });
+      if (response.data.signup) {
+        setSuccessMessage(response.data.Message);
+        setAdminName('');
+        setAdminEmail('');
+        setAdminPassword('');
+      } else {
+        setErrorMessage(response.data.Message);
+      }
+    } catch (error) {
+      console.error('Error adding admin:', error);
+    }
+  };
+
   return (
     <React.Fragment>
-      {/* Menu Button */}
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -55,7 +76,6 @@ const AdminMenu = () => {
           </IconButton>
         </Tooltip>
       </Box>
-      {/* Account Menu */}
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -91,7 +111,6 @@ const AdminMenu = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {/* Profile MenuItem */}
         <MenuItem onClick={handleProfileDialogOpen}>
           <Avatar /> Profile
         </MenuItem>
@@ -104,19 +123,17 @@ const AdminMenu = () => {
         </MenuItem>
       </Menu>
 
-      {/* Profile Dialog */}
       <Dialog open={openProfileDialog} onClose={handleProfileDialogClose}>
         <DialogContent>
           <Typography variant="h6" gutterBottom>
             Admin Info
           </Typography>
-          {/* Add your profile details here */}
-          <Avatar /> {/* Replace with actual avatar */}
+          <Avatar />
           <Typography fontFamily='sora' fontWeight='bold' variant="subtitle1" gutterBottom>
-            Name: John Doe {/* Replace with actual name */}
+            Name: John Doe
           </Typography>
           <Typography fontFamily='sora' fontWeight='light' variant="subtitle1" gutterBottom>
-            Email: john@example.com {/* Replace with actual email */}
+            Email: john@example.com 
           </Typography>
         </DialogContent>
       </Dialog>

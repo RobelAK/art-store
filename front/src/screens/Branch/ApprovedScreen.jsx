@@ -72,19 +72,22 @@ export default function ApprovedScreen() {
   };
   const handleComplete = (orderID) => (event) => {
     event.stopPropagation();
-    axios
-        .post("http://localhost:8081/print/complete" , {orderId: orderID})
-        .then((res) => {
-          console.log(res.data);
-          toast.info(res.data, {
-            onClose: () => {
-              setApprovedOrders(approvedorders.filter((approvedorder) => approvedorder.id !== orderID));
-            },
-            autoClose: 2000,
-            closeOnClick: true,
-          });
-        })
-        .catch((err) => console.log(err));
+    const isPrinted = window.confirm("Is this order printed?")
+    if(isPrinted){
+      axios
+          .post("http://localhost:8081/print/complete" , {orderId: orderID})
+          .then((res) => {
+            console.log(res.data);
+            toast.info(res.data, {
+              onClose: () => {
+                setApprovedOrders(approvedorders.filter((approvedorder) => approvedorder.id !== orderID));
+              },
+              autoClose: 2000,
+              closeOnClick: true,
+            });
+          })
+          .catch((err) => console.log(err));
+    }
   }
 
   return (

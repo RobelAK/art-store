@@ -44,12 +44,12 @@ function Signup() {
 
   useEffect(()=>{
     const result = NAME_VALID.test(name)
-    console.log('Name validation: ',result)
+    // console.log('Name validation: ',result)
     setIsValidName(result)
   },[name])
   useEffect(()=>{
     const result = PASSWORD_VALID.test(password)
-    console.log('Password validation: ',result)
+    // console.log('Password validation: ',result)
     setIsValidPassword(result)
     
     const match = password == matchPassword
@@ -57,7 +57,7 @@ function Signup() {
   },[password,matchPassword])
   useEffect(()=>{
     const result = EMAIL_VALID.test(email)
-    console.log('Email validation ',result)
+    // console.log('Email validation ',result)
     setIsValidEmail(result)
   },[email])
 
