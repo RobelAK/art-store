@@ -76,7 +76,7 @@ export default function NavBranch() {
           <Link to="/">Waiting</Link>
           <Link to="/approved">Approved</Link>
           <Link to="/Printed">Printed</Link>
-          {/* <Link to="/delivered">Delivered</Link> */}
+          <Link to="/delivered">Delivered</Link>
         </NavLinks>
         <div>
           <IconButton

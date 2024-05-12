@@ -23,9 +23,19 @@ const ArtDiscovery = () => {
   const [art, setArt] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkStatus, setBookmarkStatus] = useState({});
-  const [loadCount, setLoadCount] = useState(25); // State to keep track of number of images to load
-  const navigate = useNavigate(); // Get the navigate function
-
+  const [categoryList, setCategoryList] = useState([]);
+  const [loadCount, setLoadCount] = useState(25); 
+  const navigate = useNavigate();
+  useEffect(()=>{
+    axios
+      .get("http://localhost:8081/categories")
+      .then((res) => {
+        setCategoryList(res.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[])
   useEffect(() => {
     fetchArtwork();
   }, [selectedCategory, loadCount]);
@@ -33,14 +43,12 @@ const ArtDiscovery = () => {
   const fetchArtwork = async () => {
     try {
       const response = await axios.get('http://localhost:8081/art', {
-        params: { category: selectedCategory, limit: loadCount } // Pass limit parameter to limit number of images fetched
+        params: { category: selectedCategory, limit: loadCount }
       });
 
       if (!response.data) {
         throw new Error('Failed to fetch artwork');
       }
-
-      // Fetch average ratings for each art piece
       const artWithRatings = await Promise.all(
         response.data.map(async (item) => {
           const ratingResponse = await axios.get(`http://localhost:8081/art/${item.id}/average-rating`);
@@ -51,7 +59,6 @@ const ArtDiscovery = () => {
 
       setArt(artWithRatings);
 
-      // Fetch bookmark status
       const token = localStorage.getItem("token");
       if (token) {
         const user = JSON.parse(atob(token.split(".")[1]));
@@ -104,8 +111,8 @@ const ArtDiscovery = () => {
   };
 
   const handleLoadMore = () => {
-    setLoadCount(prevCount => prevCount + 25); // Increase loadCount by 25 when clicking "Load More"
-    fetchArtwork(); // Fetch more artwork when "Load More" is clicked
+    setLoadCount(prevCount => prevCount + 25);
+    fetchArtwork();
   };
 
 
@@ -204,25 +211,11 @@ const ArtDiscovery = () => {
                 }}
               >
                 <MenuItem value="All">All</MenuItem>
-                <MenuItem value="Abstract">Abstract</MenuItem>
-                <MenuItem value="Animals">Animals</MenuItem>
-                <MenuItem value="Anime/Manga">Anime/Manga</MenuItem>
-                <MenuItem value="Character Design">Character Design</MenuItem>
-                <MenuItem value="Concept Art">Concept Art</MenuItem>
-                <MenuItem value="Cyberpunk">Cyberpunk</MenuItem>
-                <MenuItem value="Fantasy">Fantasy</MenuItem>
-                <MenuItem value="Fan Art">Fan Art</MenuItem>
-                <MenuItem value="Graffiti">Graffiti</MenuItem>
-                <MenuItem value="Horror">Horror</MenuItem>
-                <MenuItem value="Landscape">Landscape</MenuItem>
-                <MenuItem value="Minimalism">Minimalism</MenuItem>
-                <MenuItem value="Nature">Nature</MenuItem>
-                <MenuItem value="Pixel Art">Pixel Art</MenuItem>
-                <MenuItem value="Pop Art">Pop Art</MenuItem>
-                <MenuItem value="Portrait">Portrait</MenuItem>
-                <MenuItem value="Sci-Fi">Sci-Fi</MenuItem>
-                <MenuItem value="Steampunk">Steampunk</MenuItem>
-                <MenuItem value="Surreal">Surreal</MenuItem>
+                {categoryList.map((x) => (
+                  <MenuItem key={x.id} value={x.name}>
+                    {x.name}
+                  </MenuItem>
+                ))}
               </Select>
             </Box>
 
@@ -269,7 +262,7 @@ const ArtDiscovery = () => {
                         </Typography>
                         <div style={{ marginBottom: '19px' }}>
                           <Rating
-                            value={Art.averageRating} // Use Art.averageRating instead of averageRating
+                            value={Art.averageRating}
                             name="rating"
                             size='small'
                             precision={0.5}

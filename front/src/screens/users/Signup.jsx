@@ -20,12 +20,11 @@ import {
   createTheme,
   Typography
 } from "@mui/material";
-const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_ /]{3,24}$/;
+const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_ /]{2,24}$/;
 const PASSWORD_VALID =/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
 const EMAIL_VALID = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function Signup() {
-  // const userRef = userRef()
   const defaultTheme = createTheme();
 
   const [name, setName] = useState('');
@@ -44,9 +43,6 @@ function Signup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(()=>{
-
-  },[])
-  useEffect(()=>{
     const result = NAME_VALID.test(name)
     console.log('Name validation: ',result)
     setIsValidName(result)
@@ -64,6 +60,7 @@ function Signup() {
     console.log('Email validation ',result)
     setIsValidEmail(result)
   },[email])
+
   
   
   
@@ -110,11 +107,20 @@ function Signup() {
           .post("http://localhost:8081/signup", values)
           .then((res) => {
             if (res.data.signup) {
-              console.log(res.data.Message)
-              navigate("/login");
+              toast.success(res.data.Message, {
+                onClose: () => {
+                  navigate('/login');
+                }
+              });
             } else {
-              console.log(res.data.Message)
-              navigate("/signup");
+              toast.warning(res.data.Message, {
+                onClose:()=>{
+                  setEmail('')
+                  setName('')
+                  setPassword('')
+                  setMatchPassword('')
+                }
+              });
             }
           })
           .catch((err) => console.log(err));
@@ -161,7 +167,6 @@ function Signup() {
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <Grid container rowSpacing={2}>
               <Grid item xs={12}>
-                {/* <input type="text" aria-invalid="false"/> */}
                 <TextField
                   size="small"
                   id="name"
@@ -170,6 +175,7 @@ function Signup() {
                   fullWidth
                   name="name"
                   autoComplete="off"
+                  value={name}
                   onChange={handleName}
                   helperText={!isValidName && name &&("Name must start with letter, must be between 3 to 20 characters long")}
                   error={!isValidName && name}
@@ -177,6 +183,7 @@ function Signup() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={email}
                   size="small"
                   type="email"
                   required
@@ -190,6 +197,7 @@ function Signup() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={password}
                   size="small"
                   required
                   name="password"
@@ -216,6 +224,7 @@ function Signup() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={matchPassword}
                   size="small"
                   required
                   name="passwordConfirm"
@@ -256,6 +265,7 @@ function Signup() {
           </Box>
         </Box>
       </Container>
+      <ToastContainer autoClose={2000} />
     </ThemeProvider>
   );
 }

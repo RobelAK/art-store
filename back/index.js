@@ -491,6 +491,25 @@ app.post("/print/complete", (req,res) =>{
   })
 })
 
+app.post("/branch/deliver", (req,res) =>{
+  const tx_ref = req.body.tx_ref
+  const sql = "UPDATE payment_detail SET print_status = 'delivered' WHERE tx_ref = ?"
+  db.query(sql,[tx_ref],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Art added to delivered")
+  })
+})
+app.post("/branch/delivered", (req,res) =>{
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? AND print_status = 'delivered'"
+  db.query(sql,[branchName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
 
 app.post('/postpayment',(req,res)=>{ 
   const {userId} = req.body
@@ -577,6 +596,49 @@ app.get("/admin/admins", (req, res) => {
     return res.json(data);
   });
 });
+app.get("/price", (req, res) => {
+  const sql = "SELECT * FROM print_price"
+  db.query(sql, (err,data)=>{
+    if(err) return res.json(err)
+    else return res.json(data)
+  })
+});
+
+
+app.get("/categories", (req, res) => {
+  const sql = "SELECT * FROM category"
+  db.query(sql, (err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+});
+
+
+
+app.delete("/category/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const deleteCategory = "DELETE FROM category WHERE id = ?";
+  db.query(deleteCategory, id, (error, results) => {
+    if (error) {
+      res.json({ error: "Internal server error" });
+    } else {
+      res.json({ Message: "User deleted succefully" });
+    }
+  });
+});
+
+app.post("/addCategory", (req,res) =>{
+  const {categoryName} = req.body
+  const sql = "INSERT INTO category (`name`) VALUES (?)"
+  db.query(sql,[categoryName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
+
 app.get("/overview", (req, res) => {
   const usersQuery = "SELECT COUNT(*) AS userCount FROM users";
   const adminsQuery = "SELECT COUNT(*) AS adminCount FROM users WHERE role = 'admin'"
