@@ -6,16 +6,10 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button,
-  TextField,
   Container,
   Box,
   Divider,
   Link,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
 } from "@mui/material";
 import Footer from "../../components/users/Footer";
 import Navbar from "../../components/users/Navbar";
@@ -28,9 +22,29 @@ const AnalysisPage = () => {
   const navigate = useNavigate();
 
   const [cartData, setCartData] = useState([]);
+  const [fachedData , setfechedData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemsInCart, setItemsInCart] = useState(false);
+  const [lifetimeEarnings, setLifetimeEarnings] = useState(0);
+  const [lifetimeSoldItems, setLifetimeSoldItems] = useState(0);
   const [id, setId] = useState("");
+
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get("http://localhost:8081/user/art", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setfechedData(response.data);
+      } catch (error) {
+        console.error('Error fetching posted artworks:', error);
+      }
+    };
+    fetchArtworks();
+  }, []);
 
 
   useEffect(() => {
@@ -62,6 +76,13 @@ const AnalysisPage = () => {
     }
   }, [cartData]);
 
+  useEffect(() => {
+    const totalSoldItems = calculateTotalSoldItems();
+    setLifetimeSoldItems(totalSoldItems);
+    const earnings = calculateLifetimeEarnings();
+    setLifetimeEarnings(earnings);
+  }, [fachedData]);
+
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -70,6 +91,22 @@ const AnalysisPage = () => {
     });
     return totalPrice;
   };
+  const calculateTotalSoldItems = () => {
+    let totalSoldItems = 0;
+    fachedData.forEach((item) => {
+      totalSoldItems += item.total_sales;
+    });
+    return totalSoldItems;
+  };
+
+  const calculateLifetimeEarnings = () => {
+    let lifetimeEarnings = 0;
+    fachedData.forEach((item) => {
+      lifetimeEarnings += item.total_sales * item.price;
+    });
+    return lifetimeEarnings;
+  };
+
 
   return (
     <>
@@ -113,15 +150,15 @@ const AnalysisPage = () => {
                         Lifetime Earnings 
                       </Typography>
                       <Typography fontFamily={"sora"} variant="body1">
-                        $1000
+                      {lifetimeEarnings} birr
                       </Typography>
                   </Grid>
                   <Grid item sm={6}>
                       <Typography fontFamily={"sora"} fontWeight={"medium"} variant="subtitle1">
-                        Lifetime Sold Items
+                        Lifetime Sold Artworks
                       </Typography>
                       <Typography fontFamily={"sora"} variant="body1">
-                        $2000
+                      {lifetimeSoldItems} arts
                       </Typography>
                   </Grid>
                   </Grid>
