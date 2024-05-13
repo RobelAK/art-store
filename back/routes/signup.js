@@ -1,43 +1,177 @@
-import bcrypt from 'bcrypt'
+// export default async function signup(transporter, db, req, res) {
+//   try {
+//     const { email, name, password, passwordConfirm } = req.body;
 
-export default async function signup(db, req, res) {
-  
-  const check = "SELECT * From users where email = ?";
-  const { email, name, password, passwordConfirm } = req.body
-  const hashedPassword = await bcrypt.hash(password,10)
-  const validatePassword = (password) => {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(
-      password
-    );
+//     // Check if password matches confirmation
+//     if (password !== passwordConfirm) {
+//       return res.json({ verificationSent: false, message: "Password doesn't match" });
+//     }
 
-    return (
-      password.length >= minLength &&
-      hasUpperCase &&
-      hasLowerCase &&
-      hasNumber &&
-      hasSpecialChar
-    );
-  }; 
+//     // Check if email already exists in users table
+//     const checkUserQuery = "SELECT * FROM users WHERE email = ?";
+//     db.query(checkUserQuery, [email], async (err, userResult) => {
+//       if (err) {
+//         console.error("Error checking existing user:", err);
+//         return res.json({ verificationSent: false, message: "Database error" });
+//       }
+      
+//       if (userResult.length > 0) {
+//         return res.json({ verificationSent: false, message: "Email already exists" });
+//       }
 
-  if (password == passwordConfirm) {
-    db.query(check, [email], (err, result) => {
-      if (err) return res.json({ Message: "Query error" })
-      if (result.length == 0) {
-        const sql = "INSERT INTO users (`name`,`email`,`password`,`role`) Values (?,?,?,?)";
-        db.query(sql, [name, email, hashedPassword, 'buyer'], (err, data) => {
-          if (err) return res.json({ Message: "query error" });
-          return res.json({ signup: true, Message: 'You have Registered successfuly' });
+//       // Generate random verification code
+//       const verificationCode = Math.random().toString(36).substr(2, 6);
 
-        })
-      }
-      else {
-        return res.json({ signup: false, Message: 'Email already exist' })
-      }
-    })
+//       // Insert or update verification code in pending_user table
+//       const selectSql = "SELECT * FROM pending_user WHERE email = ?";
+//       const selectResult = await queryDb(db, selectSql, [email]);
+
+//       let query, queryParams;
+//       if (selectResult.length === 0) {
+//         query = "INSERT INTO pending_user (email, verificationCode) VALUES (?, ?)";
+//         queryParams = [email, verificationCode];
+//       } else {
+//         query = "UPDATE pending_user SET verificationCode = ? WHERE email = ?";
+//         queryParams = [verificationCode, email];
+//       }
+
+//       await queryDb(db, query, queryParams);
+
+//       // Send verification email
+//       const mailOptions = {
+//         from: "robelaklilu100@gmail.com",
+//         to: email,
+//         subject: "Email Verification",
+//         text: `Your verification code is: ${verificationCode}`,
+//       };
+
+//       await transporter.sendMail(mailOptions);
+//       console.log("Email sent.");
+
+//       return res.json({ verificationSent: true, message: "Verification code sent to your email" });
+//     });
+//   } catch (error) {
+//     console.error("Error occurred:", error);
+//     return res.json({ verificationSent: false, message: "Internal server error" });
+//   }
+// }
+
+// async function queryDb(db, query, params) {
+//   return new Promise((resolve, reject) => {
+//     db.query(query, params, (err, result) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(result);
+//       }
+//     });
+//   });
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export default async function signup(transporter, db, req, res) {
+  try {
+    const { email, name, password, passwordConfirm } = req.body;
+
+    if (password !== passwordConfirm) {
+      return res.json({ verificationSent: false, message: "Password doesn't match" });
+    }
+
+    const checkUserQuery = "SELECT * FROM users WHERE email = ?";
+    
+    const userResult = await queryDb(db, checkUserQuery, [email]);
+
+    if (userResult.length > 0) {
+      return res.json({ verificationSent: false, message: "Email already exists" });
+    }
+
+    const verificationCode = generateRandomCode();
+
+    const selectSql = "SELECT * FROM pending_user WHERE email = ?";
+    const selectResult = await queryDb(db, selectSql, [email]);
+
+    let query, queryParams;
+    if (selectResult.length === 0) {
+      query = "INSERT INTO pending_user (email, verificationCode) VALUES (?, ?)";
+      queryParams = [email, verificationCode];
+    } else {
+      query = "UPDATE pending_user SET verificationCode = ? WHERE email = ?";
+      queryParams = [verificationCode, email];
+    }
+
+    await queryDb(db, query, queryParams);
+
+    const mailOptions = {
+      from: "robelaklilu100@gmail.com",
+      to: email,
+      subject: "Email Verification",
+      text: `Your verification code is: ${verificationCode}`,
+    };
+
+    await sendVerificationEmail(transporter, mailOptions);
+
+    console.log("Email sent.");
+
+    return res.json({ verificationSent: true, message: "Verification code sent to your email" });
+  } catch (error) {
+    console.error("Error occurred:", error);
+    return res.status(500).json({ verificationSent: false, message: "Internal server error" });
   }
-  else return res.json({ signup: false, Message: "Password doesnt match" })
+}
+
+async function queryDb(db, query, params) {
+  return new Promise((resolve, reject) => {
+    db.query(query, params, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
+function generateRandomCode() {
+  return Math.random().toString(36).substr(2, 6);
+}
+
+async function sendVerificationEmail(transporter, mailOptions) {
+  
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(info);
+      }
+    });
+  });
 }

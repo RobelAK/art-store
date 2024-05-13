@@ -73,7 +73,7 @@ const WithdrawRequest = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell>No</TableCell>
               <TableCell>Full Name</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Action</TableCell>
@@ -87,9 +87,9 @@ const WithdrawRequest = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
+              users.map((user,x) => (
                 <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{x+1}</TableCell>
                   <TableCell>{user.fname} { user.Lastname}</TableCell>
                   <TableCell>{user.total_revenue}</TableCell>
 

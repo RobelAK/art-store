@@ -1,7 +1,7 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ToastContainer ,toast} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -12,59 +12,65 @@ import {
   Button,
   Checkbox,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControlLabel,
   Grid,
   IconButton,
   TextField,
   ThemeProvider,
   createTheme,
-  Typography
+  Typography,
 } from "@mui/material";
 const NAME_VALID = /^[a-zA-Z][a-zA-Z0-9-_ /]{2,24}$/;
-const PASSWORD_VALID =/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
+const PASSWORD_VALID =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_VALID = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function Signup() {
   const defaultTheme = createTheme();
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [isValidName, setIsValidName] = useState(false);
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
 
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [isValidPassword, setIsValidPassword] = useState(false);
 
-  const [matchPassword, setMatchPassword] = useState('');
+  const [matchPassword, setMatchPassword] = useState("");
   const [validMatch, setValidMatch] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  useEffect(()=>{
-    const result = NAME_VALID.test(name)
-    // console.log('Name validation: ',result)
-    setIsValidName(result)
-  },[name])
-  useEffect(()=>{
-    const result = PASSWORD_VALID.test(password)
-    // console.log('Password validation: ',result)
-    setIsValidPassword(result)
-    
-    const match = password == matchPassword
-    setValidMatch(match)
-  },[password,matchPassword])
-  useEffect(()=>{
-    const result = EMAIL_VALID.test(email)
-    // console.log('Email validation ',result)
-    setIsValidEmail(result)
-  },[email])
+  const [show, setShow] = useState("none");
+  const [textFieldDisabled, setTextFieldDisabled] = useState(false);
 
-  
-  
-  
-  
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verifyButton, setVerifyButton] = useState(false)
+
+  const [signupButton, setSignupButton] = useState(false)
+  useEffect(() => {
+    const result = NAME_VALID.test(name);
+    setIsValidName(result);
+  }, [name]);
+  useEffect(() => {
+    const result = PASSWORD_VALID.test(password);
+    setIsValidPassword(result);
+
+    const match = password == matchPassword;
+    setValidMatch(match);
+  }, [password, matchPassword]);
+  useEffect(() => {
+    const result = EMAIL_VALID.test(email);
+    setIsValidEmail(result);
+  }, [email]);
+
   const navigate = useNavigate();
 
   const handleName = (event) => {
@@ -87,46 +93,89 @@ function Signup() {
       (prevShowConfirmPassword) => !prevShowConfirmPassword
     );
   };
-
-
-  const values = {
-    name: name,
-    email: email,
-    password: password,
-    passwordConfirm: matchPassword,
+  const handleVerificationCode = (event) => {
+    setVerificationCode(event.target.value);
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const values = {
+      name: name,
+      email: email,
+      password: password,
+      passwordConfirm: matchPassword,
+    };
     if (!isValidName) {
       console.log("invalid name");
+      toast.warning("Invalid name",{
+        onClose:()=>{
+          setSignupButton(false)
+        }
+      });
+    }
+    if (!isValidPassword) {
+      console.log("Invalid password");
+      toast.warning("Invalid password",{
+        onClose:()=>{
+          setSignupButton(false)
+        }
+      });
     } else {
-      if (!isValidPassword) {
-        console.log("Invalid password");
-      } else {
-        axios
-          .post("http://localhost:8081/signup", values)
-          .then((res) => {
-            if (res.data.signup) {
-              toast.success(res.data.Message, {
-                onClose: () => {
-                  navigate('/login');
-                }
-              });
-            } else {
-              toast.warning(res.data.Message, {
-                onClose:()=>{
-                  setEmail('')
-                  setName('')
-                  setPassword('')
-                  setMatchPassword('')
-                }
-              });
-            }
-          })
-          .catch((err) => console.log(err));
-      }
+
+      axios
+        .post("http://localhost:8081/signup", values)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.verificationSent == true) {
+            toast.success(res.data.message, {
+              onClose: () => {
+                setTextFieldDisabled(true);
+                setShow("block");
+              },
+            });
+          } else {
+            toast.warning(res.data.message, {
+              onClose: () => {
+                setEmail("");
+                setName("");
+                setPassword("");
+                setMatchPassword("");
+              },
+            });
+          }
+        })
+        .catch((err) => console.log(err));
     }
   };
+
+  const handleVerify = (event) => {
+    event.preventDefault();
+    setVerifyButton(true)
+    const values = {
+      name: name,
+      email: email,
+      password: password,
+      verificationCode: verificationCode,
+    };
+    axios.post("http://localhost:8081/signup/verify", values).then((res) => {
+      console.log(res.data);
+      if (res.data.signup) {
+        toast.success(res.data.Message, {
+          onClose: () => {
+            navigate("/login");
+          },
+        });
+      } else {
+        toast.warning(res.data.Message,{
+          onClose:()=>{
+            setVerifyButton(false)
+          }
+        });
+      }
+    });
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container
@@ -177,8 +226,13 @@ function Signup() {
                   autoComplete="off"
                   value={name}
                   onChange={handleName}
-                  helperText={!isValidName && name &&("Name must start with letter, must be between 3 to 20 characters long")}
+                  helperText={
+                    !isValidName &&
+                    name &&
+                    "Name must start with letter, must be between 3 to 20 characters long"
+                  }
                   error={!isValidName && name}
+                  disabled={textFieldDisabled}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -193,7 +247,26 @@ function Signup() {
                   name="email"
                   autoComplete="off"
                   onChange={handleEmail}
+                  disabled={textFieldDisabled}
                 />
+              </Grid>
+              <Grid item xs={6} sx={{ display: show }}>
+                <TextField
+                  value={verificationCode}
+                  size="small"
+                  type="text"
+                  fullWidth
+                  id="verificationCode"
+                  label="verificationCode"
+                  name="verificationCode"
+                  autoComplete="off"
+                  onChange={handleVerificationCode}
+                />
+              </Grid>
+              <Grid item xs={6} sx={{ display: show }}>
+                <Button variant="contained" onClick={handleVerify} disabled={verifyButton}>
+                  Verify
+                </Button>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -207,7 +280,12 @@ function Signup() {
                   id="password"
                   autoComplete="new-password"
                   onChange={handlePassword}
-                  helperText={!isValidPassword && password &&('Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and special characters.')}
+                  disabled={textFieldDisabled}
+                  helperText={
+                    !isValidPassword &&
+                    password &&
+                    "Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and special characters."
+                  }
                   error={!isValidPassword && password}
                   InputProps={{
                     endAdornment: (
@@ -233,8 +311,11 @@ function Signup() {
                   type={showConfirmPassword ? "text" : "password"}
                   id="passwordConfirm"
                   autoComplete="new-password"
+                  disabled={textFieldDisabled}
                   onChange={handlePasswordConfirm}
-                  helperText={!validMatch && matchPassword &&('Password doesnt match')}
+                  helperText={
+                    !validMatch && matchPassword && "Password doesnt match"
+                  }
                   error={!validMatch && matchPassword}
                   InputProps={{
                     endAdornment: (
@@ -252,20 +333,13 @@ function Signup() {
                   }}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="Agreed to terms and conditions"
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 1, mb: 0 }}
+              disabled={textFieldDisabled || signupButton}
             >
               Sign Up
             </Button>
