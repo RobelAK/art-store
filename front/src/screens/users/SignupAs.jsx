@@ -37,9 +37,17 @@ const SignupAs = () => {
       console.log("no user found");
     }
   }, []);
-  const handlePortfolioLink = (event) =>{
-    setPortfolioLink(event.target.value);
-  }
+  // const handlePortfolioLink = (event) =>{
+  //   setPortfolioLink(event.target.value);
+  // }
+  const handlePortfolioLink = (event) => {
+    let link = event.target.value;
+    if (!link.startsWith("https://")) {
+        link = "https://" + link;
+    }
+    setPortfolioLink(link);
+}
+
   const handleDescription = (event) =>{
     setDescriotion(event.target.value);
   }

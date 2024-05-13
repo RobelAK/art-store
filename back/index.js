@@ -654,7 +654,16 @@ app.post("/changePrintPrice",(req,res) => {
   })
 })
 
-
+app.post("/navbarInfo",(req,res)=>{
+  const {userId} = req.body
+  const sql = "SELECT role FROM users WHERE id = ?"
+  db.query(sql,[userId],(err,result)=>{
+    if(err) return res.json(err)
+    else{
+      return res.json(result[0].role)
+    }
+  })
+})
 
 
 app.get("/overview", (req, res) => {

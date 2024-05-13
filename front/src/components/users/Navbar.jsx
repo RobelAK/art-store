@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -8,8 +7,8 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Logo from "../../utils/logo1.png";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import AccountMenu from './AccountMenu';
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import AccountMenu from "./AccountMenu";
 import { Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
@@ -37,15 +36,20 @@ const Navbar = () => {
   const [id, setId] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     if (token) {
       setisLoggedIn(true);
       const user = JSON.parse(atob(token.split(".")[1]));
-      if (user.role === "seller") {
-        setisSeller(true);
-      } else {
-        setisSeller(false);
-      }
+      axios
+        .post("http://localhost:8081/navbarInfo", { userId: user.id })
+        .then((res) => {
+          if (res.data === "seller") {
+            setisSeller(true);
+          } else {
+            setisSeller(false);
+          }
+        })
+        .catch((err) => console.log(err));
     } else {
       setisLoggedIn(false);
     }
@@ -140,20 +144,26 @@ const Navbar = () => {
                 alignItems: "center",
                 ml: "-18px",
                 px: 0,
-                textDecoration: 'none', // Remove underline from the text
+                textDecoration: "none", // Remove underline from the text
               }}
             >
-              <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+              <Link
+                to="/"
+                style={{
+                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 <img src={Logo} style={logoStyle} alt="Habesha Art" />
                 <Typography
                   variant="body2"
                   component="h1"
                   sx={{
-
-                    fontFamily: 'Sora, sans-serif',
+                    fontFamily: "Sora, sans-serif",
                     fontWeight: 200,
-                    color: 'gray', // Text color on top of the overlay
-                    marginLeft: '5px', // Add margin for spacing between the logo and text
+                    color: "gray", // Text color on top of the overlay
+                    marginLeft: "5px", // Add margin for spacing between the logo and text
                   }}
                 >
                   Habesha Art Store
@@ -182,32 +192,34 @@ const Navbar = () => {
                   Discover Art
                 </Button>
               </Link>
-                <Button
-                  color="primary"
-                  variant="text"
-                  size="small"
-                  component={Link} to='/category'
-                  sx={{
-                    color: "black",
-                    fontWeight: "light",
-                    fontFamily: "sora,sans-serif",
-                  }}
-                >
-                  category
-                </Button>
-                <Button
-                  color="primary"
-                  variant="text"
-                  size="small"
-                  component={Link} to='/about'
-                  sx={{
-                    color: "black",
-                    fontWeight: "light",
-                    fontFamily: "sora,sans-serif",
-                  }}
-                >
-                  About Us
-                </Button>
+              <Button
+                color="primary"
+                variant="text"
+                size="small"
+                component={Link}
+                to="/category"
+                sx={{
+                  color: "black",
+                  fontWeight: "light",
+                  fontFamily: "sora,sans-serif",
+                }}
+              >
+                category
+              </Button>
+              <Button
+                color="primary"
+                variant="text"
+                size="small"
+                component={Link}
+                to="/about"
+                sx={{
+                  color: "black",
+                  fontWeight: "light",
+                  fontFamily: "sora,sans-serif",
+                }}
+              >
+                About Us
+              </Button>
             </Box>
             <SearchBar />
             <Box
@@ -218,8 +230,11 @@ const Navbar = () => {
               }}
             >
               {isSeller && (
-                <Link to="/addart"  >
-                  <AddPhotoAlternateIcon color="primary" sx={{ marginRight: 2 , color: "black",}} />
+                <Link to="/addart">
+                  <AddPhotoAlternateIcon
+                    color="primary"
+                    sx={{ marginRight: 2, color: "black" }}
+                  />
                 </Link>
               )}
 
@@ -232,9 +247,7 @@ const Navbar = () => {
               <Link to="/saved">
                 <BookmarkIcon color="primary" sx={{ marginLeft: 2, marginRight: 2, color: "black", }} />
               </Link>
-              {isLoggedIn && (
-                  <Notifications   />
-              )}
+              {isLoggedIn && <Notifications />}
 
               {isLoggedIn ? (
                 <AccountMenu />
@@ -244,7 +257,6 @@ const Navbar = () => {
                 </Link>
               )}
             </Box>
-
           </Toolbar>
         </Container>
       </AppBar>
