@@ -85,115 +85,8 @@ const chapa = new Chapa({
 });
 
 app.post("/signup", async (req, res) => {
-  // signup(db, req, res);
-  const check = "SELECT * From users where email = ?";
-  const { email, name, password, passwordConfirm } = req.body;
-
-  if (password == passwordConfirm) {
-    try {
-      db.query(check, [email], async (err, result) => {
-        if (err) return res.json({verificationSent: false, Message: "Query error" });
-        if (result.length == 0) {
-
-          const verificationCode = Math.random().toString(36).substr(2, 6);
-
-          const mailOptions = {
-            from: "robelaklilu100@gmail.com",
-            to: email,
-            subject: "Email Verification",
-            text: `Your verification code is: ${verificationCode}`,
-          };
-
-          await transporter.sendMail(mailOptions);
-          console.log("email sent :)");
-
-
-          const selectSql = "SELECT * FROM pending_user WHERE email = ?"
-          const sql = "INSERT INTO pending_user (`email`,`verificationCode`) Values (?,?)";
-          const setSql = "UPDATE pending_user SET verificationCode = ? WHERE email = ?"
-          db.query(selectSql,[email],(err,result)=>{
-            if(result.length == 0){
-              db.query(sql, [email, verificationCode], (err, data) => {
-                if (err) return res.json({verificationSent: false, Message: "query error" });
-                return res.json({verificationSent: true, Message: "Verification code sent to your email"});
-              });
-            }
-            else{
-              db.query(setSql,[verificationCode,email],(err,result) => {
-                if(err) return res.json({verificationSent: false,Message: 'query error'})
-                else res.json({verificationSent: true, Message: "Verification code sent to your email"});
-              })
-            }
-          })
-        } else {
-          return res.json({ verificationSent: false, Message: "Email already exist" });
-        }
-      });
-    } catch (error) {
-      console.log("ERROR OCCURED: " + error);
-      return res.json(error);
-    }
-  } else return res.json({ verificationSent: false, Message: "Password doesnt match" });
+  signup(transporter,db, req, res);
 });
-
-
-// app.post("/signup", async (req, res) => {
-//   const { email, name, password, passwordConfirm } = req.body;
-
-//   try {
-//     // Validate input
-//     if (!email || !name || !password || !passwordConfirm) {
-//       return res.status(400).json({ error: "All fields are required" });
-//     }
-//     if (password !== passwordConfirm) {
-//       return res.status(400).json({ error: "Passwords do not match" });
-//     }
-
-//     // Check if the email already exists
-//     const checkEmailQuery = "SELECT * FROM users WHERE email = ?";
-//     db.query(checkEmailQuery, [email], async (err, result) => {
-//       if (err) {
-//         console.error("Database error:", err);
-//         return res.status(500).json({ error: "Database error" });
-//       }
-
-//       if (result.length > 0) {
-//         return res.status(409).json({ error: "Email already exists" });
-//       }
-
-//       // Hash the password
-//       const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-//       // Generate verification code
-//       const verificationCode = Math.random().toString(36).substr(2, 6);
-
-//       // Save user data to pending_user table
-//       const insertPendingUserQuery = "INSERT INTO pending_user (email, name, password, verificationCode) VALUES (?, ?, ?, ?)";
-//       db.query(insertPendingUserQuery, [email, name, hashedPassword, verificationCode], async (err, data) => {
-//         if (err) {
-//           console.error("Database error:", err);
-//           return res.status(500).json({ error: "Database error" });
-//         }
-
-//         // Send verification email
-//         const mailOptions = {
-//           from: "robelaklilu100@gmail.com",
-//           to: email,
-//           subject: "Email Verification",
-//           text: `Your verification code is: ${verificationCode}`,
-//         };
-
-//         await transporter.sendMail(mailOptions);
-//         console.log("Email sent :)");
-
-//         return res.json({ success: true, message: "Verification code sent to your email" });
-//       });
-//     });
-//   } catch (error) {
-//     console.error("Error occurred:", error);
-//     return res.status(500).json({ error: "Internal server error" });
-//   }
-// });
 
 
 
@@ -209,6 +102,8 @@ app.post("/signup/verify",async (req,res)=>{
     else{
       if(verificationCode == result[0].verificationCode){
         const insertSql = "INSERT INTO users (`name`,`email`,`password`,`role`) Values (?,?,?,?)";
+        const deletePending = "DELETE FROM pending_user WHERE email = ?"
+        db.query(deletePending,[email])
         db.query(insertSql, [name, email, hashedPassword, 'buyer'], (err, data) => {
           if (err) return res.json({signup: false, Message: "query error" });
           return res.json({ signup: true, Message: 'You have Registered successfuly' });
