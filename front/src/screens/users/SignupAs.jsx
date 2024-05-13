@@ -37,9 +37,6 @@ const SignupAs = () => {
       console.log("no user found");
     }
   }, []);
-  // const handlePortfolioLink = (event) =>{
-  //   setPortfolioLink(event.target.value);
-  // }
   const handlePortfolioLink = (event) => {
     let link = event.target.value;
     if (!link.startsWith("https://")) {

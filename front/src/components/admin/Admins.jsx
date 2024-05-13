@@ -81,7 +81,7 @@ const Admins = () => {
           <TableBody>
             {admins.map((admin,x) => (
               <TableRow key={admin.id}>
-                <TableCell>{admin.id}</TableCell>
+                <TableCell>{x+1}</TableCell>
                 <TableCell>{admin.name}</TableCell>
                 <TableCell>{admin.email}</TableCell>
                 <TableCell>

@@ -1,3 +1,6 @@
+import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
+
 import express from "express";
 import mysql from "mysql";
 import cors from "cors";
@@ -26,7 +29,7 @@ import AddAvatar from "./routes/AddAvatar.js";
 import Notifications from "./routes/Notifications.js";
 import Rating from "./routes/Rating.js";
 import RatingAverage from "./routes/RatingAverage.js";
-import { Chapa } from 'chapa-nodejs';
+import { Chapa } from "chapa-nodejs";
 import AddBranch from "./routes/AddBranch.js";
 import AddAdmin from "./routes/AddAdmin.js";
 import AddToCart from "./routes/AddToCart.js";
@@ -38,8 +41,6 @@ import ApprovePayment from "./routes/ApprovePayment.js";
 import AddedSales from "./routes/AddedSales.js";
 import WithdrawalList from "./routes/WithdrawalList.js";
 import SalesList from "./routes/SalesList.js";
-
-
 
 const app = express();
 
@@ -67,6 +68,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }).single("art");
 const Add = multer({ storage }).single("avatar");
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "robelaklilu100@gmail.com",
+    pass: "tjti wqiy retb nytd",
+  },
+});
+
 app.post("/profile/changeavatar", Add, (req, res) => {
   AddAvatar(db, req, res);
 });
@@ -76,11 +85,142 @@ const chapa = new Chapa({
 });
 
 app.post("/signup", async (req, res) => {
-  signup(db, req, res);
+  // signup(db, req, res);
+  const check = "SELECT * From users where email = ?";
+  const { email, name, password, passwordConfirm } = req.body;
+
+  if (password == passwordConfirm) {
+    try {
+      db.query(check, [email], async (err, result) => {
+        if (err) return res.json({verificationSent: false, Message: "Query error" });
+        if (result.length == 0) {
+
+          const verificationCode = Math.random().toString(36).substr(2, 6);
+
+          const mailOptions = {
+            from: "robelaklilu100@gmail.com",
+            to: email,
+            subject: "Email Verification",
+            text: `Your verification code is: ${verificationCode}`,
+          };
+
+          await transporter.sendMail(mailOptions);
+          console.log("email sent :)");
+
+
+          const selectSql = "SELECT * FROM pending_user WHERE email = ?"
+          const sql = "INSERT INTO pending_user (`email`,`verificationCode`) Values (?,?)";
+          const setSql = "UPDATE pending_user SET verificationCode = ? WHERE email = ?"
+          db.query(selectSql,[email],(err,result)=>{
+            if(result.length == 0){
+              db.query(sql, [email, verificationCode], (err, data) => {
+                if (err) return res.json({verificationSent: false, Message: "query error" });
+                return res.json({verificationSent: true, Message: "Verification code sent to your email"});
+              });
+            }
+            else{
+              db.query(setSql,[verificationCode,email],(err,result) => {
+                if(err) return res.json({verificationSent: false,Message: 'query error'})
+                else res.json({verificationSent: true, Message: "Verification code sent to your email"});
+              })
+            }
+          })
+        } else {
+          return res.json({ verificationSent: false, Message: "Email already exist" });
+        }
+      });
+    } catch (error) {
+      console.log("ERROR OCCURED: " + error);
+      return res.json(error);
+    }
+  } else return res.json({ verificationSent: false, Message: "Password doesnt match" });
 });
 
+
+// app.post("/signup", async (req, res) => {
+//   const { email, name, password, passwordConfirm } = req.body;
+
+//   try {
+//     // Validate input
+//     if (!email || !name || !password || !passwordConfirm) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
+//     if (password !== passwordConfirm) {
+//       return res.status(400).json({ error: "Passwords do not match" });
+//     }
+
+//     // Check if the email already exists
+//     const checkEmailQuery = "SELECT * FROM users WHERE email = ?";
+//     db.query(checkEmailQuery, [email], async (err, result) => {
+//       if (err) {
+//         console.error("Database error:", err);
+//         return res.status(500).json({ error: "Database error" });
+//       }
+
+//       if (result.length > 0) {
+//         return res.status(409).json({ error: "Email already exists" });
+//       }
+
+//       // Hash the password
+//       const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+//       // Generate verification code
+//       const verificationCode = Math.random().toString(36).substr(2, 6);
+
+//       // Save user data to pending_user table
+//       const insertPendingUserQuery = "INSERT INTO pending_user (email, name, password, verificationCode) VALUES (?, ?, ?, ?)";
+//       db.query(insertPendingUserQuery, [email, name, hashedPassword, verificationCode], async (err, data) => {
+//         if (err) {
+//           console.error("Database error:", err);
+//           return res.status(500).json({ error: "Database error" });
+//         }
+
+//         // Send verification email
+//         const mailOptions = {
+//           from: "robelaklilu100@gmail.com",
+//           to: email,
+//           subject: "Email Verification",
+//           text: `Your verification code is: ${verificationCode}`,
+//         };
+
+//         await transporter.sendMail(mailOptions);
+//         console.log("Email sent :)");
+
+//         return res.json({ success: true, message: "Verification code sent to your email" });
+//       });
+//     });
+//   } catch (error) {
+//     console.error("Error occurred:", error);
+//     return res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
+
+
+
+
+
+app.post("/signup/verify",async (req,res)=>{
+  const {name,email,password,verificationCode} = req.body
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const sql = "SELECT verificationCode FROM pending_user WHERE email = ?"
+  db.query(sql,[email],(err,result)=>{
+    if(err) return res.json({signup: false,Message: "Query error"})
+    else{
+      if(verificationCode == result[0].verificationCode){
+        const insertSql = "INSERT INTO users (`name`,`email`,`password`,`role`) Values (?,?,?,?)";
+        db.query(insertSql, [name, email, hashedPassword, 'buyer'], (err, data) => {
+          if (err) return res.json({signup: false, Message: "query error" });
+          return res.json({ signup: true, Message: 'You have Registered successfuly' });
+        })
+      }
+      else return res.json({signup: false,Message: 'verification code not correct'})
+    }
+  })
+})
+
 app.post("/addbranch", async (req, res) => {
-  AddBranch(db,req,res)
+  AddBranch(db, req, res);
 });
 
 app.post("/addadmin", async (req, res) => {
@@ -201,16 +341,15 @@ app.post("/signupas", (req, res) => {
 
 app.post("/withdraw", (req, res) => {
   Withdrawal(db, req, res);
-  });
+});
 
 app.post("/api/rating", (req, res) => {
   Rating(db, req, res);
 });
 
-app.get('/api/rating/average/:art_id', (req, res) => {
+app.get("/api/rating/average/:art_id", (req, res) => {
   RatingAverage(db, req, res);
 });
-
 
 app.put("/art/approve/:id", (req, res) => {
   ApproveArt(db, req, res);
@@ -223,7 +362,7 @@ app.put("/payed/user/:id", (req, res) => {
   ApprovePayment(db, req, res);
 });
 
-app.get('/art/:id/average-rating', (req, res) => {
+app.get("/art/:id/average-rating", (req, res) => {
   AverageRating(db, req, res);
 });
 
@@ -291,10 +430,8 @@ app.delete("/user/art/:id", (req, res) => {
   });
 });
 
-
-
 app.post("/addtocart", (req, res) => {
-  AddToCart(db,req,res)
+  AddToCart(db, req, res);
 });
 
 app.post("/cart", (req, res) => {
@@ -316,7 +453,7 @@ app.post("/sold", (req, res) => {
 });
 
 app.post("/seles", (req, res) => {
-  AddedSales (db, req, res);
+  AddedSales(db, req, res);
 });
 // app.post("/seles", (req, res) => {
 //   const {art_id} = req.body;
@@ -326,18 +463,15 @@ app.post("/seles", (req, res) => {
 //     else return res.json(result);
 //   });
 // });
-  
 
-app.post("/cart", (req,res)=>{
-  const userId = req.body.userId
-  const sql = "SELECT * FROM cart WHERE user_id = ?" 
-  db.query(sql, [userId], (err,result)=>{
-    if(err) return res.json(err) 
-    else return res.json(result)
-  })
-})
-
-
+app.post("/cart", (req, res) => {
+  const userId = req.body.userId;
+  const sql = "SELECT * FROM cart WHERE user_id = ?";
+  db.query(sql, [userId], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
+});
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;
@@ -351,16 +485,19 @@ app.delete("/user/delete/:id", (req, res) => {
   });
 });
 
-app.put('/api/notifications/:id', (req, res) => {
+app.put("/api/notifications/:id", (req, res) => {
   const notificationId = req.params.id;
-  db.query('UPDATE notifications SET status = false WHERE id = ?', [notificationId], (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: 'Internal server error' });
+  db.query(
+    "UPDATE notifications SET status = false WHERE id = ?",
+    [notificationId],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
+      res.status(200).json({ message: "Notification updated successfully" });
     }
-    res.status(200).json({ message: 'Notification updated successfully' });
-  });
+  );
 });
-
 
 app.post("/removecartitem", (req, res) => {
   const { id } = req.body;
@@ -426,7 +563,7 @@ app.post("/payment/pay", async (req, res) => {
           ],
           (err, result) => {
             if (err) {
-              console.log(err)
+              console.log(err);
               return res.status(500).json({
                 error: "An error occurred while inserting cart data.",
               });
@@ -440,31 +577,34 @@ app.post("/payment/pay", async (req, res) => {
     })
     .catch((error) => console.error("Error:", error));
 });
-app.post('/branch',(req, res) => {
-  const branchName = req.body.branchName
-  const sql = "SELECT * FROM payment_detail WHERE location = ? and print_status ='waiting'"
-  db.query(sql,[branchName], (err,results)=>{
-    if(err) return res.json(err)
-    else{
-      return res.json(results)
-  }
-  })
-})
-app.post('/branch/approve',(req, res) => {
-  const {paymentId,branchName} = req.body
-  const sql = "UPDATE payment_detail SET print_status = 'approved' WHERE id = ?"
-  const AddCount = " "
-  
-  db.query(sql, [paymentId],(err,result)=>{
-    if(err) return res.json(err)
-    return res.json(result)
-  })
-})
+app.post("/branch", (req, res) => {
+  const branchName = req.body.branchName;
+  const sql =
+    "SELECT * FROM payment_detail WHERE location = ? and print_status ='waiting'";
+  db.query(sql, [branchName], (err, results) => {
+    if (err) return res.json(err);
+    else {
+      return res.json(results);
+    }
+  });
+});
+app.post("/branch/approve", (req, res) => {
+  const { paymentId, branchName } = req.body;
+  const sql =
+    "UPDATE payment_detail SET print_status = 'approved' WHERE id = ?";
+  const AddCount = " ";
+
+  db.query(sql, [paymentId], (err, result) => {
+    if (err) return res.json(err);
+    return res.json(result);
+  });
+});
 
 app.post("/branch/approved", (req, res) => {
-  const branchName = req.body.branchName
-  const sql = "SELECT * FROM payment_detail WHERE location = ? and print_status = 'approved'"
-  db.query(sql,[branchName], (err, results) => {
+  const branchName = req.body.branchName;
+  const sql =
+    "SELECT * FROM payment_detail WHERE location = ? and print_status = 'approved'";
+  db.query(sql, [branchName], (err, results) => {
     if (err) return res.json(err);
     else {
       return res.json(results);
@@ -472,9 +612,10 @@ app.post("/branch/approved", (req, res) => {
   });
 });
 app.post("/branch/printed", (req, res) => {
-  const branchName = req.body.branchName
-  const sql = "SELECT * FROM payment_detail WHERE location = ? and print_status = 'printed'"
-  db.query(sql,[branchName], (err, results) => {
+  const branchName = req.body.branchName;
+  const sql =
+    "SELECT * FROM payment_detail WHERE location = ? and print_status = 'printed'";
+  db.query(sql, [branchName], (err, results) => {
     if (err) return res.json(err);
     else {
       return res.json(results);
@@ -482,50 +623,42 @@ app.post("/branch/printed", (req, res) => {
   });
 });
 
-app.post("/print/complete", (req,res) =>{
-  const orderId = req.body.orderId
-  const sql = "UPDATE payment_detail SET print_status = 'printed' WHERE id = ?"
-  db.query(sql,[orderId],(err,result)=>{
-    if(err) return res.json(err)
-    else return res.json("Art added to printed")
-  })
-})
+app.post("/print/complete", (req, res) => {
+  const orderId = req.body.orderId;
+  const sql = "UPDATE payment_detail SET print_status = 'printed' WHERE id = ?";
+  db.query(sql, [orderId], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json("Art added to printed");
+  });
+});
 
-app.post("/branch/deliver", (req,res) =>{
-  const tx_ref = req.body.tx_ref
-  const sql = "UPDATE payment_detail SET print_status = 'delivered' WHERE tx_ref = ?"
-  db.query(sql,[tx_ref],(err,result)=>{
-    if(err) return res.json(err)
-    else return res.json("Art added to delivered")
-  })
-})
-app.post("/branch/delivered", (req,res) =>{
-  const branchName = req.body.branchName
-  const sql = "SELECT * FROM payment_detail WHERE location = ? AND print_status = 'delivered'"
-  db.query(sql,[branchName],(err,result)=>{
-    if(err) return res.json(err)
-    else return res.json(result)
-  })
-})
+app.post("/branch/deliver", (req, res) => {
+  const tx_ref = req.body.tx_ref;
+  const sql =
+    "UPDATE payment_detail SET print_status = 'delivered' WHERE tx_ref = ?";
+  db.query(sql, [tx_ref], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json("Art added to delivered");
+  });
+});
+app.post("/branch/delivered", (req, res) => {
+  const branchName = req.body.branchName;
+  const sql =
+    "SELECT * FROM payment_detail WHERE location = ? AND print_status = 'delivered'";
+  db.query(sql, [branchName], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
+});
 
-
-
-
-app.post('/postpayment',(req,res)=>{ 
-  const {userId} = req.body
-  const sql = 'DELETE FROM cart WHERE user_id = ?'
-  db.query(sql,[userId],(err,result)=>{
-    if(err) return res.json(err)
-    else return res.json("Payment successful")
-  })
-})
-
-
-
-
-
-
-
+app.post("/postpayment", (req, res) => {
+  const { userId } = req.body;
+  const sql = "DELETE FROM cart WHERE user_id = ?";
+  db.query(sql, [userId], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json("Payment successful");
+  });
+});
 
 app.post("/branch/verifypayment", async (req, res) => {
   try {
@@ -541,54 +674,51 @@ app.post("/branch/verifypayment", async (req, res) => {
       .json({ error: "An error occurred while verifying the payment." });
   }
 });
-app.post('/branch/delete', async (req, res) => {
+app.post("/branch/delete", async (req, res) => {
   try {
-    const {tx_ref} = req.body;
-    const sql = "DELETE FROM payment_detail WHERE tx_ref = ?"
-    db.query(sql,[tx_ref], (err,results)=>{
-      if(err) return res.json(err)
-      else{
-        return res.json("order deleted successfully")
-    }
-    })
+    const { tx_ref } = req.body;
+    const sql = "DELETE FROM payment_detail WHERE tx_ref = ?";
+    db.query(sql, [tx_ref], (err, results) => {
+      if (err) return res.json(err);
+      else {
+        return res.json("order deleted successfully");
+      }
+    });
   } catch (error) {
-    return res.json(error)
+    return res.json(error);
   }
 });
 
-
-
-app.get('/fetchBranch', async (req, res) => {
-  try{
-    const sql = "SELECT * FROM users WHERE role = 'branch' "
-    db.query(sql,(err,result)=>{
-      if(err) return res.json(err)
-      else{
-    return res.json(result)
-    }
-    })
-  }
-  catch(error){
-    console.log(error)
-    return res.json(error)
+app.get("/fetchBranch", async (req, res) => {
+  try {
+    const sql = "SELECT * FROM users WHERE role = 'branch' ";
+    db.query(sql, (err, result) => {
+      if (err) return res.json(err);
+      else {
+        return res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
   }
 });
-app.post('/ordereditems', async (req,res) =>{
-  try{
-    const id = req.body.userId
-    const sql = "SELECT * FROM payment_detail WHERE user_id = ? AND print_status != 'delivered'"
-    db.query(sql,[id], (err,result)=>{
-      if(err) return res.json(err)
-      else{
-        return res.json(result)
-    }
-    })
+app.post("/ordereditems", async (req, res) => {
+  try {
+    const id = req.body.userId;
+    const sql =
+      "SELECT * FROM payment_detail WHERE user_id = ? AND print_status != 'delivered'";
+    db.query(sql, [id], (err, result) => {
+      if (err) return res.json(err);
+      else {
+        return res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
   }
-  catch(error){
-    console.log(error)
-    return res.json(error)
-  }
-})
+});
 app.get("/admin/admins", (req, res) => {
   const sql = "SELECT * FROM users WHERE role = 'admin' ";
   db.query(sql, (err, data) => {
@@ -597,23 +727,20 @@ app.get("/admin/admins", (req, res) => {
   });
 });
 app.get("/price", (req, res) => {
-  const sql = "SELECT * FROM print_price"
-  db.query(sql, (err,data)=>{
-    if(err) return res.json(err)
-    else return res.json(data)
-  })
+  const sql = "SELECT * FROM print_price";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    else return res.json(data);
+  });
 });
-
 
 app.get("/categories", (req, res) => {
-  const sql = "SELECT * FROM category"
-  db.query(sql, (err,result)=>{
-    if(err) return res.json(err)
-    else return res.json(result)
-  })
+  const sql = "SELECT * FROM category";
+  db.query(sql, (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
 });
-
-
 
 app.delete("/category/delete/:id", (req, res) => {
   const id = req.params.id;
@@ -627,55 +754,58 @@ app.delete("/category/delete/:id", (req, res) => {
   });
 });
 
-app.post("/addCategory", (req,res) =>{
-  const {categoryName} = req.body
-  const sql = "INSERT INTO category (`name`) VALUES (?)"
-  db.query(sql,[categoryName],(err,result)=>{
-    if(err) return res.json(err)
-    else return res.json(result)
-  })
-})
+app.post("/addCategory", (req, res) => {
+  const { categoryName } = req.body;
+  const sql = "INSERT INTO category (`name`) VALUES (?)";
+  db.query(sql, [categoryName], (err, result) => {
+    if (err) return res.json(err);
+    else return res.json(result);
+  });
+});
 
-app.get("/printPrices",(req,res) => {
+app.get("/printPrices", (req, res) => {
   // return res.json('something')
-  const sql = "SELECT * FROM print_price"
-  db.query(sql,(err,result)=>{
-    if(err) return res.json(err)
-    else{
-      return res.json(result)
+  const sql = "SELECT * FROM print_price";
+  db.query(sql, (err, result) => {
+    if (err) return res.json(err);
+    else {
+      return res.json(result);
     }
-  })
-})
-app.post("/changePrintPrice",(req,res) => {
-  const {size,newPrice} = req.body
-  const sql = "UPDATE print_price SET price = ? WHERE size = ?"
-  db.query(sql,[newPrice,size],(err,result)=>{
-    if(err) return res.json(err)
-    else{
-      return res.json(size+" size print price changed successful!")
+  });
+});
+app.post("/changePrintPrice", (req, res) => {
+  const { size, newPrice } = req.body;
+  const sql = "UPDATE print_price SET price = ? WHERE size = ?";
+  db.query(sql, [newPrice, size], (err, result) => {
+    if (err) return res.json(err);
+    else {
+      return res.json(size + " size print price changed successful!");
     }
-  })
-})
+  });
+});
 
-app.post("/navbarInfo",(req,res)=>{
-  const {userId} = req.body
-  const sql = "SELECT role FROM users WHERE id = ?"
-  db.query(sql,[userId],(err,result)=>{
-    if(err) return res.json(err)
-    else{
-      return res.json(result[0].role)
+app.post("/navbarInfo", (req, res) => {
+  const { userId } = req.body;
+  const sql = "SELECT role FROM users WHERE id = ?";
+  db.query(sql, [userId], (err, result) => {
+    if (err) return res.json(err);
+    else {
+      return res.json(result[0].role);
     }
-  })
-})
-
+  });
+});
 
 app.get("/overview", (req, res) => {
   const usersQuery = "SELECT COUNT(*) AS userCount FROM users";
-  const adminsQuery = "SELECT COUNT(*) AS adminCount FROM users WHERE role = 'admin'"
-  const sellersQuery = "SELECT COUNT(*) AS sellerCount FROM users WHERE role = 'seller'"
-  const buyersQuery = "SELECT COUNT(*) AS buyerCount FROM users WHERE role = 'buyer'"
+  const adminsQuery =
+    "SELECT COUNT(*) AS adminCount FROM users WHERE role = 'admin'";
+  const sellersQuery =
+    "SELECT COUNT(*) AS sellerCount FROM users WHERE role = 'seller'";
+  const buyersQuery =
+    "SELECT COUNT(*) AS buyerCount FROM users WHERE role = 'buyer'";
   const artsQuery = "SELECT COUNT(*) AS artCount FROM artwork WHERE status = 1";
-  const branchsQuery = "SELECT COUNT(*) AS branchCount FROM users WHERE role = 'branch'";
+  const branchsQuery =
+    "SELECT COUNT(*) AS branchCount FROM users WHERE role = 'branch'";
   let userCount, artCount, branchCount, adminCount, sellerCount, buyerCount;
   db.query(usersQuery, (err, userResult) => {
     if (err) {
@@ -689,28 +819,34 @@ app.get("/overview", (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
       }
       artCount = artResult[0].artCount;
-      db.query(branchsQuery, (err,branchResult)=>{
-        if(err) return res.json(err)
-        branchCount = branchResult[0].branchCount
-        db.query(adminsQuery, (err,adminResult)=>{
-          if(err) return res.json(err)
-          adminCount = adminResult[0].adminCount
-          db.query(sellersQuery, (err,sellerReslut)=>{
-            if(err) return res.json(err)
-            sellerCount = sellerReslut[0].sellerCount
-            db.query(buyersQuery, (err,buyerResult)=>{
-              if(err) return res.json(err)
-              buyerCount = buyerResult[0].buyerCount
-              
-              res.json({ userCount,artCount ,branchCount,adminCount,sellerCount,buyerCount});
-            })
-          })
-        })
-      })
+      db.query(branchsQuery, (err, branchResult) => {
+        if (err) return res.json(err);
+        branchCount = branchResult[0].branchCount;
+        db.query(adminsQuery, (err, adminResult) => {
+          if (err) return res.json(err);
+          adminCount = adminResult[0].adminCount;
+          db.query(sellersQuery, (err, sellerReslut) => {
+            if (err) return res.json(err);
+            sellerCount = sellerReslut[0].sellerCount;
+            db.query(buyersQuery, (err, buyerResult) => {
+              if (err) return res.json(err);
+              buyerCount = buyerResult[0].buyerCount;
+
+              res.json({
+                userCount,
+                artCount,
+                branchCount,
+                adminCount,
+                sellerCount,
+                buyerCount,
+              });
+            });
+          });
+        });
+      });
     });
   });
 });
-
 
 const db = mysql.createConnection({
   host: "localhost",

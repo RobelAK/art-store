@@ -72,14 +72,16 @@ const Branch = () => {
         <Table>
           <TableHead>
             <TableRow >
+              <TableCell style={{fontWeight:'bold'}}>No</TableCell>
               <TableCell style={{fontWeight:'bold'}}>Name</TableCell>
-              <TableCell style={{fontWeight:'bold'}}>Location</TableCell>
+              <TableCell style={{fontWeight:'bold'}}>Email</TableCell>
               <TableCell style={{fontWeight:'bold'}}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {branches.map((branch) => (
+            {branches.map((branch,x) => (
               <TableRow key={branch.id}>
+                <TableCell>{x+1}</TableCell>
                 <TableCell>{branch.name}</TableCell>
                 <TableCell>{branch.email}</TableCell>
                 <TableCell>

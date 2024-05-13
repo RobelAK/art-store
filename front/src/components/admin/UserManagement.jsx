@@ -90,7 +90,7 @@ const UserManagement = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell>No</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
@@ -100,7 +100,7 @@ const UserManagement = () => {
           <TableBody>
             {users.map((data, i) => (
               <TableRow key={i}>
-                <TableCell>{data.id}</TableCell>
+                <TableCell>{i+1}</TableCell>
                 <TableCell>{data.name}</TableCell>
                 <TableCell>{data.email}</TableCell>
                 <TableCell>{data.role}</TableCell>

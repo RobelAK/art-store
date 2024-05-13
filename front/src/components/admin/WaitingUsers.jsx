@@ -122,9 +122,9 @@ const WaitingUsers = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
+              users.map((user, index) => (
                 <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
@@ -135,7 +135,7 @@ const WaitingUsers = () => {
                       View
                     </Button>
                   </TableCell>
-
+              
                   <TableCell>
                     <Button onClick={() => handleApprove(user.id)}>
                       Approve
@@ -148,7 +148,7 @@ const WaitingUsers = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))
+              ))              
             )}
           </TableBody>
         </Table>

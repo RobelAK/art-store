@@ -1,27 +1,42 @@
 import bcrypt from 'bcrypt'
+import nodemailer from 'nodemailer'
 
 export default async function signup(db, req, res) {
-  
+
+
   const check = "SELECT * From users where email = ?";
   const { email, name, password, passwordConfirm } = req.body
   const hashedPassword = await bcrypt.hash(password,10)
-  const validatePassword = (password) => {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(
-      password
-    );
 
-    return (
-      password.length >= minLength &&
-      hasUpperCase &&
-      hasLowerCase &&
-      hasNumber &&
-      hasSpecialChar
-    );
-  }; 
+
+
+
+
+  // const transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: 'robelaklilu100@gmail.com',
+  //     pass: 'A12a12!!',
+  //   },
+  // });
+  // const verificationCode = Math.random().toString(36).substr(2, 6);
+
+  // const mailOptions = {
+  //   from: 'your_email@gmail.com',
+  //   to: email,
+  //   subject: 'Email Verification',
+  //   text: `Your verification code is: ${verificationCode}`,
+  // };
+
+
+
+
+
+
+
+
+
+  
 
   if (password == passwordConfirm) {
     db.query(check, [email], (err, result) => {
