@@ -6,7 +6,9 @@ import { Card, CardContent, CardMedia, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Footer from '../../components/users/Footer';
 import Navbar from '../../components/users/Navbar';
-import portrait from '../../utils/portrait.jpg'
+import tsemru from '../../utils/tsemru.jpg'
+import robel from '../../utils/robel.jpg'
+import nahom from '../../utils/nahom.jpg'
 
 const AboutUs = () => {
   return (
@@ -75,14 +77,14 @@ const AboutUs = () => {
                 alt=''
                 sx={{ padding: '5px',borderRadius: '10px', }}
                 height="230"
-                image={portrait}
+                image={tsemru}
               />
               <CardContent >
                 <Typography  component="div" fontWeight="bold"  color={'Highlight'} fontFamily="Sora" >
                   Tsemru Fikremariam
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                 Software Developer
+                 Ui/Ux designer , Frontend developer
                 </Typography>
               </CardContent>
             </Card>
@@ -107,14 +109,14 @@ const AboutUs = () => {
                 alt=''
                 sx={{ padding: '5px',borderRadius: '10px', }}
                 height="230"
-                image={portrait}
+                image={robel}
               />
               <CardContent>
                 <Typography  component="div" fontWeight="bold" color={'Highlight'} fontFamily="Sora" >
                   Robel Aklilu
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                 Software Developer
+                 Backend Developer
                 </Typography>
               </CardContent>
             </Card>
@@ -140,14 +142,14 @@ const AboutUs = () => {
                 alt=''
                 sx={{ padding: '5px',borderRadius: '10px', }}
                 height="230"
-                image={portrait}
+                image={nahom}
               />
               <CardContent>
                 <Typography  component="div" fontWeight="bold" color={'Highlight'} fontFamily="Sora" >
                   Nahome Endalkacew
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                 Software Developer
+                 Database Specialist ,Frontend Developer
                 </Typography>
               </CardContent>
             </Card>
