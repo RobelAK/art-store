@@ -99,7 +99,6 @@ function Signup() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // setSignupButton(true)
 
     const values = {
       name: name,
@@ -109,33 +108,39 @@ function Signup() {
     };
     if (!isValidName) {
       console.log("invalid name");
-      toast.warning("Invalid name");
+      toast.warning("Invalid name",{
+        onClose:()=>{
+          setSignupButton(false)
+        }
+      });
     }
     if (!isValidPassword) {
       console.log("Invalid password");
-      toast.warning("Invalid password");
+      toast.warning("Invalid password",{
+        onClose:()=>{
+          setSignupButton(false)
+        }
+      });
     } else {
 
       axios
         .post("http://localhost:8081/signup", values)
         .then((res) => {
           console.log(res.data);
-          if (res.data.verificationSent) {
-            toast.success(res.data.Message, {
+          if (res.data.verificationSent == true) {
+            toast.success(res.data.message, {
               onClose: () => {
                 setTextFieldDisabled(true);
                 setShow("block");
-                setSignupButton(false)
               },
             });
           } else {
-            toast.warning(res.data.Message, {
+            toast.warning(res.data.message, {
               onClose: () => {
                 setEmail("");
                 setName("");
                 setPassword("");
                 setMatchPassword("");
-                setSignupButton(false)
               },
             });
           }
