@@ -38,6 +38,7 @@ import ApprovePayment from "./routes/ApprovePayment.js";
 import AddedSales from "./routes/AddedSales.js";
 import WithdrawalList from "./routes/WithdrawalList.js";
 import SalesList from "./routes/SalesList.js";
+import BranchPrinted from "./BranchPrinted.js";
 
 
 
@@ -319,15 +320,6 @@ app.post("/sold", (req, res) => {
 app.post("/seles", (req, res) => {
   AddedSales (db, req, res);
 });
-// app.post("/seles", (req, res) => {
-//   const {art_id} = req.body;
-//   const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
-//   db.query(sql, [art_id], (err, result) => {
-//     if (err) return res.json(err);
-//     else return res.json(result);
-//   });
-// });
-  
 
 app.post("/cart", (req,res)=>{
   const userId = req.body.userId
@@ -483,14 +475,18 @@ app.post("/branch/printed", (req, res) => {
   });
 });
 
+// app.post("/print/complete", (req,res) =>{
+//   const orderId = req.body.orderId
+//   const sql = "UPDATE payment_detail SET print_status = 'printed' WHERE id = ?"
+//   db.query(sql,[orderId],(err,result)=>{
+//     if(err) return res.json(err)
+//     else return res.json("Art added to printed")
+//   })
+// })
+
 app.post("/print/complete", (req,res) =>{
-  const orderId = req.body.orderId
-  const sql = "UPDATE payment_detail SET print_status = 'printed' WHERE id = ?"
-  db.query(sql,[orderId],(err,result)=>{
-    if(err) return res.json(err)
-    else return res.json("Art added to printed")
-  })
-})
+  BranchPrinted(db,req,res)
+});
 
 app.post("/branch/deliver", (req,res) =>{
   const tx_ref = req.body.tx_ref

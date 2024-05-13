@@ -15,9 +15,10 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
 import DrawerComponent from "./DrawerComponent";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { Typography } from '@mui/material';
+import { Badge, Typography } from '@mui/material';
 import SearchBar from './SearchBar';
 import Notifications from "./Notifications";
+import axios from "axios";
 
 
 const logoStyle = {
@@ -32,6 +33,8 @@ const Navbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isSeller, setisSeller] = useState(false);
+  const [cartData, setCartData] = useState([]);
+  const [id, setId] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -55,6 +58,36 @@ const Navbar = () => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+
+  useEffect(() => {
+    const fetchCartlength = async () => {
+      try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user = JSON.parse(atob(token.split(".")[1]));
+      setId(user.id);
+
+      axios
+        .post("http://localhost:8081/cart", { userId: user.id })
+        .then((res) => {
+          setCartData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+    } else {
+      console.log('err');
+    } 
+  } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+  fetchCartlength();
+    
+    const intervalId = setInterval(fetchCartlength, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div>
@@ -191,11 +224,13 @@ const Navbar = () => {
               )}
 
               <Link to="/cart">
-                <ShoppingCartIcon color="primary" sx={{ marginRight: 2, color: "black", }} />
+              <Badge badgeContent={cartData.length} color="error">
+                <ShoppingCartIcon color="primary" sx={{ color: "black", }} />
+                </Badge>
               </Link>
 
               <Link to="/saved">
-                <BookmarkIcon color="primary" sx={{ marginRight: 2, color: "black", }} />
+                <BookmarkIcon color="primary" sx={{ marginLeft: 2, marginRight: 2, color: "black", }} />
               </Link>
               {isLoggedIn && (
                   <Notifications   />
