@@ -594,19 +594,17 @@ const CartPage = () => {
       </Box>
       <Dialog open={openOrdereInfo} onClose={() => setOpenOrderInfo(false)}>
         <DialogTitle>Ordered Items</DialogTitle>
-        <DialogContent>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Container>
+        <DialogContent style={{justifyContent:'center' , display:'flex'}}>
+          <div>
               {orderedItems.map((items, i) => (
                 <Grid container key={i} spacing={2}>
                   {parseData(items.data).map((item, j) => (
-                    <Card key={j} sx={{ display: 'flex'}}>
+                    <Card key={j} sx={{justifyContent:'center',  padding:'10px',margin:'2px'}}>
                       <CardMedia
                         component="img"
                         sx={{
-                          width: 70,
-                          margin: 1,
-                          aspectRatio: 4 / 6,
+                          width: 150,
+                          aspectRatio: 5 / 6,
                         }}
                         src={`http://localhost:8081/images/${item.art}`}
                         alt="Product Image"
@@ -614,14 +612,13 @@ const CartPage = () => {
                       <CardContent>
                         {item.art_title}
                         <Typography>Size: {item.size}</Typography>
-                        <Typography>Status: {items.print_status}</Typography>
+                        <Typography color={'red'}>Status: {items.print_status}</Typography>
                         {/* <Typography>Estimated date: 5d</Typography> */}
                       </CardContent>
                     </Card>
                   ))}
                 </Grid>
               ))}
-            </Container>
           </div>
         </DialogContent>
       </Dialog>

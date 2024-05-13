@@ -41,6 +41,7 @@ import ApprovePayment from "./routes/ApprovePayment.js";
 import AddedSales from "./routes/AddedSales.js";
 import WithdrawalList from "./routes/WithdrawalList.js";
 import SalesList from "./routes/SalesList.js";
+import BranchPrinted from "./BranchPrinted.js";
 
 const app = express();
 
@@ -307,6 +308,7 @@ app.get("/user/art/:id", (req, res) => {
   });
 });
 
+
 app.delete("/user/art/:id", (req, res) => {
   const { id } = req.params;
   const sql = "UPDATE artwork SET deleted = 1 WHERE id = ?";
@@ -350,23 +352,17 @@ app.post("/sold", (req, res) => {
 app.post("/seles", (req, res) => {
   AddedSales(db, req, res);
 });
-// app.post("/seles", (req, res) => {
-//   const {art_id} = req.body;
-//   const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
-//   db.query(sql, [art_id], (err, result) => {
-//     if (err) return res.json(err);
-//     else return res.json(result);
-//   });
-// });
 
-app.post("/cart", (req, res) => {
-  const userId = req.body.userId;
-  const sql = "SELECT * FROM cart WHERE user_id = ?";
-  db.query(sql, [userId], (err, result) => {
-    if (err) return res.json(err);
-    else return res.json(result);
-  });
-});
+app.post("/cart", (req,res)=>{
+  const userId = req.body.userId
+  const sql = "SELECT * FROM cart WHERE user_id = ?" 
+  db.query(sql, [userId], (err,result)=>{
+    if(err) return res.json(err) 
+    else return res.json(result)
+  })
+})
+
+
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;
@@ -432,8 +428,6 @@ app.post("/payment/pay", async (req, res) => {
       last_name: lname,
       phone_number: "+251" + phoneNo,
       tx_ref: tx_ref,
-      // callback_url: "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-      // callback_url: "http://localhost:8081/payment/callback",
       return_url: "http://localhost:5173/postpayed",
     }),
   };
@@ -526,6 +520,44 @@ app.post("/print/complete", (req, res) => {
     else return res.json("Art added to printed");
   });
 });
+
+app.post("/print/complete", (req,res) =>{
+  BranchPrinted(db,req,res)
+});
+
+app.post("/branch/deliver", (req,res) =>{
+  const tx_ref = req.body.tx_ref
+  const sql = "UPDATE payment_detail SET print_status = 'delivered' WHERE tx_ref = ?"
+  db.query(sql,[tx_ref],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Art added to delivered")
+  })
+})
+app.post("/branch/delivered", (req,res) =>{
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? AND print_status = 'delivered'"
+  db.query(sql,[branchName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
+
+app.post('/postpayment',(req,res)=>{ 
+  const {userId} = req.body
+  const sql = 'DELETE FROM cart WHERE user_id = ?'
+  db.query(sql,[userId],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Payment successful")
+  })
+})
+
+
+
+
+
 
 app.post("/branch/deliver", (req, res) => {
   const tx_ref = req.body.tx_ref;

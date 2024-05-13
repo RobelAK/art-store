@@ -70,12 +70,12 @@ export default function ApprovedScreen() {
       win.print();
     }, 1000);
   };
-  const handleComplete = (orderID) => (event) => {
+  const handleComplete = (orderID , user_id) => (event) => {
     event.stopPropagation();
     const isPrinted = window.confirm("Is this order printed?")
     if(isPrinted){
       axios
-          .post("http://localhost:8081/print/complete" , {orderId: orderID})
+          .post("http://localhost:8081/print/complete" , {orderId: orderID , user_id})
           .then((res) => {
             console.log(res.data);
             toast.info(res.data, {
@@ -129,7 +129,7 @@ export default function ApprovedScreen() {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Button variant="contained" onClick={handleComplete(item.id)}>Complete</Button>
+                      <Button variant="contained" onClick={handleComplete(item.id , item.user_id)}>Complete</Button>
                     </Grid>
                   </Grid>
                 </AccordionSummary>

@@ -55,7 +55,7 @@ const Notifications = () => {
     <>
       <IconButton aria-controls="notification-menu" aria-haspopup="true" onClick={handleClick} color="black">
         <Badge badgeContent={notifications.length} color="error">
-          <NotificationsIcon sx={{ marginRight: 2, color: "black", }} />
+          <NotificationsIcon sx={{  color: "black", }} />
         </Badge>
       </IconButton>
       <Menu
