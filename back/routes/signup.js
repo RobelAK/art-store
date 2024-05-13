@@ -1,43 +1,53 @@
-import bcrypt from 'bcrypt'
 
-export default async function signup(db, req, res) {
-  
+export default async function signup(transporter, db, req, res) {
+
+
   const check = "SELECT * From users where email = ?";
-  const { email, name, password, passwordConfirm } = req.body
-  const hashedPassword = await bcrypt.hash(password,10)
-  const validatePassword = (password) => {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(
-      password
-    );
-
-    return (
-      password.length >= minLength &&
-      hasUpperCase &&
-      hasLowerCase &&
-      hasNumber &&
-      hasSpecialChar
-    );
-  }; 
+  const { email, name, password, passwordConfirm } = req.body;
 
   if (password == passwordConfirm) {
-    db.query(check, [email], (err, result) => {
-      if (err) return res.json({ Message: "Query error" })
-      if (result.length == 0) {
-        const sql = "INSERT INTO users (`name`,`email`,`password`,`role`) Values (?,?,?,?)";
-        db.query(sql, [name, email, hashedPassword, 'buyer'], (err, data) => {
-          if (err) return res.json({ Message: "query error" });
-          return res.json({ signup: true, Message: 'You have Registered successfuly' });
+    try {
+      db.query(check, [email], async (err, result) => {
+        if (err) return res.json({verificationSent: false, Message: "Query error" });
+        if (result.length == 0) {
 
-        })
-      }
-      else {
-        return res.json({ signup: false, Message: 'Email already exist' })
-      }
-    })
-  }
-  else return res.json({ signup: false, Message: "Password doesnt match" })
+          const verificationCode = Math.random().toString(36).substr(2, 6);
+
+          const mailOptions = {
+            from: "robelaklilu100@gmail.com",
+            to: email,
+            subject: "Email Verification",
+            text: `Your verification code is: ${verificationCode}`,
+          };
+
+          await transporter.sendMail(mailOptions);
+          console.log("email sent :)");
+
+
+          const selectSql = "SELECT * FROM pending_user WHERE email = ?"
+          const sql = "INSERT INTO pending_user (`email`,`verificationCode`) Values (?,?)";
+          const setSql = "UPDATE pending_user SET verificationCode = ? WHERE email = ?"
+          db.query(selectSql,[email],(err,result)=>{
+            if(result.length == 0){
+              db.query(sql, [email, verificationCode], (err, data) => {
+                if (err) return res.json({verificationSent: false, Message: "query error" });
+                return res.json({verificationSent: true, Message: "Verification code sent to your email"});
+              });
+            }
+            else{
+              db.query(setSql,[verificationCode,email],(err,result) => {
+                if(err) return res.json({verificationSent: false,Message: 'query error'})
+                else res.json({verificationSent: true, Message: "Verification code sent to your email"});
+              })
+            }
+          })
+        } else {
+          return res.json({ verificationSent: false, Message: "Email already exist" });
+        }
+      });
+    } catch (error) {
+      console.log("ERROR OCCURED: " + error);
+      return res.json(error);
+    }
+  } else return res.json({ verificationSent: false, Message: "Password doesnt match" });
 }

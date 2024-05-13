@@ -113,12 +113,6 @@ function Login() {
                   }}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="Remember Me"
-                />
-              </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 0 }}>
               Sign In

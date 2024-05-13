@@ -55,7 +55,7 @@ const WithdrawalList = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell>No</TableCell>
               <TableCell>Full Name</TableCell>
               <TableCell>date</TableCell>
               <TableCell>Amount</TableCell>
@@ -70,9 +70,9 @@ const WithdrawalList = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
+              users.map((user,x) => (
                 <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{x+1}</TableCell>
                   <TableCell>{user.fname} { user.Lastname}</TableCell>
                   <TableCell>{new Date(user.datetime).toLocaleString()}</TableCell>
                   <TableCell>{user.total_revenue} birr</TableCell>
