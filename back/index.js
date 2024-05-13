@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
+import jwt from 'jsonwebtoken';
 
 import express from "express";
 import mysql from "mysql";
@@ -90,8 +91,58 @@ app.post("/signup", async (req, res) => {
 });
 
 
+app.post("/forgotpassword/sendcode",(req,res)=>{
+  try {
+    const {email} = req.body;
+    const sql = "SELECT * FROM users WHERE email = ?";
+    db.query(sql,[email],(err,result)=>{
+      if(err) throw err;
+      if(result.length === 0){
+        return res.json("user not found");
+      }
+      
+      const token = jwt.sign( 
+        {email},
+        "jwt_secret_key",
+        { expiresIn: "60m" }
+      ); 
+      const insertSql = "INSERT INTO reset_tokens (`email`,`token`) VALUES (?,?)";
+      db.query(insertSql,[email,token],(err,result)=>{
+        if(err) throw err;
+        const resetLink = `http://localhost:5173/updatepassword/${token}`;  
+        const mailOptions = {
+          from: 'robelaklilu100@gmail.com',
+          to: email,
+          subject: 'Password reset',
+          text: `click this: ${resetLink}`
+        };
+        transporter.sendMail(mailOptions, (err, info) => { 
+          if (err) {
+            console.error('Error sending email: ', err);
+            throw err;
+          }
+          console.log('Email sent: ', info.response);
+          return res.json("success");
+        });
+      });
+    });
+  } catch (error) {
+    console.error('An error occurred: ', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
+app.post("/resetpassword",async (req,res)=>{
+  const {email,password} = req.body
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const sql = "UPDATE users SET password = ? WHERE email = ?"
+
+  db.query(sql,[hashedPassword,email],(err,result)=>{
+    if(err) return res.json({status: false, err})
+    return res.json({Message: "Your password has been reseted successfully", status: true})
+  })
+})
 
 
 app.post("/signup/verify",async (req,res)=>{

@@ -29,6 +29,7 @@ import AnalysisPage from './screens/users/AnalysisPage';
 import ApprovedScreen from './screens/Branch/ApprovedScreen';
 import SellersArt from './screens/users/SellersArt';
 import Delivered from './screens/Branch/Delivered';
+import UpdatePassword from './screens/users/UpdatePassword';
 
 const decodeToken = (token) => {
   try {
@@ -136,6 +137,7 @@ function App() {
         <Route path='/postpayed' element={<PostPayed/>}/>
         <Route path='/analysis' element ={<AnalysisPage/>}/>
         <Route path='/SellerArt/:id' element ={<SellersArt/>}/>
+        <Route path='/updatepassword/:token' element ={<UpdatePassword/>}/>
       </Routes>
     </BrowserRouter>
   );
