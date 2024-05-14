@@ -54,12 +54,10 @@ const WaitingArt = () => {
     }
   };
 
-  const handleOpenDialog = (artId) => {
-    setSelectedImage(artId);
+  const handleOpenDialog = (art) => {
+    setSelectedImage(art);
     setOpen(true);
-    console.log(art)
   };
-
 
   const handleCloseDialog = () => {
     setOpen(false);

@@ -82,7 +82,6 @@ const UserManagement = () => {
           <MenuItem value="all">All Roles</MenuItem>
           <MenuItem value="buyer">buyer</MenuItem>
           <MenuItem value="seller">seller</MenuItem>
-          <MenuItem value="admin">admin</MenuItem>
         </Select>
       </Container>
 
