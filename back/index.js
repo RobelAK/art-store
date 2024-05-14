@@ -137,7 +137,7 @@ app.post("/resetpassword",async (req,res)=>{
   const {email,password} = req.body
   const hashedPassword = await bcrypt.hash(password, 10);
   const sql = "UPDATE users SET password = ? WHERE email = ?"
-
+  
   db.query(sql,[hashedPassword,email],(err,result)=>{
     if(err) return res.json({status: false, err})
     return res.json({Message: "Your password has been reseted successfully", status: true})
@@ -146,7 +146,7 @@ app.post("/resetpassword",async (req,res)=>{
 
 
 app.post("/signup/verify",async (req,res)=>{
-  const {name,email,password,verificationCode} = req.body
+  const {name,email,password,verificationCode} = req.body 
   const hashedPassword = await bcrypt.hash(password, 10);
   const sql = "SELECT verificationCode FROM pending_user WHERE email = ?"
   db.query(sql,[email],(err,result)=>{
