@@ -3,7 +3,7 @@ export default async function ApproveSeller(db, req, res) {
   const updateUser = 'UPDATE users SET role = "seller" WHERE id = ?';
   const deletePendingSeller = "DELETE FROM sellers WHERE user_id = ?";
   const insertNotification = 'INSERT INTO notifications (user_id, message) VALUES (?, ?)';
-  const message = "Congrats!, you are now a seller"; 
+  const message = "Congrats!, you are now a seller Signout to see changes"; 
   
   db.query(deletePendingSeller, [id], async (err, result) => {
     if (err) {
