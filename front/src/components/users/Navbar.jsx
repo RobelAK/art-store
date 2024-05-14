@@ -40,16 +40,10 @@ const Navbar = () => {
     if (token) {
       setisLoggedIn(true);
       const user = JSON.parse(atob(token.split(".")[1]));
-      axios
-        .post("http://localhost:8081/navbarInfo", { userId: user.id })
-        .then((res) => {
-          if (res.data === "seller") {
-            setisSeller(true);
-          } else {
-            setisSeller(false);
-          }
-        })
-        .catch((err) => console.log(err));
+      if(user.role == "seller"){
+        setisSeller(true)
+      }
+      else setisSeller(false)
     } else {
       setisLoggedIn(false);
     }
