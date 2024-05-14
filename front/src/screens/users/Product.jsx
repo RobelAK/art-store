@@ -99,7 +99,7 @@ function Product() {
         art: artInfo.art,
         artId: artInfo.id,
         userId: userid,
-        artPrice: artInfo.price,
+        artPrice: price,
         quantity: quantity,
         size: size,
       };
