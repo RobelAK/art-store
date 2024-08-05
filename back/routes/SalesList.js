@@ -1,6 +1,6 @@
 export default function SalesList(db, req, res) {
 
-  const sql = "SELECT * FROM payment_detail WHERE print_status = 'printed' " ;
+  const sql = "SELECT * FROM payment_detail WHERE print_status = 'delivered' " ;
 
 db.query(sql, (err, results) => {
   if (err) {

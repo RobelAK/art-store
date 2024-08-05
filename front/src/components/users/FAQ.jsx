@@ -51,7 +51,7 @@ export default function FAQ() {
             id="panel1d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+              How do I Pay for the Artworks?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -60,9 +60,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              You can reach our customer support team by emailing{' '}
-              <Link href="mailto:support@email.com">support@email.com</Link> or
-              calling our toll-free number. We're here to assist you promptly.
+              integrating with chapa payment system we support a variety of payment choices.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -85,9 +83,9 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Absolutely! We offer a hassle-free return policy. If you're not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
+              We do not offer a return policy. If you're not
+               completely satisfied, unfortunately, we are unable
+                to accept returns or provide refunds or exchanges.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -136,10 +134,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It
-              covers defects in materials and workmanship. If you encounter any
-              issues covered by the warranty, please contact our customer
-              support for assistance.
+              Our product does not come with any warranty. We do not cover defects in materials or workmanship. Unfortunately, we are unable to provide assistance or support for any issues you may encounter.
             </Typography>
           </AccordionDetails>
         </Accordion>

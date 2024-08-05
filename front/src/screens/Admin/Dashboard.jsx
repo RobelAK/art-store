@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -41,6 +41,8 @@ import CategoryIcon from '@mui/icons-material/Category';
 import ArtCategory from '../../components/admin/ArtCategory';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import PrintPrice from '../../components/admin/PrintPrice';
+import { Badge } from '@mui/material';
+import axios from 'axios';
 
 const drawerWidth = 240;
 
@@ -80,6 +82,8 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+
+
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -92,6 +96,56 @@ const PersistentDrawerLeft = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [selectedComponent, setSelectedComponent] = useState('Overview');
+  const [art, setArt] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
+
+
+
+useEffect(() => {
+  const fetchArt = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/art/waiting");
+      setArt(response.data);
+    } catch (error) {
+      console.error('Error fetching artwork:', error);
+    }
+  };
+  fetchArt();
+  
+  const intervalId = setInterval(fetchArt, 1000);
+  return () => clearInterval(intervalId);
+}, []);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/Withdraw/request");
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+fetchData();
+  
+  const intervalId = setInterval(fetchData, 1000);
+  return () => clearInterval(intervalId);
+}, []);
+
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/sellers/waiting");
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  fetchUser();
+  const intervalId = setInterval(fetchUser, 1000);
+  return () => clearInterval(intervalId);
+}, []);
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -104,6 +158,7 @@ const PersistentDrawerLeft = () => {
   const handleListItemClick = (component) => {
     setSelectedComponent(component);
   };
+  
 
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#f0f1f2' }}>
@@ -176,11 +231,29 @@ const PersistentDrawerLeft = () => {
               onClick={() => handleListItemClick(text)}
             >
               <ListItemButton>
-                {index === 0 && <ListItemIcon><HourglassFullIcon /></ListItemIcon>}
-                {index === 1 && <ListItemIcon><HourglassTopIcon /></ListItemIcon>}
-                {index === 2 && <ListItemIcon><HourglassBottomIcon /></ListItemIcon>}
-                <ListItemText primary={text} />
-              </ListItemButton>
+      {index === 0 && (
+        <ListItemIcon>
+          <Badge badgeContent={art.length} color="error">
+            <HourglassFullIcon />
+          </Badge>
+        </ListItemIcon>
+      )}
+      {index === 1 && (
+        <ListItemIcon>
+          <Badge badgeContent={user.length} color="error">
+            <HourglassTopIcon />
+          </Badge>
+        </ListItemIcon>
+      )}
+      {index === 2 && (
+        <ListItemIcon>
+          <Badge badgeContent={users.length} color="error">
+            <HourglassBottomIcon />
+          </Badge>
+        </ListItemIcon>
+      )}
+      <ListItemText primary={text} />
+    </ListItemButton>
             </ListItem>
           ))}
         </List>

@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
+import jwt from 'jsonwebtoken';
 
 import express from "express";
 import mysql from "mysql";
@@ -41,6 +42,7 @@ import ApprovePayment from "./routes/ApprovePayment.js";
 import AddedSales from "./routes/AddedSales.js";
 import WithdrawalList from "./routes/WithdrawalList.js";
 import SalesList from "./routes/SalesList.js";
+import BranchPrinted from "./BranchPrinted.js";
 
 const app = express();
 
@@ -89,12 +91,62 @@ app.post("/signup", async (req, res) => {
 });
 
 
+app.post("/forgotpassword/sendcode",(req,res)=>{
+  try {
+    const {email} = req.body;
+    const sql = "SELECT * FROM users WHERE email = ?";
+    db.query(sql,[email],(err,result)=>{
+      if(err) throw err;
+      if(result.length === 0){
+        return res.json("user not found");
+      }
+      
+      const token = jwt.sign( 
+        {email},
+        "jwt_secret_key",
+        { expiresIn: "60m" }
+      ); 
+      const insertSql = "INSERT INTO reset_tokens (`email`,`token`) VALUES (?,?)";
+      db.query(insertSql,[email,token],(err,result)=>{
+        if(err) throw err;
+        const resetLink = `http://localhost:5173/updatepassword/${token}`;  
+        const mailOptions = {
+          from: 'robelaklilu100@gmail.com',
+          to: email,
+          subject: 'Password reset',
+          text: `click this: ${resetLink}`
+        };
+        transporter.sendMail(mailOptions, (err, info) => { 
+          if (err) {
+            console.error('Error sending email: ', err);
+            throw err;
+          }
+          console.log('Email sent: ', info.response);
+          return res.json("success");
+        });
+      });
+    });
+  } catch (error) {
+    console.error('An error occurred: ', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
+app.post("/resetpassword",async (req,res)=>{
+  const {email,password} = req.body
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const sql = "UPDATE users SET password = ? WHERE email = ?"
+  
+  db.query(sql,[hashedPassword,email],(err,result)=>{
+    if(err) return res.json({status: false, err})
+    return res.json({Message: "Your password has been reseted successfully", status: true})
+  })
+})
 
 
 app.post("/signup/verify",async (req,res)=>{
-  const {name,email,password,verificationCode} = req.body
+  const {name,email,password,verificationCode} = req.body 
   const hashedPassword = await bcrypt.hash(password, 10);
   const sql = "SELECT verificationCode FROM pending_user WHERE email = ?"
   db.query(sql,[email],(err,result)=>{
@@ -307,6 +359,7 @@ app.get("/user/art/:id", (req, res) => {
   });
 });
 
+
 app.delete("/user/art/:id", (req, res) => {
   const { id } = req.params;
   const sql = "UPDATE artwork SET deleted = 1 WHERE id = ?";
@@ -350,23 +403,17 @@ app.post("/sold", (req, res) => {
 app.post("/seles", (req, res) => {
   AddedSales(db, req, res);
 });
-// app.post("/seles", (req, res) => {
-//   const {art_id} = req.body;
-//   const sql = "UPDATE artwork SET sales = sales + 1 , total_sales = total_sales + 1  WHERE id = ?";
-//   db.query(sql, [art_id], (err, result) => {
-//     if (err) return res.json(err);
-//     else return res.json(result);
-//   });
-// });
 
-app.post("/cart", (req, res) => {
-  const userId = req.body.userId;
-  const sql = "SELECT * FROM cart WHERE user_id = ?";
-  db.query(sql, [userId], (err, result) => {
-    if (err) return res.json(err);
-    else return res.json(result);
-  });
-});
+app.post("/cart", (req,res)=>{
+  const userId = req.body.userId
+  const sql = "SELECT * FROM cart WHERE user_id = ?" 
+  db.query(sql, [userId], (err,result)=>{
+    if(err) return res.json(err) 
+    else return res.json(result)
+  })
+})
+
+
 
 app.delete("/user/delete/:id", (req, res) => {
   const id = req.params.id;
@@ -432,8 +479,6 @@ app.post("/payment/pay", async (req, res) => {
       last_name: lname,
       phone_number: "+251" + phoneNo,
       tx_ref: tx_ref,
-      // callback_url: "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-      // callback_url: "http://localhost:8081/payment/callback",
       return_url: "http://localhost:5173/postpayed",
     }),
   };
@@ -526,6 +571,44 @@ app.post("/print/complete", (req, res) => {
     else return res.json("Art added to printed");
   });
 });
+
+app.post("/print/complete", (req,res) =>{
+  BranchPrinted(db,req,res)
+});
+
+app.post("/branch/deliver", (req,res) =>{
+  const tx_ref = req.body.tx_ref
+  const sql = "UPDATE payment_detail SET print_status = 'delivered' WHERE tx_ref = ?"
+  db.query(sql,[tx_ref],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Art added to delivered")
+  })
+})
+app.post("/branch/delivered", (req,res) =>{
+  const branchName = req.body.branchName
+  const sql = "SELECT * FROM payment_detail WHERE location = ? AND print_status = 'delivered'"
+  db.query(sql,[branchName],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json(result)
+  })
+})
+
+
+
+
+app.post('/postpayment',(req,res)=>{ 
+  const {userId} = req.body
+  const sql = 'DELETE FROM cart WHERE user_id = ?'
+  db.query(sql,[userId],(err,result)=>{
+    if(err) return res.json(err)
+    else return res.json("Payment successful")
+  })
+})
+
+
+
+
+
 
 app.post("/branch/deliver", (req, res) => {
   const tx_ref = req.body.tx_ref;

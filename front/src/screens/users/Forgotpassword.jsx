@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ThemeProvider } from '@emotion/react';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, TextField, createTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import backgroundImage from '../../utils/333.png';
 
 
 function Forgotpassword() {
+  const [email,setEmail] = useState('')
 
   const defaultTheme = createTheme();
   axios.defaults.withCredentials = true
@@ -17,7 +18,17 @@ function Forgotpassword() {
   }
 
   const handleSubmit = (event) => {
+    event.preventDefault();
 
+    axios
+    .post("http://localhost:8081/forgotpassword/sendcode", { email:email, })
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    // console.log(email)
   }
   return (
     <ThemeProvider theme={defaultTheme}>

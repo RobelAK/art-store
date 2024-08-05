@@ -44,7 +44,7 @@ export default function declineArt(db, req, res) {
           }
 
           db.commit(function(err) {
-            if (err) {
+            if (err) { 
               db.rollback(function() {
                 console.error('Error committing transaction:', err);
                 return res.status(500).json({ error: 'Internal server error' });
